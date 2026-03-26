@@ -29,9 +29,10 @@ namespace JLP
 		public Rhino.Geometry.Brep shape = null;
 		public double area = double.NaN;
 		public double aspect = double.NaN;
+		public bool lock_trans = true;
 		public List<string> adjacent = new List<string>();
 		public string id = null;
-		public DefineSpace(): base("DefineSpace", "DS","Description","JLP", "Subcategory"){}
+		public DefineSpace(): base("DefineSpace", "DS","Defines a space to be used by the generator","JLP", "Generation") {}
 
         /// <summary>
         /// Registers all the input parameters for this component.
@@ -39,7 +40,7 @@ namespace JLP
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
 			pManager.AddTextParameter("Parent ID", "PID", "Input space ID of parent", GH_ParamAccess.item);
-			pManager.AddColourParameter("Colour", "clr", "Set colour to be used to show space", GH_ParamAccess.item);
+			pManager.AddColourParameter("Colour", "clr", "Set colour to be used to show space", GH_ParamAccess.item,Color.FromArgb(255, 0, 0));
 
 			pManager.AddBrepParameter("Shape", "Shp", "Specifies space footprint", GH_ParamAccess.item);
 			pManager[2].Optional = true;
@@ -53,7 +54,8 @@ namespace JLP
 			pManager.AddTextParameter("Adjacent IDs", "CID", "Input space ID to which this should be adjacent", GH_ParamAccess.list);
 			pManager[5].Optional = true;
 
-
+			pManager.AddBooleanParameter("Lock transform", "LT", "This locks the transform of the reference shape", GH_ParamAccess.item, true);
+			pManager[6].Optional = true;
 		}
 
 		/// <summary>
@@ -77,7 +79,7 @@ namespace JLP
 			area = double.NaN;
 			aspect = double.NaN;
 			adjacent = new List<string>();
-
+			lock_trans = true;
 			adjacent.Clear();
 			DA.GetData(0, ref parent_id);
 			DA.GetData(1, ref colour);
@@ -85,7 +87,7 @@ namespace JLP
 			DA.GetData(3, ref area);
 			DA.GetData(4, ref aspect);
 			DA.GetDataList(5, adjacent);
-
+			DA.GetData(6, ref lock_trans);
 
 			id = $"{parent_id}|{this.NickName}";
 			if (double.IsNaN(area) & shape==null)
@@ -105,9 +107,10 @@ namespace JLP
         {
             get
             {
-                //You can add image files to your project resources and access them like this:
-                // return Resources.IconForThisComponent;
-                return null;
+				//You can add image files to your project resources and access them like this:
+				// return Resources.IconForThisComponent;
+				return Properties.Resources.Definespace;
+				//return null;
             }
         }
 

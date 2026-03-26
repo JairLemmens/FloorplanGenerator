@@ -41,16 +41,11 @@ namespace UIClassLibrary
 
 		private Color[] BuildLookup(int[,] clrs)
 		{	
-		
 			Color[] lookup = new Color[256];
-			Debug.WriteLine(lookup[100]);
-
 			for (int i = 0; i < clrs.Length/3; i++)
 			{
 				lookup[i] = Color.FromArgb(clrs[i,0], clrs[i, 1], clrs[i, 2]);
 			}
-			
-
 			return lookup;
 		}
 
@@ -130,6 +125,7 @@ namespace UIClassLibrary
 					for (int x = 0; x < 64; x++)
 						SelectedSample[y, x] = sample_data[idx++];
 				this.DialogResult = DialogResult.OK;
+				http_client.Dispose();
 				this.Close();
 			}
 		}
@@ -150,7 +146,6 @@ namespace UIClassLibrary
 				this.Status.Text = "Recieved response";
 				Debug.WriteLine($"Recieved {sample_data.Length} bytes from server");
 				LoadSamples();
-				
 			}
 			catch (Exception ex)
 			{
@@ -181,8 +176,6 @@ namespace UIClassLibrary
 				throw new InvalidOperationException("Failed ", ex);
 			}
 		}
-
-	
 	}
 }
 

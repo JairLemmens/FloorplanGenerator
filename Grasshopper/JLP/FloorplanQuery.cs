@@ -26,11 +26,10 @@ namespace JLP
 		public string api_key = null;
 		public byte[] sample_data = null;
 		public List<System.Drawing.Color> colours = new List<System.Drawing.Color>();
-		public static readonly HttpClient http_client = new HttpClient();
 		public FloorplanQuery()
           : base("FloorplanQuery", "FloorplanQuery",
-              "Description",
-              "JLP", "Subcategory")
+              "Sends a request to the floorplan generation server.",
+              "JLP", "Generation")
         {
         }
 
@@ -103,8 +102,8 @@ namespace JLP
             get
             {
                 //You can add image files to your project resources and access them like this:
-                // return Resources.IconForThisComponent;
-                return null;
+                return Properties.Resources.Floorplanquery;
+                //return null;
             }
         }
 

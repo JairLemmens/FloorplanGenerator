@@ -27,6 +27,7 @@ namespace JLP
 			public List<List<List<double>>> geometries { get; set; } = new List<List<List<double>>>();
 			public List<double?> aspect_ratios { get; set; } = new List<double?>();
 			public List<List<double>> colours { get; set; } = new List<List<double>>();
+			public List<bool> lock_trans {  get; set; } = new List<bool>();
 		}
 
 		/// <summary>
@@ -96,11 +97,12 @@ namespace JLP
 			List<List<List<double>>> geometries = new List<List<List<double>>>();
 			List<double?> aspectRatios = new List<double?>();
 			List<List<double>> colours = new List<List<double>>();
+			List<bool> lock_trans = new List<bool>();
 
 			List<JLP.DefineSpace> valid_spaces = new List<JLP.DefineSpace>();
 			List<string> extra_spaces = new List<string>();
+			
 			int hierarchal_depth = space_id.Count(c => c == '|') + 1;
-			Debug.WriteLine(spaces.Count);
 			foreach (var space in spaces)
 			{
 				if (space.id == null)
@@ -166,7 +168,7 @@ namespace JLP
 				}
 				// Aspect ratio
 				aspectRatios.Add(space.aspect);
-
+				lock_trans.Add(space.lock_trans);
 				// Colour
 				colours.Add(new List<double> { space.colour.R, space.colour.G, space.colour.B });
 			}
@@ -208,10 +210,9 @@ namespace JLP
 			controlData.geometries = geometries;
 			controlData.aspect_ratios = aspectRatios;
 			controlData.colours = colours;
-
+			controlData.lock_trans = lock_trans;
 			string json = JsonConvert.SerializeObject(controlData, Formatting.Indented);
 			return json;
 		}
-
 	}
 }
