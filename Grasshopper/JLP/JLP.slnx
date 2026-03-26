@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="../UIClassLibrary/UIClassLibrary.csproj" Id="9989465f-b4fd-4a9f-b7a4-e87d57ac6ee1" />
+  <Project Path="JLP.csproj" />
+</Solution>
