@@ -1,0 +1,105 @@
+{
+  "host": {
+    "name": "Rhino3D",
+    "version": "8.29.26063\u002B11001",
+    "os": "windows",
+    "arch": "x64"
+  },
+  "id": "2ceebce6-c31e-4289-abb1-b9cd21b65791",
+  "identity": {
+    "name": "JLP",
+    "version": "0.1",
+    "publisher": {
+      "email": "JairLemmens@gmail.com",
+      "name": "Jair Lemmens"
+    },
+    "image": {
+      "light": {
+        "type": "svg",
+        "data": "PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmlld0JveD0iMHB0IDBwdCA0OHB0IDQ4cHQiIGZpbGwtZGFyaz0iI0ZGRiIgc3Ryb2tlLWRhcms9Im5vbmUiPg0KICA8cG9seWxpbmUgZmlsbD0ibm9uZSIgZmlsbC1kYXJrPSJub25lIiBzdHJva2U9IiMwMDAiIHN0cm9rZS1kYXJrPSIjMDAwIiBwb2ludHM9IjguNTAsMjYuNTAiIC8\u002BDQogIDxwb2x5bGluZSBmaWxsPSJub25lIiBmaWxsLWRhcms9Im5vbmUiIHN0cm9rZT0iI0ZGRjcwMCIgc3Ryb2tlLWRhcms9IiNGRkY3MDAiIHBvaW50cz0iMjEuNTAsNS41MCA3LjUwLDI4LjUwIDI0LjUwLDM2LjUwIiAvPg0KICA8cG9seWxpbmUgZmlsbD0ibm9uZSIgZmlsbC1kYXJrPSJub25lIiBzdHJva2U9IiNGRjAwMDQiIHN0cm9rZS1kYXJrPSIjRkYwMDA0IiBwb2ludHM9IjIxLjUwLDUuNTAiIC8\u002BDQogIDxwb2x5bGluZSBmaWxsPSJub25lIiBmaWxsLWRhcms9Im5vbmUiIHN0cm9rZT0iI0ZGMDAwNCIgc3Ryb2tlLWRhcms9IiNGRjAwMDQiIHBvaW50cz0iMzEuNTAsMTAuNTAiIC8\u002BDQogIDxwb2x5bGluZSBmaWxsPSJub25lIiBmaWxsLWRhcms9Im5vbmUiIHN0cm9rZT0iI0ZGMDAwNCIgc3Ryb2tlLWRhcms9IiNGRjAwMDQiIHBvaW50cz0iMzEuNTAsMTEuNTAiIC8\u002BDQogIDxwb2x5bGluZSBmaWxsPSJub25lIiBmaWxsLWRhcms9Im5vbmUiIHN0cm9rZT0iI0ZFNzYwMCIgc3Ryb2tlLWRhcms9IiNGRTc2MDAiIHN0cm9rZS1saW5lam9pbj0iYmV2ZWwiIHBvaW50cz0iMjkuNTAsMjcuNTAgMjMuNTAsMjQuNTAgMzEuNTAsMTAuNTAgMzEuNTAsMTAuNTAiIC8\u002BDQogIDxwb2x5bGluZSBmaWxsPSJub25lIiBmaWxsLWRhcms9Im5vbmUiIHN0cm9rZT0iI0ZGNzkwMCIgc3Ryb2tlLWRhcms9IiNGRjc5MDAiIHBvaW50cz0iMjUuNTAsMzYuNTAiIC8\u002BDQogIDxwb2x5bGluZSBmaWxsPSJub25lIiBmaWxsLWRhcms9Im5vbmUiIHN0cm9rZT0iI0ZFRjYwMCIgc3Ryb2tlLWRhcms9IiNGRUY2MDAiIHBvaW50cz0iMjQuNTAsMzYuNTAgMjkuNTAsMjcuNTAiIC8\u002BDQogIDxwb2x5bGluZSBmaWxsPSJub25lIiBmaWxsLWRhcms9Im5vbmUiIHN0cm9rZT0iI0ZFRjYwMCIgc3Ryb2tlLWRhcms9IiNGRUY2MDAiIHBvaW50cz0iMjEuNTAsNS41MCAzMS41MCwxMC41MCIgLz4NCiAgPHBvbHlsaW5lIGZpbGw9Im5vbmUiIGZpbGwtZGFyaz0ibm9uZSIgc3Ryb2tlPSIjRkYwMDA0IiBzdHJva2UtZGFyaz0iI0ZGMDAwNCIgcG9pbnRzPSIzMS41MCwxMC41MCA0Mi41MCwxNi41MCAzNC41MCwzMC41MCAyOS41MCwyNy41MCIgLz4NCjwvc3ZnPg=="
+      },
+      "projectIcon": {
+        "light": {
+          "bytes": "iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAAaZJREFUSEvt1E9LVFEYgPEnmXtFrRBJDFezkKhFmRZF2R\u002BCaREkSISRBLkJjJIwbXTGqGWfoT5J36ll3ntnNvPEGStmzh2s0J39YODynBfO5rwDx4ZtLpqzEPcjYca0BWtmLNnijXtcjmcOxYw19zjb/Zbx3xd9TWbj2X9mxjVbPCj1cNGXE59MKxuSnovP/4pSMWc37oENFtyhJifPSLIiyaqMTMdzBzLjkd\u002B5VOqfSaz3XyzDVUleSPpY7lZ6zwayoGrBatwDt1nsNJmPeyDpQ0mX4l5iwboyUeoNpjp1Xsb9F6nsypUk7n3MuWVBLe6BOzx3m2rcAxmuSeXgXVFGzanHPbDJVessxz2QidNSeRv3Ets8scX5uAe\u002BZ9YGG26VF02SZUkvxL2PbebMWYl7Lz8y7juWfD206Y1krtv2X9DAB9HHNrOdFltmXI/PeimTfhvalOTp/m/4lYxNxXMDKafC5prTNOeOMlSayXlmwUz47jA6L2OlXfkjJbXgnjkfLLivjHR7wUy4IJ4/lE7OzfCyzFj8uR\u002BT8cyRMOf2oL\u002BO/465H5EextfDbBemAAAAAElFTkSuQmCC",
+          "width": 24,
+          "height": 24
+        },
+        "dark": {
+          "bytes": "iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABhJREFUSEvtwQENAAAAwqD3T\u002B3sARQAADcJGAABCPu14gAAAABJRU5ErkJggg==",
+          "width": 24,
+          "height": 24
+        },
+        "icoData": "AAABAAEAGBgAAAEAIABPAgAAFgAAAIlQTkcNChoKAAAADUlIRFIAAAAYAAAAGAgGAAAA4Hc9\u002BAAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsIAAA7CARUoSoAAAAHxSURBVEhL7ZS9a1NhFIefc/NhktJSCkGpDhmKi7SxUgTbqggGUrAg4ljERXAQiiiCLTiJ4p\u002BgDg4uDk6C6KAgiIiDgi5xKp0EUVzae/Nl8nOIF5L3TVqkY3229/mdy\u002BGce98LuwbVmVTEnOu3I3BFPxQyTps5RF41lrXJYbdmRyjksjbZByAxqpCzqrGsl6miW/vPKOSoaix4Xozqgd1VOnlVpA\u002B6ecyWK5JIYpQswws3Y4VDrOk1jcxj0IxIXRTZcbdsSxRyThtMef4\u002BKd1gtcexpyBSl0T6vDiZjP3ACVSlQMCIDfPFzVijrGTvVEZ93Wg\u002BBGrw/kzsBzYAFsnwzJW6yV6JA8EdPrlZh3YRJp/Hp74NFDEPVMz45WaIslmfd9JZ02ngjfGxGTuvgUQOmLUsr7xshRnaVO0e617G2Ai0pozf77q914AGiwT\u002BagAIaJJgv673u2gbZQi8yXoaqM40LRKW4Wu3j7HbfCbNI4yCrgTXdCw1zd8vCMgZjYr3TPdBdYoSJWvx1ob40J11I5HnZ3CBfOJbxwRjkHxqhN/dWg\u002BJYdVYUMSKIk5I/hoVsaQqEwBtckfEkHdXtkUirSqnFHFLVUoSWTr3Y0IRS279IHpWNIh2xKzBPKJCQIEMT8z44dbtGEUc7/fr\u002BM8u5w85LrRSWT2brgAAAABJRU5ErkJggg=="
+      },
+      "categoryIcon": {
+        "light": {
+          "bytes": "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAAQpJREFUOE/dkUFLAlEYRU\u002BGI1TQIjSiKCgoKohwUQRBEFSLoKgY923bRjq06f/0H/pRpo4zKvcLG5zeDBpu2nR299yP9x7vg7/CjBlF7Ob91KjLlWKqgxA/brGf739FLSrqcZbmiD29Fl5EaSs7OQEL8d3ce\u002BbYGqyLYtXwfLFQdvsM6nCkkI1Rtndm\u002B3XuMzN4D0Zp03VJIUqKuHFdP\u002BDSGiy6bvgKN6eozbUZc6PcDFhSnYvMDN6OKB64LinarFjIaca9UbEAP3762cLk2zvcWpvDvB8Sf/CoQrEmvDsxv5zvU9Rke7gB9ThJXYc1hUke\u002B3HjkFj9PqjL\u002BaBFLd9PjURZn0ze\u002Bf/gCxwhahyEGjr0AAAAAElFTkSuQmCC",
+          "width": 16,
+          "height": 16
+        },
+        "dark": {
+          "bytes": "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABJJREFUOE9jYBgFo2AUjAIIAAAEEAABTLtGVQAAAABJRU5ErkJggg==",
+          "width": 16,
+          "height": 16
+        }
+      }
+    }
+  },
+  "settings": {
+    "buildPath": "file:///C:/Users/jairl/Documents/GitHub/FloorplanGenerator/Grasshopper Source/PythonComponents",
+    "buildTarget": {
+      "host": {
+        "name": "Rhino3D",
+        "version": "8"
+      },
+      "title": "Rhino3D (8.*)",
+      "slug": "rh8"
+    },
+    "publishTarget": {
+      "title": "McNeel Yak Server"
+    }
+  },
+  "codes": [
+    {
+      "type": "components",
+      "id": "3b5958e5-2560-4de5-b1e0-6f5400e9d246",
+      "language": {
+        "id": "*.gh1.grasshopper",
+        "version": "1.*.*"
+      },
+      "title": "JLPPython.ghx",
+      "uri": "file:///C:/Users/jairl/Documents/EigenProjecten/SurrogateModel/Grasshopper components/JLPPython.ghx",
+      "scripts": [
+        {
+          "id": "5412231e-7db7-4490-bc5b-e93ad7b7fcc3",
+          "name": "Data2Boundary",
+          "nickname": "Data2Boundary",
+          "subcat": "PostProcessing",
+          "image": {
+            "light": {
+              "type": "svg",
+              "data": "PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmlld0JveD0iMHB0IDBwdCAyNHB0IDI0cHQiIGZpbGwtZGFyaz0iI0ZGRiIgc3Ryb2tlLWRhcms9Im5vbmUiPg0KICA8cG9seWxpbmUgZmlsbD0ibm9uZSIgZmlsbC1kYXJrPSJub25lIiBzdHJva2U9IiNGMDAiIHN0cm9rZS1kYXJrPSIjRjAwIiBwb2ludHM9IjcuNTAsNy41MCAzLjUwLDEyLjUwIDcuNTAsMTYuNTAiIC8\u002BDQogIDxwb2x5bGluZSBmaWxsPSJub25lIiBmaWxsLWRhcms9Im5vbmUiIHN0cm9rZT0iIzNBRkYwMCIgc3Ryb2tlLWRhcms9IiMzQUZGMDAiIHBvaW50cz0iNy41MCwxNi41MCAxMS41MCwxMS41MCA3LjUwLDcuNTAgNy41MCw3LjUwIDcuNTAsNy41MCA3LjUwLDcuNTAiIC8\u002BDQogIDxwb2x5bGluZSBmaWxsPSJub25lIiBmaWxsLWRhcms9Im5vbmUiIHN0cm9rZT0iI0ZGRjEwMCIgc3Ryb2tlLWRhcms9IiNGRkYxMDAiIHBvaW50cz0iNy41MCw3LjUwIDExLjUwLDIuNTAgMTYuNTAsNi41MCAyMC41MCw5LjUwIDExLjUwLDIwLjUwIDcuNTAsMTYuNTAgNy41MCwxNi41MCA3LjUwLDE2LjUwIDcuNTAsMTYuNTAiIC8\u002BDQogIDxwb2x5bGluZSBmaWxsPSJub25lIiBmaWxsLWRhcms9Im5vbmUiIHN0cm9rZT0iI0ZGN0IwMCIgc3Ryb2tlLWRhcms9IiNGRjdCMDAiIHBvaW50cz0iNy41MCw3LjUwIDExLjUwLDExLjUwIDcuNTAsMTYuNTAgNy41MCwxNi41MCIgLz4NCjwvc3ZnPg=="
+            },
+            "rendered": {
+              "light": {
+                "bytes": "iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAATBJREFUSEvtlK1OxEAUhc9b8BaYfQAwvAVYngCHAI9CIOoIYEiwIDCgUDVrwKEQOGa2YOeSM1DSOduf2VIHX5p095vJPem9nQJ/iuBwZx\u002BYqZ8E8yhZPN4X2NX1X2EeRbNo/O9RpLtGwsJtxb59qX4l6paor\u002BF6nMsCG7qWxcsF3tS1YQ735nCgvhcDSgNmts\u002Bfw5jHIZ9GfSsGFIbGUHNDKmwOhrAwA5Z8Rog5zK3CuvofYkvQPdSnk\u002B6ZmMNZ8NhRnxDQ/XjPx3i/vMG2ehI89szhSH0rFq\u002BUh1M8Xl/hXD0xh63gcau\u002Bl2YICzMg3fGFVVgLDq/qs2AIW8LW6FoNizNEfTZ9B41tYXvUr4z55ZlwoBys\u002BtE0Q/gq8pVMd0wAQ3iIeJh0bTIGPwP/jOETB3as8eK788cAAAAASUVORK5CYII=",
+                "width": 24,
+                "height": 24
+              },
+              "dark": {
+                "bytes": "iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAATBJREFUSEvtlK1OxEAUhc9b8BaYfQAwvAVYngCHAI9CIOoIYEiwIDCgUDVrwKEQOGa2YOeSM1DSOduf2VIHX5p095vJPem9nQJ/iuBwZx\u002BYqZ8E8yhZPN4X2NX1X2EeRbNo/O9RpLtGwsJtxb59qX4l6paor\u002BF6nMsCG7qWxcsF3tS1YQ735nCgvhcDSgNmts\u002Bfw5jHIZ9GfSsGFIbGUHNDKmwOhrAwA5Z8Rog5zK3CuvofYkvQPdSnk\u002B6ZmMNZ8NhRnxDQ/XjPx3i/vMG2ehI89szhSH0rFq\u002BUh1M8Xl/hXD0xh63gcau\u002Bl2YICzMg3fGFVVgLDq/qs2AIW8LW6FoNizNEfTZ9B41tYXvUr4z55ZlwoBys\u002BtE0Q/gq8pVMd0wAQ3iIeJh0bTIGPwP/jOETB3as8eK788cAAAAASUVORK5CYII=",
+                "width": 24,
+                "height": 24
+              }
+            }
+          }
+        },
+        {
+          "id": "3b5958e5-2560-4de5-b1e0-6f5400e9d246",
+          "name": "JLPPython.ghx",
+          "subcat": "Post Processing"
+        }
+      ]
+    }
+  ]
+}
