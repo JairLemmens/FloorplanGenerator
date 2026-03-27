@@ -109,7 +109,7 @@
 			this.Status.Name = "Status";
 			this.Status.ReadOnly = true;
 			this.Status.RightToLeft = System.Windows.Forms.RightToLeft.No;
-			this.Status.Size = new System.Drawing.Size(300, 27);
+			this.Status.Size = new System.Drawing.Size(400, 27);
 			this.Status.TextBoxTextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			// 
 			// FloorplanQueryForm

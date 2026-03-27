@@ -24,9 +24,11 @@ namespace UIClassLibrary
 		public string instruction_json = null;
 		public string api_key = null;
 		public HttpClient http_client = new HttpClient();
+
 		public FloorplanQueryForm(string recieved_instruction_json, string recieved_api_key, byte[] received_sample_data)
 		{	
 			InitializeComponent();
+			http_client.Timeout = TimeSpan.FromSeconds(5);
 			instruction_json  = recieved_instruction_json;
 			api_key = recieved_api_key;
 			sample_data = received_sample_data;
@@ -115,7 +117,6 @@ namespace UIClassLibrary
 
 		}
 
-
         private void Confirm_Click(object sender, EventArgs e)
         {
 			if ((sample_data != null) & (SelectedIndex != -1))
@@ -139,8 +140,10 @@ namespace UIClassLibrary
 
 		private async void SendRequestButton_Click(object sender, EventArgs e)
 		{
+			SendRequestButton.Enabled = false;
+
 			try
-			{
+			{	
 				this.Status.Text = "Request sent";
 				sample_data = await PostJsonAsync("https://jair.app/inference",instruction_json,api_key);
 				this.Status.Text = "Recieved response";
@@ -152,28 +155,30 @@ namespace UIClassLibrary
 				this.Status.Text = $"Error: {ex.Message}";
 				Debug.WriteLine($"Error: {ex.Message}");
 			}
+			finally
+			{
+				SendRequestButton.Enabled = true;
+			}
 		}
 
 		public async Task<byte[]> PostJsonAsync(string url, string json, string api_key)
 		{
-			http_client.Timeout = TimeSpan.FromSeconds(10);
-			http_client.DefaultRequestHeaders.Add("api-key", api_key);
-			var content = new StringContent(json, Encoding.UTF8, "application/json");
+			var request = new HttpRequestMessage(HttpMethod.Post, url);
+			request.Headers.Add("api-key", api_key);
+			request.Content = new StringContent(json, Encoding.UTF8, "application/json");
 			try
 			{
-				HttpResponseMessage response = await http_client.PostAsync(url, content);
+				HttpResponseMessage response = await http_client.SendAsync(request);
 				response.EnsureSuccessStatusCode();
 				return await response.Content.ReadAsByteArrayAsync();
 			}
 			catch (TaskCanceledException)
 			{
-				// usually indicates a timeout
 				throw new TimeoutException("No response from server within timeout period");
 			}
 			catch (HttpRequestException ex)
 			{
-				// network/connection issues
-				throw new InvalidOperationException("Failed ", ex);
+				throw new InvalidOperationException("Failed", ex);
 			}
 		}
 	}

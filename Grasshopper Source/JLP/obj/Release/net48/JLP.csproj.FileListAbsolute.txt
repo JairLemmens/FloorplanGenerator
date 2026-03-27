@@ -23,3 +23,28 @@ C:\Users\jairl\Documents\GitHub\FloorplanGenerator\Grasshopper\JLP\obj\Release\n
 C:\Users\jairl\Documents\GitHub\FloorplanGenerator\Grasshopper\JLP\obj\Release\net48\JLP.csproj.Up2Date
 C:\Users\jairl\Documents\GitHub\FloorplanGenerator\Grasshopper\JLP\obj\Release\net48\JLP.gha
 C:\Users\jairl\Documents\GitHub\FloorplanGenerator\Grasshopper\JLP\obj\Release\net48\JLP.pdb
+C:\Users\jairl\Documents\GitHub\FloorplanGenerator\Grasshopper Source\JLP\bin\Release\net48\JLP.gha
+C:\Users\jairl\Documents\GitHub\FloorplanGenerator\Grasshopper Source\JLP\bin\Release\net48\JLP.pdb
+C:\Users\jairl\Documents\GitHub\FloorplanGenerator\Grasshopper Source\JLP\bin\Release\net48\Microsoft.Bcl.HashCode.dll
+C:\Users\jairl\Documents\GitHub\FloorplanGenerator\Grasshopper Source\JLP\bin\Release\net48\Newtonsoft.Json.dll
+C:\Users\jairl\Documents\GitHub\FloorplanGenerator\Grasshopper Source\JLP\bin\Release\net48\System.Buffers.dll
+C:\Users\jairl\Documents\GitHub\FloorplanGenerator\Grasshopper Source\JLP\bin\Release\net48\System.Collections.Immutable.dll
+C:\Users\jairl\Documents\GitHub\FloorplanGenerator\Grasshopper Source\JLP\bin\Release\net48\System.Formats.Nrbf.dll
+C:\Users\jairl\Documents\GitHub\FloorplanGenerator\Grasshopper Source\JLP\bin\Release\net48\System.Memory.dll
+C:\Users\jairl\Documents\GitHub\FloorplanGenerator\Grasshopper Source\JLP\bin\Release\net48\System.Numerics.Vectors.dll
+C:\Users\jairl\Documents\GitHub\FloorplanGenerator\Grasshopper Source\JLP\bin\Release\net48\System.Reflection.Metadata.dll
+C:\Users\jairl\Documents\GitHub\FloorplanGenerator\Grasshopper Source\JLP\bin\Release\net48\System.Resources.Extensions.dll
+C:\Users\jairl\Documents\GitHub\FloorplanGenerator\Grasshopper Source\JLP\bin\Release\net48\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\jairl\Documents\GitHub\FloorplanGenerator\Grasshopper Source\JLP\bin\Release\net48\UIClassLibrary.dll
+C:\Users\jairl\Documents\GitHub\FloorplanGenerator\Grasshopper Source\JLP\bin\Release\net48\UIClassLibrary.pdb
+C:\Users\jairl\Documents\GitHub\FloorplanGenerator\Grasshopper Source\JLP\obj\Release\net48\JLP.csproj.AssemblyReference.cache
+C:\Users\jairl\Documents\GitHub\FloorplanGenerator\Grasshopper Source\JLP\obj\Release\net48\JLP.Properties.Resources.resources
+C:\Users\jairl\Documents\GitHub\FloorplanGenerator\Grasshopper Source\JLP\obj\Release\net48\JLP.csproj.GenerateResource.cache
+C:\Users\jairl\Documents\GitHub\FloorplanGenerator\Grasshopper Source\JLP\obj\Release\net48\JLP.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\jairl\Documents\GitHub\FloorplanGenerator\Grasshopper Source\JLP\obj\Release\net48\JLP.AssemblyInfoInputs.cache
+C:\Users\jairl\Documents\GitHub\FloorplanGenerator\Grasshopper Source\JLP\obj\Release\net48\JLP.AssemblyInfo.cs
+C:\Users\jairl\Documents\GitHub\FloorplanGenerator\Grasshopper Source\JLP\obj\Release\net48\JLP.csproj.CoreCompileInputs.cache
+C:\Users\jairl\Documents\GitHub\FloorplanGenerator\Grasshopper Source\JLP\obj\Release\net48\JLP.sourcelink.json
+C:\Users\jairl\Documents\GitHub\FloorplanGenerator\Grasshopper Source\JLP\obj\Release\net48\JLP.csproj.Up2Date
+C:\Users\jairl\Documents\GitHub\FloorplanGenerator\Grasshopper Source\JLP\obj\Release\net48\JLP.gha
+C:\Users\jairl\Documents\GitHub\FloorplanGenerator\Grasshopper Source\JLP\obj\Release\net48\JLP.pdb
