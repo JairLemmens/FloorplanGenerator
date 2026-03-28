@@ -5,7 +5,7 @@
     <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
     <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
     <AssemblyName>JLP.Components</AssemblyName>
-    <AssemblyVersion>0.1.9583.16545</AssemblyVersion>
+    <AssemblyVersion>0.1.9584.25854</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>

@@ -19,7 +19,9 @@ def trace_edge(edge_map):
     # Find all edge pixels
     pixels = np.argwhere(edge_map)
     visited = np.zeros_like(edge_map, dtype=bool)
-    
+    added_pixels = 0
+    edges = []
+
     # Start at one endpoint (pixel with only one neighbor) or first pixel
     def neighbors(r, c):
         for dr, dc in [(-1,0),(1,0),(0,-1),(0,1)]:  # 4-connectivity
@@ -27,29 +29,36 @@ def trace_edge(edge_map):
             if 0 <= nr < edge_map.shape[0] and 0 <= nc < edge_map.shape[1]:
                 if edge_map[nr, nc] and not visited[nr, nc]:
                     yield nr, nc
-
-    # Find endpoint (pixel with only 1 neighbor)
-    endpoints = []
-    for r,c in pixels:
-        cnt = sum(1 for _ in neighbors(r,c))
-        if cnt == 1:
-            endpoints.append((r,c))
-    start = endpoints[0] if endpoints else tuple(pixels[0])
-
-    # Sequential walk
-    ordered = [start]
-    visited[start] = True
-    r, c = start
-
-    while True:
-        next_pixels = list(neighbors(r, c))
-        if not next_pixels:
+    
+    #instead of while True just in case, 100 should never be reached
+    for n in range(100):
+        # Find endpoint (pixel with only 1 neighbor)
+        endpoints = []
+        for r,c in pixels:
+            if visited[r, c] == False:
+                cnt = sum(1 for _ in neighbors(r,c))
+                if cnt == 1:
+                    endpoints.append((r,c))
+        start = endpoints[0] if endpoints else tuple(pixels[0])
+        added_pixels +=1
+        # Sequential walk
+        ordered_edge = [start]
+        visited[start] = True
+        r, c = start
+    
+        while True:
+            next_pixels = list(neighbors(r, c))
+            if not next_pixels:
+                break
+            r, c = next_pixels[0]  # there’s only 1 unvisited neighbor
+            ordered_edge.append((r, c))
+            visited[r, c] = True
+            added_pixels +=1
+        edges.append(np.array(ordered_edge))
+        
+        if added_pixels == len(pixels):
             break
-        r, c = next_pixels[0]  # there’s only 1 unvisited neighbor
-        ordered.append((r, c))
-        visited[r, c] = True
-
-    return np.array(ordered)
+    return edges
 
 def depthwise_conv2x2(arr):
     # arr: (num_layers, H, W)
@@ -69,25 +78,26 @@ def depthwise_conv2x2(arr):
     return mask
 
 def extract_boundaries(onehot_array,smoothing =2):
-    edge_map = depthwise_conv2x2(onehot_array)
+    edge_map = depthwise_conv2x2(onehot)
     ends = np.argwhere(edge_map.sum(0)>2)
-    N = onehot_array.shape[0]
-    boundaries = np.unique(edge_map.reshape(N, -1).T, axis=0)
+    boundaries = np.unique(edge_map.reshape(edge_map.shape[0], -1).T, axis=0)
 
     edges = []
     adjacencies = []
     for boundary in boundaries:
         if boundary.sum() != 2:
             continue
-        edge = trace_edge(np.all(edge_map.transpose(1, 2, 0) == boundary, axis=-1))
-        if len(edge)>1:
-            edge = np.stack([ends[np.argmin(np.abs((edge[0]-ends)).sum(1))],*edge,ends[np.argmin(np.abs((edge[-1]-ends)).sum(1))]]).astype(np.int32)
-        else:
-            closest_ends = np.argsort(np.abs((edge[0]-ends)).sum(1))
-            edge = np.stack([ends[closest_ends[0]],*edge,ends[closest_ends[1]]]).astype(np.int32)
-        approx = cv.approxPolyDP(edge, smoothing, closed=False)
-        edges.append(approx.squeeze().tolist())
-        adjacencies.append(boundary.tolist())
+        
+        new_edges = trace_edge(np.all(edge_map.transpose(1, 2, 0) == boundary, axis=-1))
+        for edge in new_edges:
+            if len(edge)>1:
+                edge = np.stack([ends[np.argmin(np.abs((edge[0]-ends)).sum(1))],*edge,ends[np.argmin(np.abs((edge[-1]-ends)).sum(1))]]).astype(np.int32)
+            else:
+                closest_ends = np.argsort(np.abs((edge[0]-ends)).sum(1))
+                edge = np.stack([ends[closest_ends[0]],*edge,ends[closest_ends[1]]]).astype(np.int32)
+            approx = cv.approxPolyDP(edge, smoothing, closed=False)
+            edges.append(approx.squeeze().tolist())
+            adjacencies.append(boundary.tolist())
     diff = ends[:, np.newaxis, :] - ends[np.newaxis, :, :]  # shape (N, N, 2)
     dists = np.linalg.norm(diff, axis=2) 
     dists = dists==1
@@ -100,4 +110,3 @@ def extract_boundaries(onehot_array,smoothing =2):
             edges.append(edge)
             adjacencies.append((edge_map[:,edge[0][0],edge[0][1]]*edge_map[:,edge[1][0],edge[1][1]]).tolist())
     return(edges,adjacencies)
-
