@@ -140,5 +140,11 @@ namespace JLP
 	public class DefineSpaceAttributes : GH_ComponentAttributes
 	{
 		public DefineSpaceAttributes(GH_Component component) : base(component) {}
+
+		protected override void Layout()
+		{
+			base.Layout();
+			Owner.IconDisplayMode = GH_IconDisplayMode.name;
+		}
 	}
 }
