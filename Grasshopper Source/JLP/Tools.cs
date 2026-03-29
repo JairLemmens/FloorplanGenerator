@@ -101,7 +101,9 @@ namespace JLP
 
 			List<JLP.DefineSpace> valid_spaces = new List<JLP.DefineSpace>();
 			List<string> extra_spaces = new List<string>();
-			
+			double total_area = 0;
+			double mask_area = 0;
+
 			int hierarchal_depth = space_id.Count(c => c == '|') + 1;
 			foreach (var space in spaces)
 			{
@@ -119,6 +121,7 @@ namespace JLP
 					{
 						geometries.Add(GetBrepBoundaryCoords(space.shape));
 						space.area = space.shape.GetArea();
+						mask_area = space.area;
 						continue;
 					}
 					else
@@ -154,6 +157,7 @@ namespace JLP
 				}
 			}
 
+			
 			foreach (var space in valid_spaces)
 			{
 				// Geometry
@@ -161,9 +165,11 @@ namespace JLP
 				{
 					geometries.Add(GetBrepBoundaryCoords(space.shape));
 					space.area = space.shape.GetArea();
+					total_area += space.area;
 				}
 				else
 				{
+					total_area += space.area;
 					geometries.Add(null);
 				}
 				// Aspect ratio
@@ -185,7 +191,16 @@ namespace JLP
 			{
 				var spaceA = valid_spaces[i];
 				// Diagonal = area
-				controlMatrix[i][i] = spaceA.area;
+				if (mask_area > 0)
+				{
+					Debug.WriteLine((mask_area / total_area));
+					controlMatrix[i][i] = spaceA.area * (mask_area / total_area);
+				}
+				else
+				{
+					controlMatrix[i][i] = spaceA.area;
+				}
+				
 
 				for (int j = i + 1; j < n; j++)
 				{
