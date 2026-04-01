@@ -9,8 +9,7 @@
       "JLP/1.0": {
         "dependencies": {
           "Newtonsoft.Json": "13.0.4",
-          "System.Resources.Extensions": "10.0.5",
-          "UIClassLibrary": "1.0.0"
+          "System.Resources.Extensions": "10.0.5"
         },
         "runtime": {
           "JLP.gha": {}
@@ -73,14 +72,6 @@
             "fileVersion": "10.0.526.15411"
           }
         }
-      },
-      "UIClassLibrary/1.0.0": {
-        "runtime": {
-          "UIClassLibrary.dll": {
-            "assemblyVersion": "1.0.0.0",
-            "fileVersion": "1.0.0.0"
-          }
-        }
       }
     }
   },
@@ -131,11 +122,6 @@
       "sha512": "sha512-I0kh4mWB3kl/dDKpF0CKvqOvsS74cp/BSji0b3cFP4J5kzDEjPljPlol7GjK9ISHMZMIhcUkpsfwK8Q0msCf0A==",
       "path": "system.resources.extensions/10.0.5",
       "hashPath": "system.resources.extensions.10.0.5.nupkg.sha512"
-    },
-    "UIClassLibrary/1.0.0": {
-      "type": "project",
-      "serviceable": false,
-      "sha512": ""
     }
   }
 }

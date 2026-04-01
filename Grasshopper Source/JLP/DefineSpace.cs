@@ -14,7 +14,6 @@ using Grasshopper.Kernel.Parameters;
 using Grasshopper.Kernel.Types;
 using Rhino.Geometry;
 using Rhino.Render.DataSources;
-using UIClassLibrary;
 
 namespace JLP
 {

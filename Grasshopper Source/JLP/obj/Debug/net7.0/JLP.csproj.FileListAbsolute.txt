@@ -52,8 +52,6 @@ C:\Users\jairl\Documents\GitHub\FloorplanGenerator\Grasshopper Source\JLP\bin\De
 C:\Users\jairl\Documents\GitHub\FloorplanGenerator\Grasshopper Source\JLP\bin\Debug\net7.0\System.Formats.Nrbf.dll
 C:\Users\jairl\Documents\GitHub\FloorplanGenerator\Grasshopper Source\JLP\bin\Debug\net7.0\System.Reflection.Metadata.dll
 C:\Users\jairl\Documents\GitHub\FloorplanGenerator\Grasshopper Source\JLP\bin\Debug\net7.0\System.Resources.Extensions.dll
-C:\Users\jairl\Documents\GitHub\FloorplanGenerator\Grasshopper Source\JLP\bin\Debug\net7.0\UIClassLibrary.dll
-C:\Users\jairl\Documents\GitHub\FloorplanGenerator\Grasshopper Source\JLP\bin\Debug\net7.0\UIClassLibrary.pdb
 C:\Users\jairl\Documents\GitHub\FloorplanGenerator\Grasshopper Source\JLP\obj\Debug\net7.0\JLP.csproj.AssemblyReference.cache
 C:\Users\jairl\Documents\GitHub\FloorplanGenerator\Grasshopper Source\JLP\obj\Debug\net7.0\JLP.Properties.Resources.resources
 C:\Users\jairl\Documents\GitHub\FloorplanGenerator\Grasshopper Source\JLP\obj\Debug\net7.0\JLP.csproj.GenerateResource.cache
@@ -68,3 +66,4 @@ C:\Users\jairl\Documents\GitHub\FloorplanGenerator\Grasshopper Source\JLP\obj\De
 C:\Users\jairl\Documents\GitHub\FloorplanGenerator\Grasshopper Source\JLP\obj\Debug\net7.0\JLP.pdb
 C:\Users\jairl\Documents\GitHub\FloorplanGenerator\Grasshopper Source\JLP\obj\Debug\net7.0\JLP.genruntimeconfig.cache
 C:\Users\jairl\Documents\GitHub\FloorplanGenerator\Grasshopper Source\JLP\obj\Debug\net7.0\ref\JLP.gha
+C:\Users\jairl\Documents\GitHub\FloorplanGenerator\Grasshopper Source\JLP\obj\Debug\net7.0\JLP.FloorplanQueryForm.resources

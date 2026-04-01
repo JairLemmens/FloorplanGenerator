@@ -30,27 +30,15 @@
         "frameworks": {
           "net7.0": {
             "targetAlias": "net7.0",
-            "projectReferences": {
-              "C:\\Users\\jairl\\Documents\\GitHub\\FloorplanGenerator\\Grasshopper Source\\UIClassLibrary\\UIClassLibrary.csproj": {
-                "projectPath": "C:\\Users\\jairl\\Documents\\GitHub\\FloorplanGenerator\\Grasshopper Source\\UIClassLibrary\\UIClassLibrary.csproj"
-              }
-            }
+            "projectReferences": {}
           },
           "net7.0-windows7.0": {
             "targetAlias": "net7.0-windows",
-            "projectReferences": {
-              "C:\\Users\\jairl\\Documents\\GitHub\\FloorplanGenerator\\Grasshopper Source\\UIClassLibrary\\UIClassLibrary.csproj": {
-                "projectPath": "C:\\Users\\jairl\\Documents\\GitHub\\FloorplanGenerator\\Grasshopper Source\\UIClassLibrary\\UIClassLibrary.csproj"
-              }
-            }
+            "projectReferences": {}
           },
           "net48": {
             "targetAlias": "net48",
-            "projectReferences": {
-              "C:\\Users\\jairl\\Documents\\GitHub\\FloorplanGenerator\\Grasshopper Source\\UIClassLibrary\\UIClassLibrary.csproj": {
-                "projectPath": "C:\\Users\\jairl\\Documents\\GitHub\\FloorplanGenerator\\Grasshopper Source\\UIClassLibrary\\UIClassLibrary.csproj"
-              }
-            }
+            "projectReferences": {}
           }
         },
         "warningProperties": {
@@ -184,22 +172,6 @@
           },
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.201\\RuntimeIdentifierGraph.json"
         }
-      }
-    },
-    "C:\\Users\\jairl\\Documents\\GitHub\\FloorplanGenerator\\Grasshopper Source\\UIClassLibrary\\UIClassLibrary.csproj": {
-      "restore": {
-        "projectUniqueName": "C:\\Users\\jairl\\Documents\\GitHub\\FloorplanGenerator\\Grasshopper Source\\UIClassLibrary\\UIClassLibrary.csproj",
-        "projectName": "UIClassLibrary",
-        "projectPath": "C:\\Users\\jairl\\Documents\\GitHub\\FloorplanGenerator\\Grasshopper Source\\UIClassLibrary\\UIClassLibrary.csproj",
-        "UsingMicrosoftNETSdk": false,
-        "frameworks": {
-          "net472": {
-            "projectReferences": {}
-          }
-        }
-      },
-      "frameworks": {
-        "net472": {}
       }
     }
   }

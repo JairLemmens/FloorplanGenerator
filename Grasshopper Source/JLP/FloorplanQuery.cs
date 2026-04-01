@@ -10,8 +10,8 @@ using Grasshopper.Kernel;
 using Grasshopper.Kernel.Attributes;
 using Grasshopper.Kernel.Types;
 using Newtonsoft.Json.Linq;
-using UIClassLibrary;
 using static JLP.Tools;
+
 namespace JLP
 {	
     public class FloorplanQuery : GH_Component
@@ -24,7 +24,7 @@ namespace JLP
 		public string space_id = null;
         public string instruction_json = null;
 		public string api_key = null;
-		public byte[] sample_data = null;
+		public SampleData sample_data = null;
 		public List<System.Drawing.Color> colours = new List<System.Drawing.Color>();
 		public FloorplanQuery()
           : base("FloorplanQuery", "FloorplanQuery",

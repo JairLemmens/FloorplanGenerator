@@ -36,7 +36,7 @@ namespace RhinoCodePlatform.Rhino3D.Projects.Plugin.GH
     public override Guid Id { get; } = new Guid("2ceebce6-c31e-4289-abb1-b9cd21b65791");
 
     public override string AssemblyName { get; } = "JLP.Components";
-    public override string AssemblyVersion { get; } = "0.1.9584.25854";
+    public override string AssemblyVersion { get; } = "0.1.9588.34564";
     public override string AssemblyDescription { get; } = @"";
     public override string AuthorName { get; } = "Jair Lemmens";
     public override string AuthorContact { get; } = "JairLemmens@gmail.com";

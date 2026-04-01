@@ -393,15 +393,6 @@
         "build": {
           "buildTransitive/net471/System.ValueTuple.targets": {}
         }
-      },
-      "UIClassLibrary/1.0.0": {
-        "type": "project",
-        "compile": {
-          "bin/placeholder/UIClassLibrary.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/UIClassLibrary.dll": {}
-        }
       }
     },
     "net7.0": {
@@ -1439,15 +1430,6 @@
             "related": ".xml"
           }
         }
-      },
-      "UIClassLibrary/1.0.0": {
-        "type": "project",
-        "compile": {
-          "bin/placeholder/UIClassLibrary.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/UIClassLibrary.dll": {}
-        }
       }
     },
     "net7.0-windows7.0": {
@@ -2431,15 +2413,6 @@
           "ref/netstandard1.3/System.Threading.Tasks.dll": {
             "related": ".xml"
           }
-        }
-      },
-      "UIClassLibrary/1.0.0": {
-        "type": "project",
-        "compile": {
-          "bin/placeholder/UIClassLibrary.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/UIClassLibrary.dll": {}
         }
       }
     }
@@ -5270,11 +5243,6 @@
         "system.valuetuple.4.6.1.nupkg.sha512",
         "system.valuetuple.nuspec"
       ]
-    },
-    "UIClassLibrary/1.0.0": {
-      "type": "project",
-      "path": "../UIClassLibrary/UIClassLibrary.csproj",
-      "msbuildProject": "../UIClassLibrary/UIClassLibrary.csproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -5282,8 +5250,7 @@
       "Grasshopper >= 8.0.23304.9001",
       "Newtonsoft.Json >= 13.0.4",
       "System.Net.Http >= 4.3.4",
-      "System.Resources.Extensions >= 10.0.5",
-      "UIClassLibrary >= 1.0.0"
+      "System.Resources.Extensions >= 10.0.5"
     ],
     "net7.0": [
       "Grasshopper >= 8.0.23304.9001",
@@ -5291,15 +5258,13 @@
       "Newtonsoft.Json >= 13.0.4",
       "System.Drawing.Common >= 7.0.0",
       "System.Net.Http >= 4.3.4",
-      "System.Resources.Extensions >= 10.0.5",
-      "UIClassLibrary >= 1.0.0"
+      "System.Resources.Extensions >= 10.0.5"
     ],
     "net7.0-windows7.0": [
       "Grasshopper >= 8.0.23304.9001",
       "Newtonsoft.Json >= 13.0.4",
       "System.Net.Http >= 4.3.4",
-      "System.Resources.Extensions >= 10.0.5",
-      "UIClassLibrary >= 1.0.0"
+      "System.Resources.Extensions >= 10.0.5"
     ]
   },
   "packageFolders": {
@@ -5331,27 +5296,15 @@
       "frameworks": {
         "net7.0": {
           "targetAlias": "net7.0",
-          "projectReferences": {
-            "C:\\Users\\jairl\\Documents\\GitHub\\FloorplanGenerator\\Grasshopper Source\\UIClassLibrary\\UIClassLibrary.csproj": {
-              "projectPath": "C:\\Users\\jairl\\Documents\\GitHub\\FloorplanGenerator\\Grasshopper Source\\UIClassLibrary\\UIClassLibrary.csproj"
-            }
-          }
+          "projectReferences": {}
         },
         "net7.0-windows7.0": {
           "targetAlias": "net7.0-windows",
-          "projectReferences": {
-            "C:\\Users\\jairl\\Documents\\GitHub\\FloorplanGenerator\\Grasshopper Source\\UIClassLibrary\\UIClassLibrary.csproj": {
-              "projectPath": "C:\\Users\\jairl\\Documents\\GitHub\\FloorplanGenerator\\Grasshopper Source\\UIClassLibrary\\UIClassLibrary.csproj"
-            }
-          }
+          "projectReferences": {}
         },
         "net48": {
           "targetAlias": "net48",
-          "projectReferences": {
-            "C:\\Users\\jairl\\Documents\\GitHub\\FloorplanGenerator\\Grasshopper Source\\UIClassLibrary\\UIClassLibrary.csproj": {
-              "projectPath": "C:\\Users\\jairl\\Documents\\GitHub\\FloorplanGenerator\\Grasshopper Source\\UIClassLibrary\\UIClassLibrary.csproj"
-            }
-          }
+          "projectReferences": {}
         }
       },
       "warningProperties": {

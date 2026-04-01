@@ -17,7 +17,7 @@ using Rhino.UI;
 namespace JLP
 {
 	public class Tools
-	{
+	{	
 		/// <summary>
 		/// Defines controldata structure as used in the json instruction
 		/// </summary>
@@ -28,6 +28,13 @@ namespace JLP
 			public List<double?> aspect_ratios { get; set; } = new List<double?>();
 			public List<List<double>> colours { get; set; } = new List<List<double>>();
 			public List<bool> lock_trans {  get; set; } = new List<bool>();
+		}
+		public class SampleData
+		{
+			public byte[] shapes { get; set; }
+			public int num_samples { get; set; }
+			public int width { get; set; }
+			public int height { get; set; }
 		}
 
 		/// <summary>
