@@ -33,8 +33,7 @@ namespace JLP
 		{
 			public byte[] shapes { get; set; }
 			public int num_samples { get; set; }
-			public int width { get; set; }
-			public int height { get; set; }
+			public int imsize { get; set; }
 		}
 
 		/// <summary>

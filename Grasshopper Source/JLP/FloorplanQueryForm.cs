@@ -81,9 +81,9 @@ namespace JLP
 			for (int i = 0; i < sample_data.num_samples; i++)
 			{
 				//add new image to the view for each i in num_samples
-				byte[,] sample = new byte[sample_data.height, sample_data.width];
-				for (int y = 0; y < sample_data.height; y++)
-					for (int x = 0; x < sample_data.width; x++)
+				byte[,] sample = new byte[sample_data.imsize, sample_data.imsize];
+				for (int y = 0; y < sample_data.imsize; y++)
+					for (int x = 0; x < sample_data.imsize; x++)
 						sample[y, x] = sample_data.shapes[idx++];
 
 				Color[] lookup = BuildLookup(JObject.Parse(instruction_json)["colours"].ToObject<int[,]>());
@@ -120,9 +120,9 @@ namespace JLP
         {
 			if ((sample_data != null) & (SelectedIndex != -1))
 			{
-				int idx = SelectedIndex * sample_data.width * sample_data.height;
-				for (int y = 0; y < sample_data.height; y++)
-					for (int x = 0; x < sample_data.width; x++)
+				int idx = SelectedIndex * sample_data.imsize * sample_data.imsize;
+				for (int y = 0; y < sample_data.imsize; y++)
+					for (int x = 0; x < sample_data.imsize; x++)
 						SelectedSample[y, x] = sample_data.shapes[idx++];
 				this.DialogResult = DialogResult.OK;
 				http_client.Dispose();
@@ -174,8 +174,7 @@ namespace JLP
 				{
 					shapes = ms.ToArray(),
 					num_samples = int.Parse(response.Headers.GetValues("num_samples").First()),
-					width = int.Parse(response.Headers.GetValues("width").First()),
-					height = int.Parse(response.Headers.GetValues("height").First())
+					imsize = int.Parse(response.Headers.GetValues("imsize").First()),
 				};
 				
 			}

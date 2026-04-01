@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyDescriptionAttribute("Description of JLP")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0+c4478a1b92cfcb19dda355015353ddccf4a12f21")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0+4768166857ce5f7fc28a208ff666b330d3743ce3")]
 [assembly: System.Reflection.AssemblyProductAttribute("JLP")]
 [assembly: System.Reflection.AssemblyTitleAttribute("JLP")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -6,6 +6,14 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v7.0": {
+      "Microsoft.Bcl.HashCode/6.0.0": {
+        "runtime": {
+          "lib/net6.0/Microsoft.Bcl.HashCode.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.0.24.56208"
+          }
+        }
+      },
       "Newtonsoft.Json/13.0.4": {
         "runtime": {
           "lib/net6.0/Newtonsoft.Json.dll": {
@@ -143,6 +151,14 @@
           }
         }
       },
+      "System.Collections.Immutable/10.0.5": {
+        "runtime": {
+          "lib/netstandard2.0/System.Collections.Immutable.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          }
+        }
+      },
       "System.Diagnostics.DiagnosticSource/4.3.0": {
         "dependencies": {
           "System.Threading": "4.3.0"
@@ -151,6 +167,18 @@
           "lib/netstandard1.3/System.Diagnostics.DiagnosticSource.dll": {
             "assemblyVersion": "4.0.1.0",
             "fileVersion": "4.6.24705.1"
+          }
+        }
+      },
+      "System.Formats.Nrbf/10.0.5": {
+        "dependencies": {
+          "Microsoft.Bcl.HashCode": "6.0.0",
+          "System.Reflection.Metadata": "10.0.5"
+        },
+        "runtime": {
+          "lib/netstandard2.0/System.Formats.Nrbf.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
           }
         }
       },
@@ -210,6 +238,28 @@
             "assetType": "runtime",
             "assemblyVersion": "4.1.1.3",
             "fileVersion": "4.6.26907.1"
+          }
+        }
+      },
+      "System.Reflection.Metadata/10.0.5": {
+        "dependencies": {
+          "System.Collections.Immutable": "10.0.5"
+        },
+        "runtime": {
+          "lib/netstandard2.0/System.Reflection.Metadata.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          }
+        }
+      },
+      "System.Resources.Extensions/10.0.5": {
+        "dependencies": {
+          "System.Formats.Nrbf": "10.0.5"
+        },
+        "runtime": {
+          "lib/netstandard2.0/System.Resources.Extensions.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
           }
         }
       },
@@ -388,6 +438,13 @@
     }
   },
   "libraries": {
+    "Microsoft.Bcl.HashCode/6.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-GI4jcoi6eC9ZhNOQylIBaWOQjyGaR8T6N3tC1u8p3EXfndLCVNNWa+Zp+ocjvvS3kNBN09Zma2HXL0ezO0dRfw==",
+      "path": "microsoft.bcl.hashcode/6.0.0",
+      "hashPath": "microsoft.bcl.hashcode.6.0.0.nupkg.sha512"
+    },
     "Newtonsoft.Json/13.0.4": {
       "type": "package",
       "serviceable": true,
@@ -493,12 +550,26 @@
       "path": "system.collections.concurrent/4.3.0",
       "hashPath": "system.collections.concurrent.4.3.0.nupkg.sha512"
     },
+    "System.Collections.Immutable/10.0.5": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-nozrOKfEgfrvvswkCfxaumY68RA/x1F3ZYwtwRvva8ul91NCnUzb6MKpl5/P7u9v/nIagVL4OXXj8d007tucxw==",
+      "path": "system.collections.immutable/10.0.5",
+      "hashPath": "system.collections.immutable.10.0.5.nupkg.sha512"
+    },
     "System.Diagnostics.DiagnosticSource/4.3.0": {
       "type": "package",
       "serviceable": true,
       "sha512": "sha512-tD6kosZnTAGdrEa0tZSuFyunMbt/5KYDnHdndJYGqZoNy00XVXyACd5d6KnE1YgYv3ne2CjtAfNXo/fwEhnKUA==",
       "path": "system.diagnostics.diagnosticsource/4.3.0",
       "hashPath": "system.diagnostics.diagnosticsource.4.3.0.nupkg.sha512"
+    },
+    "System.Formats.Nrbf/10.0.5": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-yyh2BSlJZWiEiHI5+l3tFsAPmPMglJHkoHMm6KK94uSgunkonTa64a5JH7QJ8Tzo1moReia7udrIBqHUeKvkag==",
+      "path": "system.formats.nrbf/10.0.5",
+      "hashPath": "system.formats.nrbf.10.0.5.nupkg.sha512"
     },
     "System.Globalization.Extensions/4.3.0": {
       "type": "package",
@@ -527,6 +598,20 @@
       "sha512": "sha512-aOa2d51SEbmM+H+Csw7yJOuNZoHkrP2XnAurye5HWYgGVVU54YZDvsLUYRv6h18X3sPnjNCANmN7ZhIPiqMcjA==",
       "path": "system.net.http/4.3.4",
       "hashPath": "system.net.http.4.3.4.nupkg.sha512"
+    },
+    "System.Reflection.Metadata/10.0.5": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-fEAXJCtauNLYr5ESg3t6HE2Av6urWdJdymxZbuSt/DDqhtNtLtUtXTEpKbp0vkTdyBJwmaha8d2454vSzS/lcQ==",
+      "path": "system.reflection.metadata/10.0.5",
+      "hashPath": "system.reflection.metadata.10.0.5.nupkg.sha512"
+    },
+    "System.Resources.Extensions/10.0.5": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-I0kh4mWB3kl/dDKpF0CKvqOvsS74cp/BSji0b3cFP4J5kzDEjPljPlol7GjK9ISHMZMIhcUkpsfwK8Q0msCf0A==",
+      "path": "system.resources.extensions/10.0.5",
+      "hashPath": "system.resources.extensions.10.0.5.nupkg.sha512"
     },
     "System.Runtime.Numerics/4.3.0": {
       "type": "package",
