@@ -93,7 +93,7 @@ namespace JLP
 				{
 					Width = sample_data.imsize+32,
 					Height = sample_data.imsize + 32,
-					SizeMode = PictureBoxSizeMode.Normal,
+					SizeMode = PictureBoxSizeMode.CenterImage,
 					Image = bmp,
 					Tag = i,
 					Cursor = Cursors.Hand,
