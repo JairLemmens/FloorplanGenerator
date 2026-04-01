@@ -18,7 +18,7 @@ namespace JLP
 	public partial class FloorplanQueryForm : Form
 	{	
 		public int SelectedIndex { get; private set; } = -1;
-		public byte[,] SelectedSample = new byte[64, 64];
+		public byte[,] SelectedSample = null;
 		private PictureBox _selectedPictureBox = null;
 		//private byte[] raw = File.ReadAllBytes(@"C:\Users\jairl\Documents\EigenProjecten\SurrogateModel\img_array.bin");
 		public string instruction_json = null;
@@ -91,9 +91,9 @@ namespace JLP
 
 				var pic = new PictureBox
 				{
-					Width = 96,
-					Height = 96,
-					SizeMode = PictureBoxSizeMode.CenterImage,
+					Width = sample_data.imsize+32,
+					Height = sample_data.imsize + 32,
+					SizeMode = PictureBoxSizeMode.Normal,
 					Image = bmp,
 					Tag = i,
 					Cursor = Cursors.Hand,
@@ -119,7 +119,8 @@ namespace JLP
         private void Confirm_Click(object sender, EventArgs e)
         {
 			if ((sample_data != null) & (SelectedIndex != -1))
-			{
+			{	
+				SelectedSample = new byte[sample_data.imsize, sample_data.imsize];
 				int idx = SelectedIndex * sample_data.imsize * sample_data.imsize;
 				for (int y = 0; y < sample_data.imsize; y++)
 					for (int x = 0; x < sample_data.imsize; x++)
