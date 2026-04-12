@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
-
+using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using Grasshopper.Kernel;
 using Newtonsoft.Json;
 using Rhino;
@@ -31,9 +32,33 @@ namespace JLP
 		}
 		public class SampleData
 		{
-			public byte[] shapes { get; set; }
-			public int num_samples { get; set; }
-			public int imsize { get; set; }
+			
+			public int num_samples { get; }
+			public int imsize { get; }
+			public int num_spaces { get; }
+			public byte[] shapes { get; }
+			public byte[] transforms { get; }
+			public byte[] offsets { get; }
+			public SampleData(byte[] _data, int _num_samples, int _num_spaces, int _imsize)
+			{
+				num_samples = _num_samples;
+				imsize = _imsize;
+				num_spaces = _num_spaces-1;
+				int byteoffset = 0;
+
+				shapes = new byte[_num_samples * _imsize * _imsize];
+				Array.Copy(_data, shapes, shapes.Length);
+				byteoffset += shapes.Length;
+
+				transforms = new byte[_num_samples * num_spaces * 3 * 4];
+				Array.Copy(_data, byteoffset, transforms,0,transforms.Length);
+				byteoffset += transforms.Length;
+
+				offsets = new byte[_num_samples * 2 * 4];
+				Array.Copy(_data,byteoffset, offsets , 0 , offsets.Length);
+				byteoffset += offsets.Length;
+			}
+
 		}
 
 		/// <summary>
@@ -95,10 +120,10 @@ namespace JLP
 		/// <param name="space_id"></param>
 		/// <param name="doc"></param>
 		/// <returns></returns>
-		public static string Create_json_instruction(GH_Component component, string space_id, GH_Document doc)
+		public static (string, List<JLP.DefineSpace>) Create_json_instruction(GH_Component component, string space_id, GH_Document doc)
 		{
 			var spaces = doc.Objects.OfType<JLP.DefineSpace>().OrderBy(s => s.NickName).ToList();
-
+			//var spaces = doc.Objects.OfType<JLP.DefineSpace>().ToList();
 			ControlData controlData = new ControlData();
 			List<List<List<double>>> geometries = new List<List<List<double>>>();
 			List<double?> aspectRatios = new List<double?>();
@@ -157,7 +182,7 @@ namespace JLP
 					if (space.shape == null)
 					{
 						component.AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, $"{space.id} does not have a geometry assigned");
-						return null;
+						return (null,null);
 					}
 					valid_spaces.Add(space);
 				}
@@ -233,7 +258,7 @@ namespace JLP
 			controlData.colours = colours;
 			controlData.lock_trans = lock_trans;
 			string json = JsonConvert.SerializeObject(controlData, Formatting.Indented);
-			return json;
+			return (json,valid_spaces);
 		}
 	}
 }

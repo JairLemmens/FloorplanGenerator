@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing.Text;
 using System.Linq;
 using System.Net.Http;
@@ -26,6 +27,9 @@ namespace JLP
 		public string api_key = null;
 		public SampleData sample_data = null;
 		public List<System.Drawing.Color> colours = new List<System.Drawing.Color>();
+		public List<JLP.DefineSpace> spaces = new List<JLP.DefineSpace>();
+		public List<double> offset = null;
+
 		public FloorplanQuery()
           : base("FloorplanQuery", "FloorplanQuery",
               "Sends a request to the floorplan generation server.",
@@ -53,6 +57,7 @@ namespace JLP
 			pManager.AddGenericParameter("data", "data", "byte_array", GH_ParamAccess.tree);
 			pManager.AddTextParameter("Instruction JSON", "json", "JSON containing instruction for model", GH_ParamAccess.tree);
 			pManager.AddColourParameter("Colours", "Colours", "Contains a list of colours for the spaces", GH_ParamAccess.list);
+			pManager.AddNumberParameter("Offset", "Offset", "Contains x and y offset", GH_ParamAccess.list);
 		}
 
 		/// <summary>
@@ -65,6 +70,7 @@ namespace JLP
 			instruction_json = null;
 			api_key = null;
 			colours = new List<System.Drawing.Color>();
+			spaces = new List<JLP.DefineSpace>();
 
 			DA.GetData(0, ref space_id);
 			DA.GetData(1, ref instruction_json);
@@ -80,7 +86,7 @@ namespace JLP
 			if (space_id != null)
 			{
 				GH_Document doc = OnPingDocument();
-				instruction_json = Create_json_instruction(this, space_id, doc);
+				(instruction_json,spaces) = Create_json_instruction(this, space_id, doc);
 			}
 		
 			var clrs = JObject.Parse(instruction_json)["colours"].ToObject<int[,]>();
@@ -92,6 +98,7 @@ namespace JLP
 			DA.SetData(0, sample);
 			DA.SetData(1, instruction_json);
 			DA.SetDataList(2, colours);
+			DA.SetDataList(3, offset);
 		}
 
         /// <summary>
@@ -129,14 +136,21 @@ namespace JLP
 		public override GH_ObjectResponse RespondToMouseDoubleClick(GH_Canvas sender, GH_CanvasMouseEvent e)
 		{	
 			var comp = (FloorplanQuery)Owner;
-			comp.ExpireSolution(true);
+			Owner.ExpireSolution(true);
 			var form = new FloorplanQueryForm(comp.instruction_json,comp.api_key,comp.sample_data);
 			if (form.ShowDialog() == DialogResult.OK)
 			{  
 				comp.sample = form.SelectedSample;
 				comp.sample_data = form.sample_data;
+				comp.offset = new List<double> {(double)form.offset[0], (double)form.offset[1]};
+				for (int i = 0; i < comp.spaces.Count; i++)
+				{
+					comp.spaces[i].transform = new List<double> { (double)form.Transforms[i, 0], (double)form.Transforms[i, 1], (double)form.Transforms[i, 2]};
+					comp.spaces[i].ExpireSolution(true);
+				}
 				Owner.ExpireSolution(true);
 			}
+
 
 			return GH_ObjectResponse.Handled;
 		}

@@ -19,6 +19,8 @@ namespace JLP
 	{	
 		public int SelectedIndex { get; private set; } = -1;
 		public byte[,] SelectedSample = null;
+		public float[,] Transforms = null;
+		public float[] offset = null;
 		private PictureBox _selectedPictureBox = null;
 		//private byte[] raw = File.ReadAllBytes(@"C:\Users\jairl\Documents\EigenProjecten\SurrogateModel\img_array.bin");
 		public string instruction_json = null;
@@ -125,6 +127,22 @@ namespace JLP
 				for (int y = 0; y < sample_data.imsize; y++)
 					for (int x = 0; x < sample_data.imsize; x++)
 						SelectedSample[y, x] = sample_data.shapes[idx++];
+				
+				Transforms = new float[sample_data.num_spaces, 3];
+				float[] temp = new float[sample_data.num_spaces * 3];
+				Buffer.BlockCopy(sample_data.transforms, SelectedIndex * sample_data.num_spaces * 3 * 4, temp, 0, temp.Length * 4);
+				int t = 0;
+				for (int space_idx = 0; space_idx < sample_data.num_spaces; space_idx++)
+				{
+					for (int x = 0; x < 3; x++)
+					{
+						Transforms[space_idx, x] = temp[t++];
+					}
+				}
+
+				offset = new float[2];
+				Buffer.BlockCopy(sample_data.offsets, SelectedIndex * 2 * 4 , offset, 0, 2 * 4);
+
 				this.DialogResult = DialogResult.OK;
 				http_client.Dispose();
 				this.Close();
@@ -171,13 +189,7 @@ namespace JLP
 				var stream = await response.Content.ReadAsStreamAsync();
 				var ms = new MemoryStream();
 				await stream.CopyToAsync(ms);
-				return new SampleData
-				{
-					shapes = ms.ToArray(),
-					num_samples = int.Parse(response.Headers.GetValues("num_samples").First()),
-					imsize = int.Parse(response.Headers.GetValues("imsize").First()),
-				};
-				
+				return new SampleData(ms.ToArray(), int.Parse(response.Headers.GetValues("num_samples").First()), int.Parse(response.Headers.GetValues("num_spaces").First()), int.Parse(response.Headers.GetValues("imsize").First()));
 			}
 			catch (TaskCanceledException)
 			{

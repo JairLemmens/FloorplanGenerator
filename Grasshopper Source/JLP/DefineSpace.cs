@@ -31,6 +31,7 @@ namespace JLP
 		public bool lock_trans = true;
 		public List<string> adjacent = new List<string>();
 		public string id = null;
+		public List<double> transform = null;
 		public DefineSpace(): base("DefineSpace", "DS","Defines a space to be used by the generator","JLP", "Generation") {}
 
         /// <summary>
@@ -64,6 +65,7 @@ namespace JLP
         {
 			pManager.AddTextParameter("Space ID", "Space ID", "ID of space to be used in query or to be assigned as parent or adjacent", GH_ParamAccess.item);
 			pManager.AddGenericParameter("guid", "guid", "guid of component instance", GH_ParamAccess.item);
+			pManager.AddNumberParameter("Transform", "Transform", "contains x,y,rotation of space chosen in FloorplanQuery",GH_ParamAccess.list);
 		}
 
 		/// <summary>
@@ -79,7 +81,7 @@ namespace JLP
 			aspect = double.NaN;
 			adjacent = new List<string>();
 			lock_trans = true;
-			adjacent.Clear();
+			
 			DA.GetData(0, ref parent_id);
 			DA.GetData(1, ref colour);
 			DA.GetData(2, ref shape);
@@ -97,6 +99,7 @@ namespace JLP
 			}
 			DA.SetData(0, id);
 			DA.SetData(1, this.InstanceGuid);
+			DA.SetDataList(2, transform);
 		}
 
 		/// <summary>

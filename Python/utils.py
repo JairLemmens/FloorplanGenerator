@@ -5,7 +5,7 @@ def sample_to_img(sample,colours):
         colours = np.array(colours)
         if (colours>1).any():
                 colours = colours/255
-        out = np.zeros((64,64,3))
+        out = np.zeros((sample.shape[-1],sample.shape[-1],3))
         for n,layer in enumerate(sample):
                 out += np.einsum('k,ij->ijk',colours[n][:3],layer)
         return(out.clip(0,1))
