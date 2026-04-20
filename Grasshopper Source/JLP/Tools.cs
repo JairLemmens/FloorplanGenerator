@@ -30,32 +30,50 @@ namespace JLP
 			public List<List<double>> colours { get; set; } = new List<List<double>>();
 			public List<bool> lock_trans {  get; set; } = new List<bool>();
 		}
+
+		public class OutputData
+		{
+			public byte[,] sample {get; }
+			public List<double> offset {get; }
+			public double scale { get; }
+			public List<System.Drawing.Color> colours {get;}
+			public List<JLP.DefineSpace> spaces { get; }
+			public List<JLP.DefineConnection> connections {get;}
+			public OutputData(byte[,] sample, List<double> offset, double scale, List<System.Drawing.Color> colours, List<DefineSpace> spaces, List<DefineConnection> connections)
+			{
+				this.sample = sample;
+				this.offset = offset;
+				this.scale = scale;
+				this.colours = colours;
+				this.spaces = spaces;
+				this.connections = connections;
+			}
+		}
 		public class SampleData
 		{
-			
 			public int num_samples { get; }
 			public int imsize { get; }
 			public int num_spaces { get; }
 			public byte[] shapes { get; }
 			public byte[] transforms { get; }
 			public byte[] offsets { get; }
-			public SampleData(byte[] _data, int _num_samples, int _num_spaces, int _imsize)
+			public SampleData(byte[] data, int num_samples, int num_spaces, int imsize)
 			{
-				num_samples = _num_samples;
-				imsize = _imsize;
-				num_spaces = _num_spaces-1;
+				this.num_samples = num_samples;
+				this.imsize = imsize;
+				this.num_spaces = num_spaces-1;
 				int byteoffset = 0;
 
-				shapes = new byte[_num_samples * _imsize * _imsize];
-				Array.Copy(_data, shapes, shapes.Length);
+				shapes = new byte[num_samples * imsize * imsize];
+				Array.Copy(data, shapes, shapes.Length);
 				byteoffset += shapes.Length;
 
-				transforms = new byte[_num_samples * num_spaces * 3 * 4];
-				Array.Copy(_data, byteoffset, transforms,0,transforms.Length);
+				transforms = new byte[num_samples * this.num_spaces * 3 * 4];
+				Array.Copy(data, byteoffset, transforms,0,transforms.Length);
 				byteoffset += transforms.Length;
 
-				offsets = new byte[_num_samples * 2 * 4];
-				Array.Copy(_data,byteoffset, offsets , 0 , offsets.Length);
+				offsets = new byte[num_samples * 2 * 4];
+				Array.Copy(data,byteoffset, offsets , 0 , offsets.Length);
 				byteoffset += offsets.Length;
 			}
 
@@ -113,17 +131,16 @@ namespace JLP
 			return boundaryCoords.Count > 0 ? boundaryCoords : null;
 		}
 
-
 		/// <summary>
 		/// Generates an instruction json to be used inside of the floorplanquery
 		/// </summary>
 		/// <param name="space_id"></param>
 		/// <param name="doc"></param>
 		/// <returns></returns>
-		public static (string, List<JLP.DefineSpace>) Create_json_instruction(GH_Component component, string space_id, GH_Document doc)
-		{
+		public static (string, List<JLP.DefineSpace>,List<JLP.DefineConnection>) Create_json_instruction(GH_Component component, JLP.DefineSpace space_id, GH_Document doc)
+		{	
 			var spaces = doc.Objects.OfType<JLP.DefineSpace>().OrderBy(s => s.NickName).ToList();
-			//var spaces = doc.Objects.OfType<JLP.DefineSpace>().ToList();
+			var connections = doc.Objects.OfType<JLP.DefineConnection>();
 			ControlData controlData = new ControlData();
 			List<List<List<double>>> geometries = new List<List<List<double>>>();
 			List<double?> aspectRatios = new List<double?>();
@@ -131,22 +148,14 @@ namespace JLP
 			List<bool> lock_trans = new List<bool>();
 
 			List<JLP.DefineSpace> valid_spaces = new List<JLP.DefineSpace>();
+			List<JLP.DefineConnection> valid_connections = new List<JLP.DefineConnection>();
 			List<string> extra_spaces = new List<string>();
 			double total_area = 0;
 			double mask_area = 0;
 
-			int hierarchal_depth = space_id.Count(c => c == '|') + 1;
 			foreach (var space in spaces)
 			{
-				if (space.id == null)
-				{
-					space.ExpireSolution(true);
-				}
-				if (space.id != space_id)
-				{
-					space.ExpireSolution(true);
-				}
-				else
+				if (space == space_id)
 				{
 					if (space.shape != null)
 					{
@@ -161,33 +170,39 @@ namespace JLP
 						continue;
 					}
 				}
-				
-				int depth = space.id.Count(c => c == '|');
-				if (space.id.Contains(space_id) & (depth == hierarchal_depth))
+				else if (space.parent_id == space_id)
 				{
-					valid_spaces.Add(space);
-					foreach (string adj_s in space.adjacent)
-					{
-						if (!adj_s.Contains(space_id) || (adj_s.Count(c => c == '|') != hierarchal_depth))
-						{
-							extra_spaces.Add(adj_s);
-						}
-					}
-				}
-			}
-			foreach (var space in spaces)
-			{
-				if (extra_spaces.Contains(space.id))
-				{
-					if (space.shape == null)
-					{
-						component.AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, $"{space.id} does not have a geometry assigned");
-						return (null,null);
-					}
+					space.ExpireSolution(true);
 					valid_spaces.Add(space);
 				}
 			}
 
+			foreach (var connection in connections)
+			{
+				if (valid_spaces.Contains(connection.spaceA))
+				{	
+					valid_connections.Add(connection);
+					if (!valid_spaces.Contains(connection.spaceB) & (connection.spaceB!=null)) 
+					{	
+						if (connection.spaceB.shape == null)
+						{
+							component.AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, $"{connection.spaceB.NickName} does not have a geometry assigned");
+							return (null, null, null);
+						}
+						valid_spaces.Add(connection.spaceB);
+					}
+				}
+				else if (valid_spaces.Contains(connection.spaceB))
+				{
+					valid_connections.Add(connection);
+					if (connection.spaceA.shape == null)
+					{
+						component.AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, $"{connection.spaceA.NickName} does not have a geometry assigned");
+						return (null, null, null);
+					}
+					valid_spaces.Add(connection.spaceA);
+				}
+			}
 			
 			foreach (var space in valid_spaces)
 			{
@@ -219,8 +234,9 @@ namespace JLP
 			}
 
 			for (int i = 0; i < n; i++)
-			{
+			{	
 				var spaceA = valid_spaces[i];
+				Debug.WriteLine(spaceA.NickName);
 				// Diagonal = area
 				if (mask_area > 0)
 				{
@@ -232,33 +248,31 @@ namespace JLP
 					controlMatrix[i][i] = spaceA.area;
 				}
 				
-
 				for (int j = i + 1; j < n; j++)
 				{
 					var spaceB = valid_spaces[j];
-					// 1 if spaceA is next to spaceB, 0 otherwise
-					double valueAtoB = spaceA.adjacent.Any(s =>
-						s.Equals(spaceB.NickName, StringComparison.Ordinal) ||
-						s.EndsWith("|" + spaceB.NickName, StringComparison.Ordinal)) ? 1.0 : 0.0;
-
-					double valueBtoA = spaceB.adjacent.Any(s =>
-						s.Equals(spaceA.NickName, StringComparison.Ordinal) ||
-						s.EndsWith("|" + spaceA.NickName, StringComparison.Ordinal)) ? 1.0 : 0.0;
-					// Take the maximum for symmetry
-					double finalValue = Math.Max(valueAtoB, valueBtoA);
-
-					controlMatrix[i][j] = finalValue;
-					controlMatrix[j][i] = finalValue; // mirror across diagonal
+					foreach (var connection in valid_connections)
+					{
+						if ((connection.spaceA == spaceA) & (connection.spaceB == spaceB))
+						{
+							controlMatrix[i][j] = 1;
+							controlMatrix[j][i] = 1;
+						}
+						else if ((connection.spaceB == spaceA) & (connection.spaceA == spaceB))
+						{
+							controlMatrix[i][j] = 1;
+							controlMatrix[j][i] = 1;
+						}
+					}
 				}
 			}
-
 			controlData.control_matrix = controlMatrix;
 			controlData.geometries = geometries;
 			controlData.aspect_ratios = aspectRatios;
 			controlData.colours = colours;
 			controlData.lock_trans = lock_trans;
 			string json = JsonConvert.SerializeObject(controlData, Formatting.Indented);
-			return (json,valid_spaces);
+			return (json,valid_spaces,valid_connections);
 		}
 	}
 }

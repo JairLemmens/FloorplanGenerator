@@ -63,6 +63,16 @@ namespace JLP.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap DefineConnection {
+            get {
+                object obj = ResourceManager.GetObject("DefineConnection", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Definespace {
             get {
                 object obj = ResourceManager.GetObject("Definespace", resourceCulture);

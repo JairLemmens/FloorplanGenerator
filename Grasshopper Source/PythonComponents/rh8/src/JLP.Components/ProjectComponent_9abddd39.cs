@@ -8,23 +8,23 @@ using Grasshopper.Kernel;
 
 namespace RhinoCodePlatform.Rhino3D.Projects.Plugin.GH
 {
-  public sealed class ProjectComponent_5412231e : ProjectComponent_Base
+  public sealed class ProjectComponent_9abddd39 : ProjectComponent_Base
   {
-    static readonly string s_scriptDataId = "5412231e-7db7-4490-bc5b-e93ad7b7fcc3";
-    static readonly string s_scriptIconData = "iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAATBJREFUSEvtlK1OxEAUhc9b8BaYfQAwvAVYngCHAI9CIOoIYEiwIDCgUDVrwKEQOGa2YOeSM1DSOduf2VIHX5p095vJPem9nQJ/iuBwZx+YqZ8E8yhZPN4X2NX1X2EeRbNo/O9RpLtGwsJtxb59qX4l6paor+F6nMsCG7qWxcsF3tS1YQ735nCgvhcDSgNmts+fw5jHIZ9GfSsGFIbGUHNDKmwOhrAwA5Z8Rog5zK3CuvofYkvQPdSnk+6ZmMNZ8NhRnxDQ/XjPx3i/vMG2ehI89szhSH0rFq+Uh1M8Xl/hXD0xh63gcau+l2YICzMg3fGFVVgLDq/qs2AIW8LW6FoNizNEfTZ9B41tYXvUr4z55ZlwoBys+tE0Q/gq8pVMd0wAQ3iIeJh0bTIGPwP/jOETB3as8eK788cAAAAASUVORK5CYII=";
+    static readonly string s_scriptDataId = "9abddd39-c916-44fc-92a7-99f726ddf81e";
+    static readonly string s_scriptIconData = "iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAAaZJREFUSEvt1E9LVFEYgPEnmXtFrRBJDFezkKhFmRZF2R+CaREkSISRBLkJjJIwbXTGqGWfoT5J36ll3ntnNvPEGStmzh2s0J39YODynBfO5rwDx4ZtLpqzEPcjYca0BWtmLNnijXtcjmcOxYw19zjb/Zbx3xd9TWbj2X9mxjVbPCj1cNGXE59MKxuSnovP/4pSMWc37oENFtyhJifPSLIiyaqMTMdzBzLjkd+5VOqfSaz3XyzDVUleSPpY7lZ6zwayoGrBatwDt1nsNJmPeyDpQ0mX4l5iwboyUeoNpjp1Xsb9F6nsypUk7n3MuWVBLe6BOzx3m2rcAxmuSeXgXVFGzanHPbDJVessxz2QidNSeRv3Ets8scX5uAe+Z9YGG26VF02SZUkvxL2PbebMWYl7Lz8y7juWfD206Y1krtv2X9DAB9HHNrOdFltmXI/PeimTfhvalOTp/m/4lYxNxXMDKafC5prTNOeOMlSayXlmwUz47jA6L2OlXfkjJbXgnjkfLLivjHR7wUy4IJ4/lE7OzfCyzFj8uR+T8cyRMOf2oL+O/465H5EextfDbBemAAAAAElFTkSuQmCC";
 
-    public override Guid ComponentGuid { get; } = new Guid("5412231e-7db7-4490-bc5b-e93ad7b7fcc3");
+    public override Guid ComponentGuid { get; } = new Guid("9abddd39-c916-44fc-92a7-99f726ddf81e");
 
     public override GH_Exposure Exposure { get; } = GH_Exposure.primary;
 
     public override bool Obsolete { get; } = false;
 
-    public ProjectComponent_5412231e() : base(GetResource(s_scriptDataId), s_scriptIconData,
+    public ProjectComponent_9abddd39() : base(GetResource(s_scriptDataId), s_scriptIconData,
         name: "Data2Boundary",
         nickname: "Data2Boundary",
         description: @"",
         category: "JLP",
-        subCategory: "PostProcessing"
+        subCategory: "Post Processing"
         )
     {
     }

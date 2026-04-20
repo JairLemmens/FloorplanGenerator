@@ -22,7 +22,6 @@ namespace JLP
 		public float[,] Transforms = null;
 		public float[] offset = null;
 		private PictureBox _selectedPictureBox = null;
-		//private byte[] raw = File.ReadAllBytes(@"C:\Users\jairl\Documents\EigenProjecten\SurrogateModel\img_array.bin");
 		public string instruction_json = null;
 		public string api_key = null;
 		public SampleData sample_data = null;

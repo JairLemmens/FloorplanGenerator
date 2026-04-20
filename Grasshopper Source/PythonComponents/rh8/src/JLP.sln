@@ -1,7 +1,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2ceebce6-c31e-4289-abb1-b9cd21b65791}") = "JLP.Components", "JLP.Components\JLP.Components.csproj", "{f18b065c-adc6-4b6c-b3a9-a024def799dd}"
+Project("{2ceebce6-c31e-4289-abb1-b9cd21b65791}") = "JLP.Components", "JLP.Components\JLP.Components.csproj", "{f9de7804-53c3-402a-931b-896e2ed00b8d}"
 EndProject
 
 Global
@@ -10,9 +10,9 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{f18b065c-adc6-4b6c-b3a9-a024def799dd}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{f18b065c-adc6-4b6c-b3a9-a024def799dd}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{f18b065c-adc6-4b6c-b3a9-a024def799dd}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{f18b065c-adc6-4b6c-b3a9-a024def799dd}.Release|Any CPU.Build.0 = Release|Any CPU
+		{f9de7804-53c3-402a-931b-896e2ed00b8d}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{f9de7804-53c3-402a-931b-896e2ed00b8d}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{f9de7804-53c3-402a-931b-896e2ed00b8d}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{f9de7804-53c3-402a-931b-896e2ed00b8d}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

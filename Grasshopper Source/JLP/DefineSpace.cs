@@ -11,27 +11,23 @@ using Grasshopper.GUI.StringDisplay;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Attributes;
 using Grasshopper.Kernel.Parameters;
-using Grasshopper.Kernel.Types;
-using Rhino.Geometry;
-using Rhino.Render.DataSources;
 
 namespace JLP
 {
-
 	public class DefineSpace : GH_Component
     {
 		/// <summary>
 		/// Initializes a new instance of the MyComponent1 class.
 		/// </summary>
-		public string parent_id = null;
+		public JLP.DefineSpace parent_id = null;
 		public Color colour = Color.FromArgb(255, 255, 255);
 		public Rhino.Geometry.Brep shape = null;
 		public double area = double.NaN;
 		public double aspect = double.NaN;
 		public bool lock_trans = true;
-		public List<string> adjacent = new List<string>();
-		public string id = null;
 		public List<double> transform = null;
+		public List<Rhino.Geometry.Polyline> boundary = new List<Rhino.Geometry.Polyline>{};
+
 		public DefineSpace(): base("DefineSpace", "DS","Defines a space to be used by the generator","JLP", "Generation") {}
 
         /// <summary>
@@ -39,7 +35,8 @@ namespace JLP
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-			pManager.AddTextParameter("Parent ID", "PID", "Input space ID of parent", GH_ParamAccess.item);
+			pManager.AddGenericParameter("Parent ID", "PID", "Input space ID of parent", GH_ParamAccess.item);
+			pManager[0].Optional = true;
 			pManager.AddColourParameter("Colour", "clr", "Set colour to be used to show space", GH_ParamAccess.item,Color.FromArgb(255, 0, 0));
 
 			pManager.AddBrepParameter("Shape", "Shp", "Specifies space footprint", GH_ParamAccess.item);
@@ -51,11 +48,8 @@ namespace JLP
 			pManager.AddNumberParameter("Aspect ratio", "AR", "Aspect ration of space", GH_ParamAccess.item);
 			pManager[4].Optional = true;
 
-			pManager.AddTextParameter("Adjacent IDs", "CID", "Input space ID to which this should be adjacent", GH_ParamAccess.list);
-			pManager[5].Optional = true;
-
 			pManager.AddBooleanParameter("Lock transform", "LT", "This locks the transform of the reference shape", GH_ParamAccess.item, true);
-			pManager[6].Optional = true;
+			pManager[5].Optional = true;
 		}
 
 		/// <summary>
@@ -63,9 +57,9 @@ namespace JLP
 		/// </summary>
 		protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-			pManager.AddTextParameter("Space ID", "Space ID", "ID of space to be used in query or to be assigned as parent or adjacent", GH_ParamAccess.item);
-			pManager.AddGenericParameter("guid", "guid", "guid of component instance", GH_ParamAccess.item);
+			pManager.AddGenericParameter("Space ID", "Space ID", "ID of space to be used in query or to be assigned as parent or adjacent", GH_ParamAccess.item);
 			pManager.AddNumberParameter("Transform", "Transform", "contains x,y,rotation of space chosen in FloorplanQuery",GH_ParamAccess.list);
+			pManager.AddCurveParameter("Exterior", "Exterior polylines", "contains the exterior polylines of the space", GH_ParamAccess.list);
 		}
 
 		/// <summary>
@@ -79,27 +73,24 @@ namespace JLP
 			shape = null;
 			area = double.NaN;
 			aspect = double.NaN;
-			adjacent = new List<string>();
 			lock_trans = true;
-			
+
 			DA.GetData(0, ref parent_id);
 			DA.GetData(1, ref colour);
 			DA.GetData(2, ref shape);
 			DA.GetData(3, ref area);
 			DA.GetData(4, ref aspect);
-			DA.GetDataList(5, adjacent);
-			DA.GetData(6, ref lock_trans);
+			DA.GetData(5, ref lock_trans);
 
-			id = $"{parent_id}|{this.NickName}";
 			if (double.IsNaN(area) & shape==null)
 			{
 				AddRuntimeMessage(GH_RuntimeMessageLevel.Warning,
 					"Either area or shape must be assigned");
 				return; // stops further computation
 			}
-			DA.SetData(0, id);
-			DA.SetData(1, this.InstanceGuid);
-			DA.SetDataList(2, transform);
+			DA.SetData(0, this);
+			DA.SetDataList(1, transform);
+			DA.SetDataList(2, boundary);
 		}
 
 		/// <summary>

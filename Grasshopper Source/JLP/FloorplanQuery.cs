@@ -20,14 +20,15 @@ namespace JLP
         /// <summary>
         /// Initializes a new instance of the MyComponent1 class.
         /// </summary>
-        
         public byte [,] sample= null;
-		public string space_id = null;
+		public JLP.DefineSpace space_id = null;
         public string instruction_json = null;
 		public string api_key = null;
 		public SampleData sample_data = null;
+		public OutputData output_data = null;
 		public List<System.Drawing.Color> colours = new List<System.Drawing.Color>();
 		public List<JLP.DefineSpace> spaces = new List<JLP.DefineSpace>();
+		public List<JLP.DefineConnection> connections = new List<JLP.DefineConnection>();
 		public List<double> offset = null;
 
 		public FloorplanQuery()
@@ -42,7 +43,7 @@ namespace JLP
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddTextParameter("Space ID", "ID","Requires Space ID of the to be generated space", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Space ID", "ID","Requires Space ID of the to be generated space", GH_ParamAccess.item);
 			pManager[0].Optional = true;
 			pManager.AddTextParameter("Instruction JSON", "json", "Input instruction json", GH_ParamAccess.item);
 			pManager[1].Optional = true;
@@ -54,10 +55,8 @@ namespace JLP
 		/// </summary>
 		protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-			pManager.AddGenericParameter("data", "data", "byte_array", GH_ParamAccess.tree);
+			pManager.AddGenericParameter("data", "data", "output data", GH_ParamAccess.item);
 			pManager.AddTextParameter("Instruction JSON", "json", "JSON containing instruction for model", GH_ParamAccess.tree);
-			pManager.AddColourParameter("Colours", "Colours", "Contains a list of colours for the spaces", GH_ParamAccess.list);
-			pManager.AddNumberParameter("Offset", "Offset", "Contains x and y offset", GH_ParamAccess.list);
 		}
 
 		/// <summary>
@@ -86,19 +85,24 @@ namespace JLP
 			if (space_id != null)
 			{
 				GH_Document doc = OnPingDocument();
-				(instruction_json,spaces) = Create_json_instruction(this, space_id, doc);
-			}
-		
-			var clrs = JObject.Parse(instruction_json)["colours"].ToObject<int[,]>();
-			for (int i = 0; i < clrs.Length / 3; i++)
-			{
-				colours.Add(System.Drawing.Color.FromArgb(clrs[i, 0], clrs[i, 1], clrs[i, 2]));
+				(instruction_json,spaces,connections) = Create_json_instruction(this, space_id, doc);
 			}
 
-			DA.SetData(0, sample);
-			DA.SetData(1, instruction_json);
-			DA.SetDataList(2, colours);
-			DA.SetDataList(3, offset);
+			var parsed_json = JObject.Parse(instruction_json);
+			if (sample!=null)
+			{
+				var clrs = parsed_json["colours"].ToObject<int[,]>();
+				double total_area = 0f;
+				var control_matrix = parsed_json["control_matrix"].ToObject<double[,]>();
+				for (int i = 0; i < clrs.Length / 3; i++)
+				{
+					total_area = total_area + control_matrix[i, i];
+					colours.Add(System.Drawing.Color.FromArgb(clrs[i, 0], clrs[i, 1], clrs[i, 2]));
+				}
+				double scale = 1 / Math.Sqrt(1440 / total_area) * 64/Math.Sqrt(sample.Length);
+				DA.SetData(0, new OutputData(sample, offset, scale, colours,spaces,connections));
+				DA.SetData(1, instruction_json);
+			}
 		}
 
         /// <summary>
@@ -113,7 +117,6 @@ namespace JLP
                 //return null;
             }
         }
-
 		public override void CreateAttributes()
 		{
 			m_attributes = new FloorplanQueryAttributes(this);
@@ -150,8 +153,6 @@ namespace JLP
 				}
 				Owner.ExpireSolution(true);
 			}
-
-
 			return GH_ObjectResponse.Handled;
 		}
 	}
