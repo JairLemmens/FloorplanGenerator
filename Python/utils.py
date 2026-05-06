@@ -77,7 +77,7 @@ def depthwise_conv2x2(arr):
     mask = conv > 0
     return mask
 
-def extract_boundaries(onehot_array,smoothing =2):
+def extract_boundaries(onehot,smoothing =2):
     edge_map = depthwise_conv2x2(onehot)
     ends = np.argwhere(edge_map.sum(0)>2)
     boundaries = np.unique(edge_map.reshape(edge_map.shape[0], -1).T, axis=0)

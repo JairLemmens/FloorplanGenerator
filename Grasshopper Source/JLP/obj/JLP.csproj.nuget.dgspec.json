@@ -28,16 +28,19 @@
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
+          "net48": {
+            "framework": "net48",
+            "targetAlias": "net48",
+            "projectReferences": {}
+          },
           "net7.0": {
+            "framework": "net7.0",
             "targetAlias": "net7.0",
             "projectReferences": {}
           },
-          "net7.0-windows7.0": {
+          "net7.0-windows": {
+            "framework": "net7.0-windows7.0",
             "targetAlias": "net7.0-windows",
-            "projectReferences": {}
-          },
-          "net48": {
-            "targetAlias": "net48",
             "projectReferences": {}
           }
         },
@@ -57,7 +60,32 @@
         "SdkAnalysisLevel": "10.0.200"
       },
       "frameworks": {
+        "net48": {
+          "framework": "net48",
+          "targetAlias": "net48",
+          "dependencies": {
+            "Grasshopper": {
+              "include": "Compile, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "target": "Package",
+              "version": "[8.0.23304.9001, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.4, )"
+            },
+            "System.Net.Http": {
+              "target": "Package",
+              "version": "[4.3.4, )"
+            },
+            "System.Resources.Extensions": {
+              "target": "Package",
+              "version": "[10.0.5, )"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.202\\RuntimeIdentifierGraph.json"
+        },
         "net7.0": {
+          "framework": "net7.0",
           "targetAlias": "net7.0",
           "dependencies": {
             "Grasshopper": {
@@ -105,9 +133,10 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.201\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.202\\RuntimeIdentifierGraph.json"
         },
-        "net7.0-windows7.0": {
+        "net7.0-windows": {
+          "framework": "net7.0-windows7.0",
           "targetAlias": "net7.0-windows",
           "dependencies": {
             "Grasshopper": {
@@ -147,30 +176,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.201\\RuntimeIdentifierGraph.json"
-        },
-        "net48": {
-          "targetAlias": "net48",
-          "dependencies": {
-            "Grasshopper": {
-              "include": "Compile, Build, Native, ContentFiles, Analyzers, BuildTransitive",
-              "target": "Package",
-              "version": "[8.0.23304.9001, )"
-            },
-            "Newtonsoft.Json": {
-              "target": "Package",
-              "version": "[13.0.4, )"
-            },
-            "System.Net.Http": {
-              "target": "Package",
-              "version": "[4.3.4, )"
-            },
-            "System.Resources.Extensions": {
-              "target": "Package",
-              "version": "[10.0.5, )"
-            }
-          },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.201\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.202\\RuntimeIdentifierGraph.json"
         }
       }
     }

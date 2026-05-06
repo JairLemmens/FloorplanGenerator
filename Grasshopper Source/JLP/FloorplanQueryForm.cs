@@ -30,7 +30,7 @@ namespace JLP
 		public FloorplanQueryForm(string recieved_instruction_json, string recieved_api_key, SampleData received_sample_data)
 		{	
 			InitializeComponent();
-			http_client.Timeout = TimeSpan.FromSeconds(5);
+			http_client.Timeout = TimeSpan.FromSeconds(20);
 			instruction_json  = recieved_instruction_json;
 			api_key = recieved_api_key;
 			sample_data = received_sample_data;
