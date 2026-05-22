@@ -359,7 +359,7 @@ class VIT_VAE_impl(nn.Module):
         radius = 0.21 * torch.sqrt(spaces.scales[:, None, None])
         baseline = radial - radius
 
-        residual = vit_vae.decoder(world_to_canonical(coords,spaces.positions,spaces.scales,spaces.angles),spaces.latents).view(B,imsize,imsize)
+        residual = self.decoder(world_to_canonical(coords,spaces.positions,spaces.scales,spaces.angles),spaces.latents).view(B,imsize,imsize)
         recon = residual*torch.sqrt(spaces.scales)[:,None,None] + baseline.detach()
         return(recon)
 
