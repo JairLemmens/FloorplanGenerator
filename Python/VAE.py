@@ -304,9 +304,9 @@ class Implicit_decoder(nn.Module):
         self.fourierfeatures = FourierFeatures2D(num_bands=num_bands)
         self.project_in = nn.Sequential(nn.Linear(num_bands*4,dim),nn.SiLU())
         b1_n =num_layers//2
-        self.block1 = nn.ModuleList([Skipped_SwiGLU_FiLM(dim,cond_dim,repeat_cond=True).to('cuda') for _ in range(b1_n)])
+        self.block1 = nn.ModuleList([Skipped_SwiGLU_FiLM(dim,cond_dim,repeat_cond=True) for _ in range(b1_n)])
         self.injection = nn.Linear(dim+4*num_bands,dim)
-        self.block2 = nn.ModuleList([Skipped_SwiGLU_FiLM(dim,cond_dim,repeat_cond=True).to('cuda') for _ in range(num_layers-b1_n)])
+        self.block2 = nn.ModuleList([Skipped_SwiGLU_FiLM(dim,cond_dim,repeat_cond=True) for _ in range(num_layers-b1_n)])
         self.project_out = nn.Linear(dim,1)
     def forward(self,coords,cond):
         fourier = self.fourierfeatures(coords)
@@ -345,7 +345,7 @@ class VIT_VAE_impl(nn.Module):
         Output: SDF of shape[N,imsize,imsize] 
         """
         B,C = spaces.latents.shape
-        y = torch.linspace(0,1,imsize, device='cuda')
+        y = torch.linspace(0,1,imsize, device=self.device)
         x = torch.linspace(0,1,imsize, device=y.device)
         yy, xx = torch.meshgrid(y, x, indexing='ij')
 
