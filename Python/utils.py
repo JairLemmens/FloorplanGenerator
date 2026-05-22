@@ -1,14 +1,22 @@
 import numpy as np
 import cv2 as cv
 
-def sample_to_img(sample,colours):
+
+def sample_to_img(sample,colours =None,imsize=64):
+    
+    out = np.zeros((imsize,imsize,3))
+
+    if colours is None:
+        colours = plt.get_cmap('hsv', sample.shape[0]+1)
+        for n,layer in enumerate(sample):
+            out += np.einsum('k,ij->ijk',colours(n)[:3],np.where(layer.round()==1,1,0))
+    else:
         colours = np.array(colours)
         if (colours>1).any():
-                colours = colours/255
-        out = np.zeros((sample.shape[-1],sample.shape[-1],3))
+            colours = colours/255
         for n,layer in enumerate(sample):
-                out += np.einsum('k,ij->ijk',colours[n][:3],layer)
-        return(out.clip(0,1))
+                out += np.einsum('k,ij->ijk',colours[n][:3],np.where(layer.round()==1,1,0))
+    return(out.clip(0,1))
 
 
 def trace_edge(edge_map):
