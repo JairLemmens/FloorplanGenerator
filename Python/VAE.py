@@ -4,6 +4,7 @@ import torch.nn as nn
 import numpy as np
 import cv2 as cv
 import shapely
+from matplotlib.path import Path
 
 def polygon_sdf_grid(vertices, H=64, W=64):
     vertices*=H
