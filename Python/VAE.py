@@ -340,26 +340,52 @@ class VIT_VAE_impl(nn.Module):
         bottle = self.encoder(h).mean(dim=1)
         z = bottle[:, :self.bottleneck_dim]
         return(z)
-    def generate_space(self,spaces:Spaces,imsize=64):
+    
+class VIT_VAE_impl(nn.Module):
+    def __init__(self,bottleneck_dim = 32, enc_hidden_dim = 64,dec_hidden_dim =64 ,enc_depth = 5,dec_depth = 7,num_patches=64,patch_size=64,device='cuda'):
+        super().__init__()
+        self.device = device
+        self.bottleneck_dim = bottleneck_dim
+        self.embedding = SinusoidalPositionEmbedding2D(num_patches,enc_hidden_dim).to(device)
+        self.project_enc = nn.Linear(patch_size,enc_hidden_dim).to(device)
+        self.encoder = nn.Sequential(Transformer_swiglu(enc_hidden_dim,enc_hidden_dim,enc_depth,masked=False),nn.Linear(enc_hidden_dim,bottleneck_dim)).to(device)
+        self.decoder = Implicit_decoder(dec_hidden_dim,bottleneck_dim,dec_depth).to(device)
+    def encode(self,canon_img):
+        """
+        Input: canonicalized tensor
+        Output: Space class instance
+        """
+        patches = patchify(torch.tensor(canon_img,device = self.device,dtype=torch.float).view(-1,1,64,64))
+        B,P,N,Px,Py = patches.shape
+        patches = patches.view(B,P,-1)
+        h = self.project_enc(patches) + self.embedding.pos_embedding.detach()
+        bottle = self.encoder(h).mean(dim=1)
+        z = bottle[:, :self.bottleneck_dim]
+        return(z)
+    def generate_space(self,spaces:Spaces,imsize=64,offset=[0,0],scale=1):
         """
         Input: Spaces [N,]
         Output: SDF of shape[N,imsize,imsize] 
         """
+        offset = torch.tensor(offset,device=self.device)
+        positions = spaces.positions*scale**0.5/imsize+offset
+        scales = spaces.scales*scale/(imsize**2*0.1)
+
         B,C = spaces.latents.shape
-        y = torch.linspace(0,1,imsize, device=self.device)
+        y = torch.linspace(0,1,imsize, device='cuda')
         x = torch.linspace(0,1,imsize, device=y.device)
         yy, xx = torch.meshgrid(y, x, indexing='ij')
 
         coords = torch.stack([xx, yy], dim=-1).flatten(0,1)
         coords = coords.unsqueeze(0).repeat(B,1,1)
 
-        dx = xx[None] - spaces.positions[:,0][:,None,None]
-        dy = yy[None] - spaces.positions[:,1][:,None,None]
+        dx = xx[None] - positions[:,0][:,None,None]
+        dy = yy[None] - positions[:,1][:,None,None]
         radial = 2*torch.sqrt(dx*dx + dy*dy + 1e-6)
-        radius = 0.21 * torch.sqrt(spaces.scales[:, None, None])
+        radius = 0.21 * torch.sqrt(scales[:, None, None])
         baseline = radial - radius
 
-        residual = self.decoder(world_to_canonical(coords,spaces.positions,spaces.scales,spaces.angles),spaces.latents).view(B,imsize,imsize)
-        recon = residual*torch.sqrt(spaces.scales)[:,None,None] + baseline.detach()
+        residual = self.decoder(world_to_canonical(coords,positions,scales,spaces.angles),spaces.latents).view(B,imsize,imsize)
+        recon = residual*torch.sqrt(scales)[:,None,None] + baseline.detach()
         return(recon)
 
