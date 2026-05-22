@@ -4,41 +4,145 @@ import torch.nn as nn
 import numpy as np
 import cv2 as cv
 
-def canonicalize(geom,imsize = 64,target_size = 1024):
-    translation = -geom.min(0)
-    geom =geom +translation
-    scale1 = (0.9*imsize)/geom.max()
-    geom *=scale1
-    geom+= 0.05*imsize
-
-    geom = geom.astype(np.int32)
-    img = np.zeros((imsize,imsize),dtype=float)
-    cv.fillPoly(img,np.expand_dims(geom,0),1.0)
-    scale2 = np.sqrt(target_size/img.sum())
+def polygon_sdf_grid(vertices, H=64, W=64):
+    vertices*=H
+    device = vertices.device
+    vertices_np = vertices.cpu().numpy()
     
+    # 1. Compute grid bounds from polygon extents
+
+    xs = torch.linspace(0, W, W, device=device)
+    ys = torch.linspace(0, H, H, device=device)
+    grid_y, grid_x = torch.meshgrid(ys, xs, indexing='ij')
+    points = torch.stack([grid_x, grid_y], dim=-1).reshape(-1,2)  # (H*W,2)
+    
+    # 2. Compute unsigned distance to edges
+    v0 = vertices
+    v1 = torch.roll(vertices, shifts=-1, dims=0)
+    s = v1 - v0
+    l2 = (s**2).sum(dim=1)
+    v = points[:,None,:] - v0[None,:,:]
+    t = (v * s[None,:,:]).sum(dim=2) / (l2[None,:] + 1e-12)
+    t = t.clamp(0,1)
+    closest = v0[None,:,:] + t[:,:,None] * s[None,:,:]
+    dist = ((points[:,None,:] - closest)**2).sum(dim=2).sqrt()
+    unsigned_dist = dist.min(dim=1)[0]
+
+    path = Path(vertices_np)
+    inside_mask = path.contains_points(points.cpu().numpy())  # boolean array
+    inside_mask = torch.tensor(inside_mask, device=device)
+    # 4. Apply sign
+    signed_dist = unsigned_dist.clone()
+    signed_dist[inside_mask] *= -1
+
+    # 5. Reshape to grid
+    sdf_grid = signed_dist.reshape(H,W)/(H*0.5)
+    return sdf_grid
+
+class Space(nn.Module):
+    def __init__(self,latent=None,position=None,angle=None,scale=1,device= 'cuda'):
+        super().__init__()
+        """
+        Input:
+        latents: torch.tensor(latent_dim)
+        position: float(2)
+        position: float(1)
+        scale: float(1)
+        Obtain these variables by passing geometry through canonicalize
+        or randomly initialize latents: torch.randn(latent_dim)
+        """
+
+        self.latent =  nn.Parameter(latent.view(latent.shape[-1]) if latent is not None else torch.randn(16,device=device))
+        self.position = nn.Parameter(torch.tensor(position,device=device,dtype=torch.float) if position is not None else torch.rand(2,device=device))
+        self.angle = nn.Parameter(torch.tensor(angle,device=device,dtype=torch.float) if angle is not None else 2*torch.pi*torch.rand(1,device=device).squeeze())
+        self.scale = nn.Parameter(torch.tensor(scale,device=device,dtype=torch.float) if scale is not None else torch.rand(1,device=device))
+        self.device = device
+    def forward(self):
+        return(self.latent,torch.concat([self.position,self.scale,self.angle],dim=-1))
+
+class Spaces(nn.Module):
+    def __init__(self,spaces:list[Space]):
+        super().__init__()
+        self.spaces = nn.ModuleList(spaces)
+
+    @property
+    def positions(self) -> torch.Tensor:
+        return torch.stack([space.position for space in self.spaces], dim=0)   # (N,2)
+    @positions.setter
+    def positions(self, value):
+        assert value.shape == (len(self.spaces),2)
+        for i, s in enumerate(self.spaces):
+            with torch.no_grad():
+                s.position.copy_(value[i])
+
+    @property
+    def scales(self) -> torch.Tensor:
+        return torch.stack([space.scale for space in self.spaces], dim=0)      # (N,)
+    @scales.setter
+    def scales(self, value):
+        assert value.shape == (len(self.spaces),)
+        for i, s in enumerate(self.spaces):
+            with torch.no_grad():
+                s.scale.copy_(value[i])
+
+    @property
+    def angles(self) -> torch.Tensor:
+        return torch.stack([space.angle for space in self.spaces], dim=0)      # (N,)
+    @angles.setter
+    def angles(self, value):
+        assert value.shape == (len(self.spaces),)
+        for i, s in enumerate(self.spaces):
+            with torch.no_grad():
+                s.angle.copy_(value[i])
+
+    @property
+    def latents(self) -> torch.Tensor:
+        return torch.stack([space.latent for space in self.spaces], dim=0)
+    @latents.setter
+    def latents(self, value):
+        assert value.shape == self.latents.shape
+        for i, s in enumerate(self.spaces):
+            with torch.no_grad():
+                s.latent.copy_(value[i])
+
+    @property
+    def transforms(self) -> torch.Tensor:
+        return torch.cat([
+            self.positions,
+            self.scales.unsqueeze(-1),
+            self.angles.unsqueeze(-1),
+        ], dim=-1)   # (N,5)
+
+    def forward(self):
+        return self.latents, self.transforms
+
+def canonicalize(geom:shapely.Polygon,imsize = 128,area_fraction= 0.25):
+    scale = (area_fraction/geom.area)**0.5
+    geom = shapely.affinity.scale(geom,scale,scale,scale)
+    offset = (0.5-np.stack(geom.centroid.xy).squeeze())
+    geom = shapely.affinity.translate(geom,offset[0],offset[1])
+
+    #Find PCA angle
+    img = np.zeros((imsize,imsize),dtype=float)
+    cv.fillPoly(img,np.expand_dims(np.stack(geom.exterior.xy,axis=1)*imsize,0).round().astype(int),1.0)
     pixel_coords = np.stack(img.nonzero(),axis=1).astype(float)
     mean, eigenvectors  = cv.PCACompute(pixel_coords,mean=None)
-    
-    mean = np.roll(mean,1)
-    angle = np.arctan2(eigenvectors[0,1], eigenvectors[0,0])
-    dist = ((pixel_coords-mean)@[1,0])
-    mass_positive = np.sum(dist > 0)
-    mass_negative = np.sum(dist < 0)
-    if mass_negative>mass_positive:
-        angle+=np.pi
 
-    angle+=0.5*np.pi
-    R = np.array([[np.cos(angle), -np.sin(angle)],[np.sin(angle),  np.cos(angle)]])
-    rot_scaled_geom = (R@(((geom-mean)*scale2).T)).T.astype(np.int32)+imsize//2
-    rot_scaled_img = np.zeros((imsize,imsize),dtype=float)
-    cv.fillPoly(rot_scaled_img,np.expand_dims(rot_scaled_geom,0),1.0)
-    
-    return(rot_scaled_img,rot_scaled_geom,angle,(mean[0]-imsize/2)/(scale1))
+    v = eigenvectors[0]
+    # force deterministic sign
+    if v[0] < 0:
+        v = -v
+
+    angle = np.arctan2(v[1], v[0])
+
+    #rotate principal axis to horizontal
+    geom = shapely.affinity.rotate(geom,angle,(0.5,0.5),True)
+    return(geom,angle)
 
 def world_to_canonical(grid,positions,scales,rotations):
     grid = grid-positions[:,None,:]
     
-    spatial_scale = torch.sqrt(scales/0.72)[:,None,None]
+    spatial_scale = torch.sqrt(scales)[:,None,None]
     grid = grid/spatial_scale
 
     sin_t = torch.sin(rotations)[:,None]
@@ -60,6 +164,7 @@ def patchify(x, p_h=8, p_w=8, s_h=8, s_w=8):
     x = x.permute(0,2, 3, 1, 4, 5)
     x = x.reshape(b, -1, c, p_h, p_w)
     return x
+
 
 class SwiGLU(nn.Module):
     def __init__(self, dim):
@@ -176,7 +281,7 @@ class SinusoidalPositionEmbedding2D(nn.Module):
         return pos_embedding                                                                  
 
 class FourierFeatures2D(nn.Module):
-    def __init__(self, num_bands=4, max_freq=32.0):
+    def __init__(self, num_bands=4, max_freq=64.0):
         super().__init__()
         # frequencies: [1, 2, 4, ..., max_freq]
         self.freq_bands = 2.0 ** torch.linspace(0.0,math.log2(max_freq),steps=num_bands)
@@ -193,104 +298,33 @@ class FourierFeatures2D(nn.Module):
         return out.view(x.shape[0], x.shape[1], -1)
     
 class Implicit_decoder(nn.Module):
-    def __init__(self, dim,cond_dim,num_layers = 5):
+    def __init__(self, dim,cond_dim,num_layers = 5,num_bands =6):
         super().__init__()
-        self.fourierfeatures = FourierFeatures2D(num_bands=dim//4)
-        assert dim%4 == 0, "dim must be divisible by 4"
-        self.layers = nn.ModuleList([Skipped_SwiGLU_FiLM(dim,cond_dim,repeat_cond=True).to('cuda') for _ in range(num_layers)])
+        self.fourierfeatures = FourierFeatures2D(num_bands=num_bands)
+        self.project_in = nn.Sequential(nn.Linear(num_bands*4,dim),nn.SiLU())
+        b1_n =num_layers//2
+        self.block1 = nn.ModuleList([Skipped_SwiGLU_FiLM(dim,cond_dim,repeat_cond=True).to('cuda') for _ in range(b1_n)])
+        self.injection = nn.Linear(dim+4*num_bands,dim)
+        self.block2 = nn.ModuleList([Skipped_SwiGLU_FiLM(dim,cond_dim,repeat_cond=True).to('cuda') for _ in range(num_layers-b1_n)])
         self.project_out = nn.Linear(dim,1)
     def forward(self,coords,cond):
-        h = self.fourierfeatures(coords)
-        for layer in self.layers:
+        fourier = self.fourierfeatures(coords)
+        h = self.project_in(fourier)
+        for layer in self.block1:
+            h = layer(h,cond)
+        h = self.injection(torch.concat([h,fourier],dim=-1))
+        for layer in self.block2:
             h = layer(h,cond)
         return(self.project_out(h))
 
-class Space(nn.Module):
-    def __init__(self,latent,position,angle,scale=1,device= 'cuda'):
-        super().__init__()
-        """
-        Input:
-        latents: torch.tensor(latent_dim)
-        position: float(2)
-        position: float(1)
-        scale: float(1)
-        Obtain these variables by passing geometry through canonicalize
-        or randomly initialize latents: torch.randn(latent_dim)
-        """
-        self.latent = nn.Parameter(latent.view(latent.shape[-1]))
-        self.position = nn.Parameter(torch.tensor(position,device=device,dtype=torch.float))
-        self.scale = nn.Parameter(torch.tensor(scale,device=device,dtype=torch.float))
-        self.angle = nn.Parameter(torch.tensor(angle,device=device,dtype=torch.float))
-        self.device = device
-    def forward(self):
-        return(self.latent,torch.concat([self.position,self.scale,torch.sin(self.angle),torch.cos(self.angle)],dim=-1))
-
-class Spaces(nn.Module):
-    def __init__(self,spaces:list[Space]):
-        super().__init__()
-        self.spaces = nn.ModuleList(spaces)
-
-    @property
-    def positions(self) -> torch.Tensor:
-        return torch.stack([space.position for space in self.spaces], dim=0)   # (N,2)
-    @positions.setter
-    def positions(self, value):
-        assert value.shape == (len(self.spaces),2)
-        for i, s in enumerate(self.spaces):
-            with torch.no_grad():
-                s.position.copy_(value[i])
-
-    @property
-    def scales(self) -> torch.Tensor:
-        return torch.stack([space.scale for space in self.spaces], dim=0)      # (N,)
-    @scales.setter
-    def scales(self, value):
-        assert value.shape == (len(self.spaces),)
-        for i, s in enumerate(self.spaces):
-            with torch.no_grad():
-                s.scale.copy_(value[i])
-
-    @property
-    def angles(self) -> torch.Tensor:
-        return torch.stack([space.angle for space in self.spaces], dim=0)      # (N,)
-    @angles.setter
-    def angles(self, value):
-        assert value.shape == (len(self.spaces),)
-        for i, s in enumerate(self.spaces):
-            with torch.no_grad():
-                s.angle.copy_(value[i])
-
-    
-    @property
-    def latents(self) -> torch.Tensor:
-        return torch.stack([space.latent for space in self.spaces], dim=0)
-    @latents.setter
-    def latents(self, value):
-        assert value.shape == self.latents.shape
-        for i, s in enumerate(self.spaces):
-            with torch.no_grad():
-                s.latent.copy_(value[i])
-
-    @property
-    def transforms(self) -> torch.Tensor:
-        return torch.cat([
-            self.positions,
-            self.scales.unsqueeze(-1),
-            torch.sin(self.angles).unsqueeze(-1),
-            torch.cos(self.angles).unsqueeze(-1),
-        ], dim=-1)   # (N,5)
-
-    def forward(self):
-        return self.latents, self.transforms
-    
 class VIT_VAE_impl(nn.Module):
-    def __init__(self,bottleneck_dim = 64, enc_hidden_dim = 64,dec_hidden_dim =32 ,enc_depth = 5,dec_depth = 5,num_patches=64,patch_size=64,device='cuda'):
+    def __init__(self,bottleneck_dim = 32, enc_hidden_dim = 64,dec_hidden_dim =64 ,enc_depth = 5,dec_depth = 7,num_patches=64,patch_size=64,device='cuda'):
         super().__init__()
         self.device = device
         self.bottleneck_dim = bottleneck_dim
         self.embedding = SinusoidalPositionEmbedding2D(num_patches,enc_hidden_dim).to(device)
         self.project_enc = nn.Linear(patch_size,enc_hidden_dim).to(device)
-        self.encoder = nn.Sequential(Transformer_swiglu(enc_hidden_dim,enc_hidden_dim,enc_depth,masked=False),nn.Linear(enc_hidden_dim,bottleneck_dim*2)).to(device)
+        self.encoder = nn.Sequential(Transformer_swiglu(enc_hidden_dim,enc_hidden_dim,enc_depth,masked=False),nn.Linear(enc_hidden_dim,bottleneck_dim)).to(device)
         self.decoder = Implicit_decoder(dec_hidden_dim,bottleneck_dim,dec_depth).to(device)
     def encode(self,canon_img):
         """
@@ -320,9 +354,10 @@ class VIT_VAE_impl(nn.Module):
         dx = xx[None] - spaces.positions[:,0][:,None,None]
         dy = yy[None] - spaces.positions[:,1][:,None,None]
         radial = 2*torch.sqrt(dx*dx + dy*dy + 1e-6)
-        radius = 0.332 * torch.sqrt(spaces.scales[:, None, None])
+        radius = 0.21 * torch.sqrt(spaces.scales[:, None, None])
         baseline = radial - radius
 
         residual = vit_vae.decoder(world_to_canonical(coords,spaces.positions,spaces.scales,spaces.angles),spaces.latents).view(B,imsize,imsize)
-        recon = residual*torch.sqrt(spaces.scales/0.72)[:,None,None] + baseline.detach()
+        recon = residual*torch.sqrt(spaces.scales)[:,None,None] + baseline.detach()
         return(recon)
+

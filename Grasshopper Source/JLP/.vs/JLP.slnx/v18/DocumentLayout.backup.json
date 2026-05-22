@@ -13,10 +13,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{588E4532-F9A2-5531-E10C-EA08A970549A}|JLP.csproj|c:\\users\\jairl\\documents\\github\\floorplangenerator\\grasshopper source\\jlp\\definespace.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{588E4532-F9A2-5531-E10C-EA08A970549A}|JLP.csproj|solutionrelative:definespace.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{588E4532-F9A2-5531-E10C-EA08A970549A}|JLP.csproj|c:\\users\\jairl\\documents\\github\\floorplangenerator\\grasshopper source\\jlp\\tools.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{588E4532-F9A2-5531-E10C-EA08A970549A}|JLP.csproj|solutionrelative:tools.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -36,7 +32,7 @@
               "RelativeDocumentMoniker": "FloorplanQueryForm.cs",
               "ToolTip": "C:\\Users\\jairl\\Documents\\GitHub\\FloorplanGenerator\\Grasshopper Source\\JLP\\FloorplanQueryForm.cs",
               "RelativeToolTip": "FloorplanQueryForm.cs",
-              "ViewState": "AgIAABUAAAAAAAAAAAAawBkAAAAfAAAAAAAAAA==",
+              "ViewState": "AgIAAJ0AAAAAAAAAAADwv6kAAAAiAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-26T15:31:06.991Z",
               "EditorCaption": ""
@@ -51,8 +47,7 @@
               "RelativeToolTip": "DefineSpace.cs",
               "ViewState": "AgIAAHEAAAAAAAAAAAAswBYAAAAnAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-20T12:18:42.506Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-20T12:18:42.506Z"
             },
             {
               "$type": "Document",
@@ -64,20 +59,7 @@
               "RelativeToolTip": "DefineConnection.cs",
               "ViewState": "AgIAAC8AAAAAAAAAAAAgwDcAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-20T11:39:12.514Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Tools.cs",
-              "DocumentMoniker": "C:\\Users\\jairl\\Documents\\GitHub\\FloorplanGenerator\\Grasshopper Source\\JLP\\Tools.cs",
-              "RelativeDocumentMoniker": "Tools.cs",
-              "ToolTip": "C:\\Users\\jairl\\Documents\\GitHub\\FloorplanGenerator\\Grasshopper Source\\JLP\\Tools.cs",
-              "RelativeToolTip": "Tools.cs",
-              "ViewState": "AgIAAM8AAAAAAAAAAAAUwIcAAAAQAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-20T11:37:47.246Z"
+              "WhenOpened": "2026-04-20T11:39:12.514Z"
             }
           ]
         }

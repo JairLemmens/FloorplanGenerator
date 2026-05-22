@@ -239,7 +239,7 @@ namespace JLP
 				Debug.WriteLine(spaceA.NickName);
 				// Diagonal = area
 				if (mask_area > 0)
-				{
+				{	
 					Debug.WriteLine((mask_area / total_area));
 					controlMatrix[i][i] = spaceA.area * (mask_area / total_area);
 				}

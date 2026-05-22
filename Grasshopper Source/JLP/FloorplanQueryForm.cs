@@ -166,7 +166,8 @@ namespace JLP
 				LoadSamples();
 			}
 			catch (Exception ex)
-			{
+			{	
+				Debug.WriteLine(ex.ToString());
 				this.Status.Text = $"Error: {ex.Message}";
 				Debug.WriteLine($"Error: {ex.Message}");
 			}
