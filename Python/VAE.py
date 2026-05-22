@@ -372,7 +372,7 @@ class VIT_VAE_impl(nn.Module):
         scales = spaces.scales*scale/(imsize**2*0.1)
 
         B,C = spaces.latents.shape
-        y = torch.linspace(0,1,imsize, device='cuda')
+        y = torch.linspace(0,1,imsize, device=self.device)
         x = torch.linspace(0,1,imsize, device=y.device)
         yy, xx = torch.meshgrid(y, x, indexing='ij')
 
