@@ -118,8 +118,10 @@ class Spaces(nn.Module):
     def forward(self):
         return self.latents, self.transforms
 
-def canonicalize(geom:shapely.Polygon,imsize = 128,area_fraction= 0.25):
-    scale = (area_fraction/geom.area)**0.5
+def canonicalize(geom:shapely.Polygon,imsize = 128,area_fraction= 0.1):
+    center = np.array(geom.centroid.xy).squeeze()
+    area = geom.area
+    scale = (area_fraction/area)**0.5
     geom = shapely.affinity.scale(geom,scale,scale,scale)
     offset = (0.5-np.stack(geom.centroid.xy).squeeze())
     geom = shapely.affinity.translate(geom,offset[0],offset[1])
@@ -139,7 +141,7 @@ def canonicalize(geom:shapely.Polygon,imsize = 128,area_fraction= 0.25):
 
     #rotate principal axis to horizontal
     geom = shapely.affinity.rotate(geom,angle,(0.5,0.5),True)
-    return(geom,angle)
+    return(geom,center,angle,area)
 
 def world_to_canonical(grid,positions,scales,rotations):
     grid = grid-positions[:,None,:]
