@@ -371,7 +371,7 @@ class VIT_VAE_impl(nn.Module):
         """
         offset = torch.tensor(offset,device=self.device)
         positions = spaces.positions*scale**0.5/imsize+offset
-        scales = spaces.scales*scale/(imsize**2*0.1)
+        scales = spaces.areas*scale/(imsize**2*0.1)
 
         B,C = spaces.latents.shape
         y = torch.linspace(0,1,imsize, device=self.device)
