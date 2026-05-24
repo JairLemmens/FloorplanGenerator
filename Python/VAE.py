@@ -42,14 +42,14 @@ def polygon_sdf_grid(vertices, H=64, W=64):
     return sdf_grid
 
 class Space(nn.Module):
-    def __init__(self,latent=None,position=None,angle=None,scale=1,device= 'cuda'):
+    def __init__(self,latent=None,position=None,angle=None,area=1,device= 'cuda'):
         super().__init__()
         """
         Input:
         latents: torch.tensor(latent_dim)
         position: float(2)
         position: float(1)
-        scale: float(1)
+        area: float(1)
         Obtain these variables by passing geometry through canonicalize
         or randomly initialize latents: torch.randn(latent_dim)
         """
@@ -57,10 +57,10 @@ class Space(nn.Module):
         self.latent =  nn.Parameter(latent.view(latent.shape[-1]) if latent is not None else torch.randn(16,device=device))
         self.position = nn.Parameter(torch.tensor(position,device=device,dtype=torch.float) if position is not None else torch.rand(2,device=device))
         self.angle = nn.Parameter(torch.tensor(angle,device=device,dtype=torch.float) if angle is not None else 2*torch.pi*torch.rand(1,device=device).squeeze())
-        self.scale = nn.Parameter(torch.tensor(scale,device=device,dtype=torch.float) if scale is not None else torch.rand(1,device=device))
+        self.area = nn.Parameter(torch.tensor(area,device=device,dtype=torch.float) if area is not None else torch.rand(1,device=device))
         self.device = device
     def forward(self):
-        return(self.latent,torch.concat([self.position,self.scale,self.angle],dim=-1))
+        return(self.latent,torch.concat([self.position,self.area,self.angle],dim=-1))
 
 class Spaces(nn.Module):
     def __init__(self,spaces:list[Space]):
@@ -78,14 +78,14 @@ class Spaces(nn.Module):
                 s.position.copy_(value[i])
 
     @property
-    def scales(self) -> torch.Tensor:
-        return torch.stack([space.scale for space in self.spaces], dim=0)      # (N,)
-    @scales.setter
-    def scales(self, value):
+    def areas(self) -> torch.Tensor:
+        return torch.stack([space.area for space in self.spaces], dim=0)      # (N,)
+    @areas.setter
+    def areas(self, value):
         assert value.shape == (len(self.spaces),)
         for i, s in enumerate(self.spaces):
             with torch.no_grad():
-                s.scale.copy_(value[i])
+                s.a.copy_(value[i])
 
     @property
     def angles(self) -> torch.Tensor:
@@ -111,7 +111,7 @@ class Spaces(nn.Module):
     def transforms(self) -> torch.Tensor:
         return torch.cat([
             self.positions,
-            self.scales.unsqueeze(-1),
+            self.areas.unsqueeze(-1),
             self.angles.unsqueeze(-1),
         ], dim=-1)   # (N,5)
 
