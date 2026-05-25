@@ -391,3 +391,96 @@ class VIT_VAE_impl(nn.Module):
         recon = residual*torch.sqrt(scales)[:,None,None] + baseline.detach()
         return(recon)
 
+class GeometricGraphAttention(nn.Module):
+    def __init__(self,dim,num_heads=4,graph_cond_dim=1,geom_cond_dim=7,device='cuda'):
+        super().__init__()
+        self.scale = (dim//num_heads) ** -.5
+        self.num_heads=num_heads
+        self.qk = nn.Linear(dim,dim*2,device=device)
+        self.graph_cond = nn.Linear(graph_cond_dim,num_heads,device=device)
+        self.graph_cond_dim = graph_cond_dim
+        self.geom_cond = Skipped_SwiGLU_FiLM(2*dim,geom_cond_dim).to(device)
+        self.msg = nn.Linear(2*dim,dim).to(device)
+
+    def forward(self,x,graph_cond=None,geom_cond=None):
+        N,C = x.shape[-2:]
+        #compute qk divide over heads and permute heads infront of N
+        qk_ = self.qk(x).view(-1,N,self.num_heads,2*(C//self.num_heads)).permute(0, 2, 1, 3)
+        #split q and k
+        q,k = qk_.chunk(2,-1)
+        #compute attn
+        attn = (q @ k.transpose(-2, -1)) * self.scale
+        #add graph bias
+        if graph_cond is not None:
+            attn = (attn + self.graph_cond(graph_cond.view(-1,N,N,self.graph_cond_dim)).permute(0,3,1,2))
+        attn = attn.softmax(dim=-1)
+        #construct pairs for edge messages
+        pairs = torch.cat([x[:, :, None, :].expand(-1, -1, N, -1),x[:, None, :, :].expand(-1, N, -1, -1)], dim=-1)
+        
+        #optionally apply geometric conditioning
+        msg = self.geom_cond(pairs, geom_cond) if geom_cond is not None else pairs
+        #compute message
+        msg = self.msg(pairs)
+        #divide message over heads
+        msg =msg.view(-1,N,N,self.num_heads,C//self.num_heads).permute(0,3,1,2,4)
+        #apply attention to messages, add messages together, move heads backwards and reshape the heads back into C
+        out = (msg*attn.unsqueeze(-1)).sum(3).permute(0,2,1,3).reshape(-1,N,C)
+        return(out)
+
+class GeometricGraphTransformerBlock(nn.Module):
+    def __init__(self,dim,num_heads=4,graph_cond_dim=1,geom_cond_dim=7,device='cuda'):
+        super().__init__()
+        self.norm1 = nn.LayerNorm(dim)
+        self.ggattn = GeometricGraphAttention(dim,num_heads,graph_cond_dim,geom_cond_dim,device)
+        self.ff = nn.Sequential(nn.LayerNorm(dim),SwiGLU(dim))
+    def forward(self,x,graph_cond=None,geom_cond=None):
+        h = self.norm1(x)
+        h = x + self.ggattn(h,graph_cond,geom_cond)
+        h = h + self.ff(h)
+        return(h)
+    
+class PlanPropertyPredictor(nn.Module):
+    """
+    pred_mode controls the prediction aggregation mode.
+    Allowed values:
+    - "mean": average prediction
+    - "N": per-sample prediction
+    - "NxN": full pairwise prediction matrix
+    """
+    def __init__(self,dim=64,bottleneck_dim=32,graph_cond_dim=1,pred_mode="mean",prediction_logits=1,num_layers=4,device='cuda'):
+        super().__init__()   
+        self.proj = nn.Sequential(nn.Linear(bottleneck_dim,dim),SwiGLU(dim)).to(device)
+        layers = []
+        for _ in range(num_layers):
+            layers.append(GeometricGraphTransformerBlock(dim,graph_cond_dim=graph_cond_dim))
+        self.layers= nn.ModuleList(layers).to(device)
+        
+        if pred_mode not in ("mean", "N", "NxN"):
+            raise ValueError("pred mode has to be: mean, N or NxN")
+        self.pred_mode = pred_mode
+        if pred_mode == "NxN":
+            self.proj_out = nn.Sequential(Skipped_SwiGLU(dim*2),nn.Linear(dim*2,prediction_logits)).to(device)
+        else:
+            self.proj_out = nn.Sequential(Skipped_SwiGLU(dim),nn.Linear(dim,prediction_logits)).to(device)
+
+    def forward(self,latents,transforms,graph_cond):
+        N,C = latents.shape[:2]
+        latents = latents.view(-1,N,C)
+        transforms = transforms.view(-1,N,4)
+
+        r = transforms[:,:,-1]
+        rot = torch.concat([torch.sin(r).unsqueeze(-1),torch.cos(r).unsqueeze(-1)],dim=-1)
+        rel_pos = (transforms[:,:,None,:2]-transforms[:,None,:,:2])/transforms[:,:,None,2:3]**0.5
+        geom_cond = torch.concat([rel_pos,rot[:,:,None].expand(-1,-1,N,-1),rot[:,None,:].expand(-1,N,-1,-1),(transforms[:,:,None,2]/transforms[:,None,:,2]).unsqueeze(-1)],dim=-1)
+        
+        h = self.proj(latents)
+        for layer in self.layers:
+            h = layer(h,graph_cond,geom_cond)
+        if self.pred_mode == "mean":
+            out = self.proj_out(h).mean(-2)
+        if self.pred_mode == "N":
+            out = self.proj_out(h)
+        if self.pred_mode == "NxN":
+            out = self.proj_out(torch.cat([h[:, :, None, :].expand(-1, -1, N, -1),h[:, None, :, :].expand(-1, N, -1, -1)], dim=-1))
+        return(out)
+    
