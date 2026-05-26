@@ -459,9 +459,9 @@ class PlanPropertyPredictor(nn.Module):
             raise ValueError("pred mode has to be: mean, N or NxN")
         self.pred_mode = pred_mode
         if pred_mode == "NxN":
-            self.proj_out = nn.Sequential(Skipped_SwiGLU(dim*2),nn.Linear(dim*2,prediction_logits)).to(device)
+            self.proj_out = nn.Sequential(SwiGLU(dim*2),nn.Linear(dim*2,prediction_logits)).to(device)
         else:
-            self.proj_out = nn.Sequential(Skipped_SwiGLU(dim),nn.Linear(dim,prediction_logits)).to(device)
+            self.proj_out = nn.Sequential(SwiGLU(dim),nn.Linear(dim,prediction_logits)).to(device)
 
     def forward(self,latents,transforms,graph_cond):
         N,C = latents.shape[:2]
