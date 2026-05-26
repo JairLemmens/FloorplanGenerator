@@ -452,7 +452,7 @@ class PlanPropertyPredictor(nn.Module):
         self.proj = nn.Sequential(nn.Linear(bottleneck_dim,dim),SwiGLU(dim)).to(device)
         layers = []
         for _ in range(num_layers):
-            layers.append(GeometricGraphTransformerBlock(dim,graph_cond_dim=graph_cond_dim))
+            layers.append(GeometricGraphTransformerBlock(dim,graph_cond_dim=graph_cond_dim,device=device))
         self.layers= nn.ModuleList(layers).to(device)
         
         if pred_mode not in ("mean", "N", "NxN"):
