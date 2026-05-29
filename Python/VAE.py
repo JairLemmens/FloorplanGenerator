@@ -464,7 +464,7 @@ class PlanPropertyPredictor(nn.Module):
             self.proj_out = nn.Sequential(SwiGLU(dim),nn.Linear(dim,prediction_logits)).to(device)
 
     def forward(self,latents,transforms,graph_cond):
-        N,C = latents.shape[:2]
+        N,C = latents.shape[-2:]
         latents = latents.view(-1,N,C)
         transforms = transforms.view(-1,N,4)
 
