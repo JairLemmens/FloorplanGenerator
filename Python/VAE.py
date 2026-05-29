@@ -420,7 +420,7 @@ class GeometricGraphAttention(nn.Module):
         #optionally apply geometric conditioning
         msg = self.geom_cond(pairs, geom_cond) if geom_cond is not None else pairs
         #compute message
-        msg = self.msg(pairs)
+        msg = self.msg(msg)
         #divide message over heads
         msg =msg.view(-1,N,N,self.num_heads,C//self.num_heads).permute(0,3,1,2,4)
         #apply attention to messages, add messages together, move heads backwards and reshape the heads back into C
