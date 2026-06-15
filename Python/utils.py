@@ -85,6 +85,7 @@ def depthwise_conv2x2(arr):
     mask = conv > 0
     return mask
 
+
 def extract_boundaries(onehot,smoothing =2):
     edge_map = depthwise_conv2x2(onehot)
     ends = np.argwhere(edge_map.sum(0)>2)
@@ -118,3 +119,118 @@ def extract_boundaries(onehot,smoothing =2):
             edges.append(edge)
             adjacencies.append((edge_map[:,edge[0][0],edge[0][1]]*edge_map[:,edge[1][0],edge[1][1]]).tolist())
     return(edges,adjacencies)
+
+
+def boundaries_to_mesh(edges_raw, face_adjacencies_raw, z=0,scale = 1):
+    """
+    Convert polyline edges and face adjacency data into a mesh representation.
+ 
+    Parameters
+    ----------
+    edges_raw : list
+        List of polylines, where each polyline is a list of [x, y] points.
+        e.g. [[[31, 74], [22, 76], [56, 83]], [[81, 76], [114, 73]], ...]
+    face_adjacencies_raw : list
+        List of [edge_index, face_index] pairs describing which polylines
+        bound which faces.
+        e.g. [[0, 5], [0, 6], [1, 4], ...]
+    z : float, optional
+        Z-coordinate to assign to all vertices (default: 0).
+ 
+    Returns
+    -------
+    vertices : list
+        List of vertices in the form [x, y, z].
+    edges : list
+        List of edges in the form [i, j] where i and j are vertex indices.
+    faces : list
+        List of faces in the form [i, j, k, ...] where items are vertex indices.
+        Faces are assumed closed (last vertex connects back to first).
+    """
+    vertex_list = []
+    vertex_index = {}
+ 
+    def get_or_add_vertex(pt):
+        key = tuple(pt)
+        if key not in vertex_index:
+            vertex_index[key] = len(vertex_list)
+            vertex_list.append(key)
+        return vertex_index[key]
+ 
+    # Register all vertices
+    for polyline in edges_raw:
+        for pt in polyline:
+            get_or_add_vertex(pt)
+ 
+    # Convert polylines to vertex index sequences
+    polyline_verts = [
+        [get_or_add_vertex(pt) for pt in polyline]
+        for polyline in edges_raw
+    ]
+ 
+    # Build deduplicated edges from consecutive pairs in each polyline
+    edge_set = set()
+    edges_out = []
+    for verts in polyline_verts:
+        for i in range(len(verts) - 1):
+            key = frozenset((verts[i], verts[i + 1]))
+            if key not in edge_set:
+                edge_set.add(key)
+                edges_out.append([verts[i], verts[i + 1]])
+ 
+    # Group polyline indices by face
+    face_to_polylines = defaultdict(list)
+    for edge_idx, face_idx in face_adjacencies_raw:
+        face_to_polylines[face_idx].append(edge_idx)
+ 
+    def chain_polylines(polyline_indices):
+        """Chain a set of polylines into a single ordered vertex loop."""
+        segs = [list(polyline_verts[i]) for i in polyline_indices]
+        result = list(segs[0])
+        used = {0}
+ 
+        for _ in range(len(segs) - 1):
+            tail = result[-1]
+            head = result[0]
+            found = False
+            for j, seg in enumerate(segs):
+                if j in used:
+                    continue
+                if seg[0] == tail:
+                    result.extend(seg[1:])
+                    used.add(j)
+                    found = True
+                    break
+                elif seg[-1] == tail:
+                    result.extend(reversed(seg[:-1]))
+                    used.add(j)
+                    found = True
+                    break
+                elif seg[0] == head:
+                    result = list(reversed(seg[1:])) + result
+                    used.add(j)
+                    found = True
+                    break
+                elif seg[-1] == head:
+                    result = list(seg[:-1]) + result
+                    used.add(j)
+                    found = True
+                    break
+            if not found:
+                break  # incomplete chain; return what we have
+ 
+        # Drop closing duplicate vertex if present
+        if result and result[0] == result[-1]:
+            result = result[:-1]
+ 
+        return result
+ 
+    faces_out = [
+        chain_polylines(face_to_polylines[face_idx])
+        for face_idx in sorted(face_to_polylines)
+    ]
+ 
+    vertices_out = [[x*scale, y*scale, z] for x, y in vertex_list]
+ 
+    return vertices_out, edges_out, faces_out
+ 
