@@ -179,6 +179,15 @@ class SwiGLU(nn.Module):
         g,h = self.w1_2(x).chunk(2,-1)
         return(self.w3(nn.functional.silu(g)*h))
 
+class Skipped_SwiGLU(nn.Module):
+    def __init__(self, dim, cond_dim = 1):
+        super().__init__()
+        self.norm = nn.LayerNorm(dim)
+        self.swiglu = SwiGLU(dim)
+    def forward(self,x,cond=None):
+        h = self.norm(x)
+        return(x + self.swiglu(h))
+
 class FiLM(nn.Module):
     def __init__(self, cond_dim, dim,repeat_cond = False):
         super().__init__()
