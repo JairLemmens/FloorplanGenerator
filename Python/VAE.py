@@ -54,10 +54,11 @@ class Space(nn.Module):
         or randomly initialize latents: torch.randn(latent_dim)
         """
 
-        self.latent =  nn.Parameter(latent.view(latent.shape[-1]) if latent is not None else torch.randn(16,device=device))
-        self.position = nn.Parameter(torch.tensor(position,device=device,dtype=torch.float) if position is not None else torch.rand(2,device=device))
-        self.angle = nn.Parameter(torch.tensor(angle,device=device,dtype=torch.float) if angle is not None else 2*torch.pi*torch.rand(1,device=device).squeeze())
+        self.latent =  nn.Parameter(latent.view(latent.shape[-1]) if latent is not None else torch.randn(32,device=device))
         self.area = nn.Parameter(torch.tensor(area,device=device,dtype=torch.float) if area is not None else torch.rand(1,device=device))
+        self.position = nn.Parameter(torch.tensor(position,device=device,dtype=torch.float) if position is not None else torch.rand(2,device=device)*self.area.mean()**0.5)
+        self.angle = nn.Parameter(torch.tensor(angle,device=device,dtype=torch.float) if angle is not None else 2*torch.pi*torch.rand(1,device=device).squeeze())
+        
         self.device = device
     def forward(self):
         return(self.latent,torch.concat([self.position,self.area,self.angle],dim=-1))
@@ -85,7 +86,7 @@ class Spaces(nn.Module):
         assert value.shape == (len(self.spaces),)
         for i, s in enumerate(self.spaces):
             with torch.no_grad():
-                s.a.copy_(value[i])
+                s.area.copy_(value[i])
 
     @property
     def angles(self) -> torch.Tensor:
@@ -330,28 +331,6 @@ class Implicit_decoder(nn.Module):
             h = layer(h,cond)
         return(self.project_out(h))
 
-class VIT_VAE_impl(nn.Module):
-    def __init__(self,bottleneck_dim = 32, enc_hidden_dim = 64,dec_hidden_dim =64 ,enc_depth = 5,dec_depth = 7,num_patches=64,patch_size=64,device='cuda'):
-        super().__init__()
-        self.device = device
-        self.bottleneck_dim = bottleneck_dim
-        self.embedding = SinusoidalPositionEmbedding2D(num_patches,enc_hidden_dim).to(device)
-        self.project_enc = nn.Linear(patch_size,enc_hidden_dim).to(device)
-        self.encoder = nn.Sequential(Transformer_swiglu(enc_hidden_dim,enc_hidden_dim,enc_depth,masked=False),nn.Linear(enc_hidden_dim,bottleneck_dim)).to(device)
-        self.decoder = Implicit_decoder(dec_hidden_dim,bottleneck_dim,dec_depth).to(device)
-    def encode(self,canon_img):
-        """
-        Input: canonicalized tensor
-        Output: Space class instance
-        """
-        patches = patchify(torch.tensor(canon_img,device = self.device,dtype=torch.float).view(-1,1,64,64))
-        B,P,N,Px,Py = patches.shape
-        patches = patches.view(B,P,-1)
-        h = self.project_enc(patches) + self.embedding.pos_embedding.detach()
-        bottle = self.encoder(h).mean(dim=1)
-        z = bottle[:, :self.bottleneck_dim]
-        return(z)
-    
 class VIT_VAE_impl(nn.Module):
     def __init__(self,bottleneck_dim = 32, enc_hidden_dim = 64,dec_hidden_dim =64 ,enc_depth = 5,dec_depth = 7,num_patches=64,patch_size=64,device='cuda'):
         super().__init__()
