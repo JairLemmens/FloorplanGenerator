@@ -3,7 +3,7 @@
 version = 4
 
 [[package]]
-name = "Python"
+name = "floorplan_backend"
 version = "0.1.0"
 dependencies = [
  "pyo3",

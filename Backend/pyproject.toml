@@ -3,7 +3,7 @@ requires = ["maturin>=1.15,<2.0"]
 build-backend = "maturin"
 
 [project]
-name = "Python"
+name = "floorplan_backend"
 requires-python = ">=3.8"
 classifiers = [
     "Programming Language :: Rust",
