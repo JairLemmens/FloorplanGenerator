@@ -13,8 +13,9 @@
 # limitations under the License.
 
 import numpy as np
-import cv2 as cv
 import matplotlib.pyplot as plt
+import floorplan_backend 
+from collections import defaultdict
 
 def sample_to_img(sample,colours =None,imsize=64):
     
@@ -32,56 +33,6 @@ def sample_to_img(sample,colours =None,imsize=64):
                 out += np.einsum('k,ij->ijk',colours[n][:3],np.where(layer.round()==1,1,0))
     return(out.clip(0,1))
 
-
-def trace_edge(edge_map):
-    """
-    edge_map: 2D binary array (single-pixel, 0/1)
-    returns: list of (row, col) coordinates in order along the edge
-    """
-    # Find all edge pixels
-    pixels = np.argwhere(edge_map)
-    visited = np.zeros_like(edge_map, dtype=bool)
-    added_pixels = 0
-    edges = []
-
-    # Start at one endpoint (pixel with only one neighbor) or first pixel
-    def neighbors(r, c):
-        for dr, dc in [(-1,0),(1,0),(0,-1),(0,1)]:  # 4-connectivity
-            nr, nc = r+dr, c+dc
-            if 0 <= nr < edge_map.shape[0] and 0 <= nc < edge_map.shape[1]:
-                if edge_map[nr, nc] and not visited[nr, nc]:
-                    yield nr, nc
-    
-    #instead of while True just in case, 100 should never be reached
-    for n in range(100):
-        # Find endpoint (pixel with only 1 neighbor)
-        endpoints = []
-        for r,c in pixels:
-            if visited[r, c] == False:
-                cnt = sum(1 for _ in neighbors(r,c))
-                if cnt == 1:
-                    endpoints.append((r,c))
-        start = endpoints[0] if endpoints else tuple(pixels[0])
-        added_pixels +=1
-        # Sequential walk
-        ordered_edge = [start]
-        visited[start] = True
-        r, c = start
-    
-        while True:
-            next_pixels = list(neighbors(r, c))
-            if not next_pixels:
-                break
-            r, c = next_pixels[0]  # there’s only 1 unvisited neighbor
-            ordered_edge.append((r, c))
-            visited[r, c] = True
-            added_pixels +=1
-        edges.append(np.array(ordered_edge))
-        
-        if added_pixels == len(pixels):
-            break
-    return edges
-
 def depthwise_conv2x2(arr):
     # arr: (num_layers, H, W)
     N, H, W = arr.shape
@@ -98,42 +49,23 @@ def depthwise_conv2x2(arr):
 
     mask = conv > 0
     return mask
+    
+def extract_boundaries(edge_map, smoothing=2.0):
+    if edge_map.dtype != np.uint8:
+        raise TypeError("edge_map must be np.uint8")
 
+    if edge_map.ndim != 4:
+        raise ValueError("edge_map must have shape (B,N,H,W)")
 
-def extract_boundaries(onehot,smoothing =2):
-    edge_map = depthwise_conv2x2(onehot)
-    ends = np.argwhere(edge_map.sum(0)>2)
-    boundaries = np.unique(edge_map.reshape(edge_map.shape[0], -1).T, axis=0)
+    if edge_map.shape[1] > 256:
+        raise ValueError("N must be <= 256")
 
-    edges = []
-    adjacencies = []
-    for boundary in boundaries:
-        if boundary.sum() != 2:
-            continue
-        
-        new_edges = trace_edge(np.all(edge_map.transpose(1, 2, 0) == boundary, axis=-1))
-        for edge in new_edges:
-            if len(edge)>1:
-                edge = np.stack([ends[np.argmin(np.abs((edge[0]-ends)).sum(1))],*edge,ends[np.argmin(np.abs((edge[-1]-ends)).sum(1))]]).astype(np.int32)
-            else:
-                closest_ends = np.argsort(np.abs((edge[0]-ends)).sum(1))
-                edge = np.stack([ends[closest_ends[0]],*edge,ends[closest_ends[1]]]).astype(np.int32)
-            approx = cv.approxPolyDP(edge, smoothing, closed=False)
-            edges.append(approx.squeeze().tolist())
-            adjacencies.append(boundary.tolist())
-    diff = ends[:, np.newaxis, :] - ends[np.newaxis, :, :]  # shape (N, N, 2)
-    dists = np.linalg.norm(diff, axis=2) 
-    dists = dists==1
-    N = len(ends)
-    mask = np.tril(np.ones((N, N), dtype=bool))
-    dists[mask] = False
-    for end,dist in zip(ends,dists):
-        if dist.any() == True:
-            edge =[end.tolist(),ends[dist][0].tolist()]
-            edges.append(edge)
-            adjacencies.append((edge_map[:,edge[0][0],edge[0][1]]*edge_map[:,edge[1][0],edge[1][1]]).tolist())
-    return(edges,adjacencies)
+    if not edge_map.flags.c_contiguous:
+        edge_map = np.ascontiguousarray(edge_map)
 
+    b, n, h, w = edge_map.shape
+
+    return floorplan_backend.extract_boundaries(edge_map.ctypes.data, b, n, h, w, smoothing)
 
 def boundaries_to_mesh(edges_raw, face_adjacencies_raw, z=0,scale = 1):
     """

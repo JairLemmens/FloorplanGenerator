@@ -1,13 +1,21 @@
+pub mod bim;
+pub mod extraction;
+
+
+#[cfg(feature = "python")]
 use pyo3::prelude::*;
+#[cfg(feature = "python")]
+use crate::bim::bindings::pyo3::base_types::{PyId};
+#[cfg(feature = "python")]
+use crate::bim::bindings::pyo3::building::{PyBuilding};
+#[cfg(feature = "python")]
+use crate::extraction::bindings::pyo3::extract::{extract_boundaries};
 
-/// A Python module implemented in Rust.
+#[cfg(feature = "python")]
 #[pymodule]
-mod floorplan_backend {
-    use pyo3::prelude::*;
-
-    /// Formats the sum of two numbers as string.
-    #[pyfunction]
-    fn sum_as_string(a: usize, b: usize) -> PyResult<String> {
-        Ok((a + b).to_string())
-    }
+fn floorplan_backend(_py: Python<'_>, m: &Bound<'_, PyModule>) -> PyResult<()> {
+    m.add_function(wrap_pyfunction!(extract_boundaries, m)?)?;
+    m.add_class::<PyBuilding>()?;
+    m.add_class::<PyId>()?;
+    Ok(())
 }

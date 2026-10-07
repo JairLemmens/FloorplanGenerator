@@ -1,7 +1,25 @@
+[features]
+default = []
+
+wasm = [
+    "dep:wasm-bindgen",
+    "dep:js-sys",
+    "dep:web-sys",
+]
+
+python = [
+    "dep:pyo3",
+    "pyo3/extension-module",
+    "dep:pythonize",
+    "dep:numpy"
+]
+
 [package]
 name = "floorplan_backend"
 version = "0.1.0"
 edition = "2024"
+authors = ["Vishwajeet Mane <manevishwajeet1@gmail.com>",
+            "Jair Lemmens <jairlemmens@gmail.com>"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [lib]
@@ -9,4 +27,16 @@ name = "floorplan_backend"
 crate-type = ["cdylib"]
 
 [dependencies]
-pyo3 = "0.29.0"
+rayon = "1.10"
+serde = { version = "1.0", features = ["derive"] }
+serde-wasm-bindgen = "0.4"
+serde_json = { version = "1.0.127", features = ["float_roundtrip"] }
+openmaths = "0.2.4"
+
+wasm-bindgen = { version = "0.2", optional = true }
+js-sys = { version = "0.3", optional = true }
+web-sys = { version = "0.3", optional = true }
+
+numpy = {version = "0.27", optional = true}
+pyo3 = { version = "0.27", optional = true }
+pythonize = { version = "0.27", optional = true }

@@ -1,0 +1,191 @@
+{
+  "materials": {
+    "0cbab760-7b22-4202-9e56-4d096260f8ad": {
+      "name": "OSB",
+      "density": 600,
+      "heat_transfer_coefficient": 0.12,
+      "specific_heat_capacity": 1600,
+      "dictionary": {}
+    },
+    "4ca55fd2-ce4b-4c8b-b169-8c16320cebf4": {
+      "name": "Fir",
+      "density": 400,
+      "heat_transfer_coefficient": 0.11,
+      "specific_heat_capacity": 1500,
+      "dictionary": {}
+    },
+    "2cb9546a-e67c-4abc-a232-4a75f5c7d0c0": {
+      "name": "Mineral wool",
+      "density": 50,
+      "heat_transfer_coefficient": 0.033,
+      "specific_heat_capacity": 1030,
+      "dictionary": {}
+    },
+    "f1999927-0e5a-4b9e-9f46-b8cae020db32": {
+      "name": "Ceramic facade tiles",
+      "density": 2000,
+      "heat_transfer_coefficient": 1,
+      "specific_heat_capacity": 1000,
+      "dictionary": {}
+    },
+    "73dd0c9b-3596-4123-b48e-73cd2a2622fb": {
+      "name": "Concrete",
+      "density": 2200,
+      "heat_transfer_coefficient": 1.5,
+      "specific_heat_capacity": 840,
+      "dictionary": {}
+    }
+  },
+  "composites": {
+    "e48e81f5-5daf-4ffd-be13-665bf6da2709": {
+      "name": "Studs",
+      "part1": "4ca55fd2-ce4b-4c8b-b169-8c16320cebf4",
+      "part2": "2cb9546a-e67c-4abc-a232-4a75f5c7d0c0",
+      "part1_fraction": 0.1,
+      "part2_fraction": 0.9,
+      "dictionary": {}
+    }
+  },
+  "layers": {
+    "5c7b651d-6557-4643-8043-b240473314c1": {
+      "name": "plate",
+      "material": "0cbab760-7b22-4202-9e56-4d096260f8ad",
+      "thickness": 0.01,
+      "priority": 90,
+      "joint_type": "miter_joint",
+      "dictionary": {}
+    },
+    "202df3c8-5714-4c40-a83e-181d76104c64": {
+      "name": "studs",
+      "material": "e48e81f5-5daf-4ffd-be13-665bf6da2709",
+      "thickness": 0.1,
+      "priority": 100,
+      "joint_type": "butt_joint",
+      "dictionary": {}
+    },
+    "db573df3-b731-493d-9e3d-166cacd7424e": {
+      "name": "wall_insulation",
+      "material": "2cb9546a-e67c-4abc-a232-4a75f5c7d0c0",
+      "thickness": 0.1,
+      "priority": 80,
+      "joint_type": "miter_joint",
+      "dictionary": {}
+    },
+    "0db8f982-a057-4d1d-bbe4-e7c6d30f6b37": {
+      "name": "facade",
+      "material": "f1999927-0e5a-4b9e-9f46-b8cae020db32",
+      "thickness": 0.05,
+      "priority": 20,
+      "joint_type": "miter_joint",
+      "dictionary": {}
+    },
+    "3c666f9e-8d64-4628-a146-e406e61dc51c": {
+      "name": "beams",
+      "material": "e48e81f5-5daf-4ffd-be13-665bf6da2709",
+      "thickness": 0.2,
+      "priority": 100.1,
+      "joint_type": "butt_joint",
+      "dictionary": {}
+    },
+    "5300870b-2ef9-41c5-8889-8b268f137d97": {
+      "name": "beams",
+      "material": "e48e81f5-5daf-4ffd-be13-665bf6da2709",
+      "thickness": 0.25,
+      "priority": 100.1,
+      "joint_type": "butt_joint",
+      "dictionary": {}
+    },
+    "81103e84-4d8d-4db5-88a5-ab03659ec0d5": {
+      "name": "roof_insulation",
+      "material": "2cb9546a-e67c-4abc-a232-4a75f5c7d0c0",
+      "thickness": 0.1,
+      "priority": 80.1,
+      "joint_type": "butt_joint",
+      "dictionary": {}
+    },
+    "b0fdd36a-18c3-4809-9cbf-c192eabfa156": {
+      "name": "foundation_slab",
+      "material": "73dd0c9b-3596-4123-b48e-73cd2a2622fb",
+      "thickness": 0.2,
+      "priority": 100.5,
+      "joint_type": "butt_joint",
+      "dictionary": {}
+    }
+  },
+  "layer_groups": {
+    "f5299341-7a8a-4d25-aac7-eba59d4873ab": {
+      "name": "Interior wall",
+      "layers": [
+        "5c7b651d-6557-4643-8043-b240473314c1",
+        "202df3c8-5714-4c40-a83e-181d76104c64",
+        "5c7b651d-6557-4643-8043-b240473314c1"
+      ],
+      "layer_offsets": [
+        0,
+        0.01,
+        0.11
+      ],
+      "dictionary": {}
+    },
+    "2063ecc7-0b32-4890-a305-2837a41d79fe": {
+      "name": "Facade",
+      "layers": [
+        "5c7b651d-6557-4643-8043-b240473314c1",
+        "202df3c8-5714-4c40-a83e-181d76104c64",
+        "5c7b651d-6557-4643-8043-b240473314c1",
+        "db573df3-b731-493d-9e3d-166cacd7424e",
+        "0db8f982-a057-4d1d-bbe4-e7c6d30f6b37"
+      ],
+      "layer_offsets": [
+        0,
+        0.01,
+        0.11,
+        0.12,
+        0.27
+      ],
+      "dictionary": {}
+    },
+    "9fbc55f8-1f3c-44da-ba6c-bb2d3f3b8c3f": {
+      "name": "Floor",
+      "layers": [
+        "5c7b651d-6557-4643-8043-b240473314c1",
+        "3c666f9e-8d64-4628-a146-e406e61dc51c",
+        "5c7b651d-6557-4643-8043-b240473314c1"
+      ],
+      "layer_offsets": [
+        0,
+        0.01,
+        0.21
+      ],
+      "dictionary": {}
+    },
+    "e369a18b-3e2e-408b-90cf-c853a0183e73": {
+      "name": "Roof",
+      "layers": [
+        "5c7b651d-6557-4643-8043-b240473314c1",
+        "5300870b-2ef9-41c5-8889-8b268f137d97",
+        "5c7b651d-6557-4643-8043-b240473314c1",
+        "81103e84-4d8d-4db5-88a5-ab03659ec0d5"
+      ],
+      "layer_offsets": [
+        0,
+        0.01,
+        0.26,
+        0.27
+      ],
+      "dictionary": {}
+    },
+    "1f8976d6-d03f-41dc-a3ec-6ff27bafa655": {
+      "name": "Foundation",
+      "layers": [
+        "81103e84-4d8d-4db5-88a5-ab03659ec0d5",
+        "b0fdd36a-18c3-4809-9cbf-c192eabfa156"
+      ],
+      "layer_offsets": [
+        -0.1,
+        0
+      ],
+      "dictionary": {}
+    }
+  }
+}
