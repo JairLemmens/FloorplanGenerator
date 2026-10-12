@@ -1,0 +1,1376 @@
+{
+  "verts": {
+    "ebe838be-8e41-4f39-b1f4-84e90a737c95": {
+      "coords": [
+        -324.400346677676,
+        80.662603168556,
+        0.0
+      ],
+      "edges": [
+        "b421576d-92e2-43e1-a1ba-dcbd7a4fb816",
+        "7617b987-1358-4918-8420-f23021ddcacd",
+        "1fb5252d-1914-4bce-8177-e97e3341bf96",
+        "87f86d38-8002-48dc-a59a-2b0d7fb7860d"
+      ],
+      "dictionary": {}
+    },
+    "ddd49a86-66c1-492a-8055-09c5f1b3837d": {
+      "coords": [
+        -325.0294925811091,
+        77.14756904616802,
+        0.0
+      ],
+      "edges": [
+        "b421576d-92e2-43e1-a1ba-dcbd7a4fb816",
+        "fdac8729-9876-45b9-8ed0-6c6eb55416b1"
+      ],
+      "dictionary": {}
+    },
+    "f2f8d381-112a-45de-85f4-dca0c93c5f2b": {
+      "coords": [
+        -325.6586384845421,
+        73.63253492378001,
+        0.0
+      ],
+      "edges": [
+        "fdac8729-9876-45b9-8ed0-6c6eb55416b1",
+        "12ead49f-c70d-4b7e-8021-5becf364ad6d",
+        "daf7313b-ee93-450a-857b-a5dc9f6d0f13",
+        "f3acacff-0cf6-43c4-85fb-d7c3bd484953"
+      ],
+      "dictionary": {}
+    },
+    "79ffa1fe-d61f-4e07-8ce2-78aaecc4ac51": {
+      "coords": [
+        -327.319554083681,
+        73.63253492378,
+        0.0
+      ],
+      "edges": [
+        "12ead49f-c70d-4b7e-8021-5becf364ad6d",
+        "a5174a5d-06fc-4e59-8948-dca6f1c20a7a"
+      ],
+      "dictionary": {}
+    },
+    "be538499-3112-41f5-8efe-f0efbc03bb3a": {
+      "coords": [
+        -328.980469682819,
+        73.63253492377996,
+        0.0
+      ],
+      "edges": [
+        "a5174a5d-06fc-4e59-8948-dca6f1c20a7a",
+        "eaaa4488-e5c3-4479-bf40-9ed77bebd32a",
+        "a5a978b8-ae5a-4478-bdb8-d6a36ee39fda"
+      ],
+      "dictionary": {}
+    },
+    "feddc274-3495-475b-9d32-006392884d06": {
+      "coords": [
+        -328.8940830156722,
+        77.14756904616787,
+        0.0
+      ],
+      "edges": [
+        "eaaa4488-e5c3-4479-bf40-9ed77bebd32a",
+        "33f2fbf4-fb88-4ec6-839e-b5229f40abd1"
+      ],
+      "dictionary": {}
+    },
+    "1ffb20bd-ef51-4739-adfc-f8c569928f29": {
+      "coords": [
+        -328.80769634852595,
+        80.66260316855588,
+        0.0
+      ],
+      "edges": [
+        "33f2fbf4-fb88-4ec6-839e-b5229f40abd1",
+        "e3850b1e-6169-4d49-af15-3b0259a592bd",
+        "93e865b3-a0c4-469d-888e-8c101e3072ef"
+      ],
+      "dictionary": {}
+    },
+    "082526f5-a0e2-44e1-b435-3ec89664d95a": {
+      "coords": [
+        -326.604021513101,
+        80.662603168556,
+        0.0
+      ],
+      "edges": [
+        "e3850b1e-6169-4d49-af15-3b0259a592bd",
+        "7617b987-1358-4918-8420-f23021ddcacd"
+      ],
+      "dictionary": {}
+    },
+    "3e27e152-d6f8-4a34-b8e1-43e802a2b4e2": {
+      "coords": [
+        -324.400346677676,
+        80.662603168556,
+        1.639540707918
+      ],
+      "edges": [
+        "a1f49b0b-e1c1-450d-ad41-c828838afc38",
+        "1fb5252d-1914-4bce-8177-e97e3341bf96"
+      ],
+      "dictionary": {}
+    },
+    "5e235921-6213-4b6b-a3b1-9bbc3caab226": {
+      "coords": [
+        -324.400346677676,
+        80.662603168556,
+        3.279081415835001
+      ],
+      "edges": [
+        "a1f49b0b-e1c1-450d-ad41-c828838afc38",
+        "7c314a8b-efbd-4227-9c21-03452f22e01e",
+        "05928ca8-142d-4322-aea5-c02b131217c4",
+        "c02ef97c-6630-4cef-a839-c073603f0d10"
+      ],
+      "dictionary": {}
+    },
+    "d8dd458d-2b14-4dff-a813-f3233c9e386f": {
+      "coords": [
+        -325.02949258110914,
+        77.14756904616802,
+        3.2790814158350003
+      ],
+      "edges": [
+        "7c314a8b-efbd-4227-9c21-03452f22e01e",
+        "b975c679-c98a-4334-91cf-bf85de766b5a"
+      ],
+      "dictionary": {}
+    },
+    "e70c77c3-9d6a-413c-a689-2537bbe8e7fd": {
+      "coords": [
+        -325.6586384845421,
+        73.63253492378001,
+        3.279081415835001
+      ],
+      "edges": [
+        "b975c679-c98a-4334-91cf-bf85de766b5a",
+        "1e830189-285b-4ab0-a150-889e4fb3a5de",
+        "a1dfc203-2ef2-4728-a077-9ba7275fc738",
+        "826e5ab8-ed44-4b5f-a68d-8c341749a22c"
+      ],
+      "dictionary": {}
+    },
+    "998ce122-a7d0-4cb8-90d5-5f094f6a4e6d": {
+      "coords": [
+        -325.6586384845422,
+        73.63253492378003,
+        1.639540707918
+      ],
+      "edges": [
+        "1e830189-285b-4ab0-a150-889e4fb3a5de",
+        "daf7313b-ee93-450a-857b-a5dc9f6d0f13"
+      ],
+      "dictionary": {}
+    },
+    "ffc8e378-36a2-4e6d-928b-a18c35531c4e": {
+      "coords": [
+        -327.319554083681,
+        73.63253492378,
+        3.279081415835
+      ],
+      "edges": [
+        "a1dfc203-2ef2-4728-a077-9ba7275fc738",
+        "e818e4ab-3f40-4e89-97d8-8a617c037094"
+      ],
+      "dictionary": {}
+    },
+    "0ef4d5ca-7b4c-424e-8c5a-61d67a1671ac": {
+      "coords": [
+        -328.980469682819,
+        73.63253492377996,
+        3.2790814158351425
+      ],
+      "edges": [
+        "e818e4ab-3f40-4e89-97d8-8a617c037094",
+        "9cac633d-6dd5-4d93-b50c-b2bf50c082bd",
+        "c381f5c7-10cd-4eff-9a00-42057274add3"
+      ],
+      "dictionary": {}
+    },
+    "e96495dc-ff38-43d2-a81b-016816cbf2c0": {
+      "coords": [
+        -328.980469682819,
+        73.63253492377996,
+        1.6395407079178563
+      ],
+      "edges": [
+        "9cac633d-6dd5-4d93-b50c-b2bf50c082bd",
+        "a5a978b8-ae5a-4478-bdb8-d6a36ee39fda"
+      ],
+      "dictionary": {}
+    },
+    "41ec0a68-3823-4600-9a73-e87d39c861c9": {
+      "coords": [
+        -328.8940830156722,
+        77.14756904616787,
+        3.2790814158352255
+      ],
+      "edges": [
+        "c381f5c7-10cd-4eff-9a00-42057274add3",
+        "47201db9-5845-48f1-876f-eac6fb52fd62"
+      ],
+      "dictionary": {}
+    },
+    "893def5f-4a1f-4b00-a6aa-c31e8955e516": {
+      "coords": [
+        -328.80769634852595,
+        80.66260316855588,
+        3.2790814158351416
+      ],
+      "edges": [
+        "47201db9-5845-48f1-876f-eac6fb52fd62",
+        "ce806b46-436b-40df-9ef2-5c347116ef71",
+        "64e39e08-5851-4049-b1f7-6b09b5705291"
+      ],
+      "dictionary": {}
+    },
+    "76bd377c-b298-47c9-adc8-35348448345c": {
+      "coords": [
+        -328.8076963485259,
+        80.6626031685558,
+        1.639540707917856
+      ],
+      "edges": [
+        "ce806b46-436b-40df-9ef2-5c347116ef71",
+        "93e865b3-a0c4-469d-888e-8c101e3072ef"
+      ],
+      "dictionary": {}
+    },
+    "51db3588-6f7c-4d98-a095-7f4ecbd52059": {
+      "coords": [
+        -326.604021513101,
+        80.662603168556,
+        3.279081415835
+      ],
+      "edges": [
+        "64e39e08-5851-4049-b1f7-6b09b5705291",
+        "05928ca8-142d-4322-aea5-c02b131217c4"
+      ],
+      "dictionary": {}
+    },
+    "0262343c-b0cc-4686-91ba-aeada06b43ec": {
+      "coords": [
+        -321.7076613828322,
+        77.14756904616787,
+        0.0
+      ],
+      "edges": [
+        "3d6fc702-a3bc-4876-abca-7d668116babb",
+        "bc8f7405-82f4-4ae2-b7ad-8babcc25c223"
+      ],
+      "dictionary": {}
+    },
+    "daefef2f-f0b9-4827-9b2d-7b7375be814d": {
+      "coords": [
+        -322.3368072862659,
+        73.63253492377996,
+        0.0
+      ],
+      "edges": [
+        "3d6fc702-a3bc-4876-abca-7d668116babb",
+        "e77e70dc-f6c2-4963-8976-5fa8bdb68495",
+        "36efc8bb-b529-433a-b5a5-332a8377ebbf"
+      ],
+      "dictionary": {}
+    },
+    "4e048b0f-28dd-40a2-89e2-dd5ecd4baa4f": {
+      "coords": [
+        -323.997722885404,
+        73.63253492378,
+        0.0
+      ],
+      "edges": [
+        "e77e70dc-f6c2-4963-8976-5fa8bdb68495",
+        "f3acacff-0cf6-43c4-85fb-d7c3bd484953"
+      ],
+      "dictionary": {}
+    },
+    "182fd9ae-ac00-44cc-b6e9-f4c85ffb048d": {
+      "coords": [
+        -322.739431078538,
+        80.662603168556,
+        0.0
+      ],
+      "edges": [
+        "87f86d38-8002-48dc-a59a-2b0d7fb7860d",
+        "66c09d8c-3294-4026-9aa8-445a784a97ea"
+      ],
+      "dictionary": {}
+    },
+    "b772e46c-cc54-4cdd-9d69-eb107264ca50": {
+      "coords": [
+        -321.0785154793991,
+        80.66260316855588,
+        0.0
+      ],
+      "edges": [
+        "66c09d8c-3294-4026-9aa8-445a784a97ea",
+        "bc8f7405-82f4-4ae2-b7ad-8babcc25c223",
+        "4b3c24dd-620e-47b5-812c-52ee59f96afb"
+      ],
+      "dictionary": {}
+    },
+    "0128282a-7752-48bd-b20b-06dc4d5efa5a": {
+      "coords": [
+        -321.07851547939913,
+        80.6626031685558,
+        1.6395407079178568
+      ],
+      "edges": [
+        "4b3c24dd-620e-47b5-812c-52ee59f96afb",
+        "abed9955-0331-4e95-87d7-15ba25b381a4"
+      ],
+      "dictionary": {}
+    },
+    "0f423b51-0146-4ebc-9683-7ed0812a5301": {
+      "coords": [
+        -321.0785154793991,
+        80.66260316855588,
+        3.2790814158351425
+      ],
+      "edges": [
+        "abed9955-0331-4e95-87d7-15ba25b381a4",
+        "7f62fe05-0b34-4692-9164-365aa1cee149",
+        "986c750e-eb3d-49b4-8513-843eb2374fcf"
+      ],
+      "dictionary": {}
+    },
+    "375dffc7-81ca-4023-a24f-619ac64f85d3": {
+      "coords": [
+        -321.7076613828322,
+        77.14756904616787,
+        3.2790814158352126
+      ],
+      "edges": [
+        "7f62fe05-0b34-4692-9164-365aa1cee149",
+        "160dbd05-57a2-489f-8bbd-9b1251475571"
+      ],
+      "dictionary": {}
+    },
+    "716ab27b-f7e0-41a8-acf2-1a6cd5ac4f4c": {
+      "coords": [
+        -322.3368072862659,
+        73.63253492377996,
+        3.2790814158351416
+      ],
+      "edges": [
+        "160dbd05-57a2-489f-8bbd-9b1251475571",
+        "122356cc-f034-492a-a3fd-982e74058933",
+        "152a146e-8d46-4274-a100-8241240ff4f2"
+      ],
+      "dictionary": {}
+    },
+    "75ff5a91-1b94-4ed3-a1ac-17d4c173f74e": {
+      "coords": [
+        -322.33680728626587,
+        73.63253492377996,
+        1.639540707917856
+      ],
+      "edges": [
+        "122356cc-f034-492a-a3fd-982e74058933",
+        "36efc8bb-b529-433a-b5a5-332a8377ebbf"
+      ],
+      "dictionary": {}
+    },
+    "d71ae7fc-1872-464f-9a49-80e1645e3fa8": {
+      "coords": [
+        -323.997722885404,
+        73.63253492378,
+        3.279081415835
+      ],
+      "edges": [
+        "152a146e-8d46-4274-a100-8241240ff4f2",
+        "826e5ab8-ed44-4b5f-a68d-8c341749a22c"
+      ],
+      "dictionary": {}
+    },
+    "81c52b41-2e27-41ec-9a96-836f16c0d2ba": {
+      "coords": [
+        -322.739431078538,
+        80.662603168556,
+        3.279081415835
+      ],
+      "edges": [
+        "986c750e-eb3d-49b4-8513-843eb2374fcf",
+        "c02ef97c-6630-4cef-a839-c073603f0d10"
+      ],
+      "dictionary": {}
+    }
+  },
+  "edges": {
+    "b421576d-92e2-43e1-a1ba-dcbd7a4fb816": {
+      "verts": [
+        "ebe838be-8e41-4f39-b1f4-84e90a737c95",
+        "ddd49a86-66c1-492a-8055-09c5f1b3837d"
+      ],
+      "faces": [
+        "3dc14b0f-b60f-4299-a36a-0fcf95bec30e",
+        "eef2fc3e-621a-4536-ac3a-3d3af0018637",
+        "cff21a44-de05-43ab-8f90-5535a2fd0892"
+      ],
+      "dictionary": {}
+    },
+    "fdac8729-9876-45b9-8ed0-6c6eb55416b1": {
+      "verts": [
+        "ddd49a86-66c1-492a-8055-09c5f1b3837d",
+        "f2f8d381-112a-45de-85f4-dca0c93c5f2b"
+      ],
+      "faces": [
+        "3dc14b0f-b60f-4299-a36a-0fcf95bec30e",
+        "eef2fc3e-621a-4536-ac3a-3d3af0018637",
+        "cff21a44-de05-43ab-8f90-5535a2fd0892"
+      ],
+      "dictionary": {}
+    },
+    "12ead49f-c70d-4b7e-8021-5becf364ad6d": {
+      "verts": [
+        "f2f8d381-112a-45de-85f4-dca0c93c5f2b",
+        "79ffa1fe-d61f-4e07-8ce2-78aaecc4ac51"
+      ],
+      "faces": [
+        "3dc14b0f-b60f-4299-a36a-0fcf95bec30e",
+        "1a91cf73-8621-4832-ab54-f0e2477716c7"
+      ],
+      "dictionary": {}
+    },
+    "a5174a5d-06fc-4e59-8948-dca6f1c20a7a": {
+      "verts": [
+        "79ffa1fe-d61f-4e07-8ce2-78aaecc4ac51",
+        "be538499-3112-41f5-8efe-f0efbc03bb3a"
+      ],
+      "faces": [
+        "3dc14b0f-b60f-4299-a36a-0fcf95bec30e",
+        "1a91cf73-8621-4832-ab54-f0e2477716c7"
+      ],
+      "dictionary": {}
+    },
+    "eaaa4488-e5c3-4479-bf40-9ed77bebd32a": {
+      "verts": [
+        "be538499-3112-41f5-8efe-f0efbc03bb3a",
+        "feddc274-3495-475b-9d32-006392884d06"
+      ],
+      "faces": [
+        "3dc14b0f-b60f-4299-a36a-0fcf95bec30e",
+        "07190a37-a44c-4aec-96b4-0b5d753ea965"
+      ],
+      "dictionary": {}
+    },
+    "33f2fbf4-fb88-4ec6-839e-b5229f40abd1": {
+      "verts": [
+        "feddc274-3495-475b-9d32-006392884d06",
+        "1ffb20bd-ef51-4739-adfc-f8c569928f29"
+      ],
+      "faces": [
+        "3dc14b0f-b60f-4299-a36a-0fcf95bec30e",
+        "07190a37-a44c-4aec-96b4-0b5d753ea965"
+      ],
+      "dictionary": {}
+    },
+    "e3850b1e-6169-4d49-af15-3b0259a592bd": {
+      "verts": [
+        "1ffb20bd-ef51-4739-adfc-f8c569928f29",
+        "082526f5-a0e2-44e1-b435-3ec89664d95a"
+      ],
+      "faces": [
+        "3dc14b0f-b60f-4299-a36a-0fcf95bec30e",
+        "cb0c6ec8-b153-4458-b0e3-9c649d7021ca"
+      ],
+      "dictionary": {}
+    },
+    "7617b987-1358-4918-8420-f23021ddcacd": {
+      "verts": [
+        "082526f5-a0e2-44e1-b435-3ec89664d95a",
+        "ebe838be-8e41-4f39-b1f4-84e90a737c95"
+      ],
+      "faces": [
+        "3dc14b0f-b60f-4299-a36a-0fcf95bec30e",
+        "cb0c6ec8-b153-4458-b0e3-9c649d7021ca"
+      ],
+      "dictionary": {}
+    },
+    "a1f49b0b-e1c1-450d-ad41-c828838afc38": {
+      "verts": [
+        "3e27e152-d6f8-4a34-b8e1-43e802a2b4e2",
+        "5e235921-6213-4b6b-a3b1-9bbc3caab226"
+      ],
+      "faces": [
+        "eef2fc3e-621a-4536-ac3a-3d3af0018637",
+        "cb0c6ec8-b153-4458-b0e3-9c649d7021ca",
+        "75cc001e-f857-43db-8732-eb52dbe641e0"
+      ],
+      "dictionary": {}
+    },
+    "7c314a8b-efbd-4227-9c21-03452f22e01e": {
+      "verts": [
+        "5e235921-6213-4b6b-a3b1-9bbc3caab226",
+        "d8dd458d-2b14-4dff-a813-f3233c9e386f"
+      ],
+      "faces": [
+        "eef2fc3e-621a-4536-ac3a-3d3af0018637",
+        "6d4a5a57-30b7-427c-80d5-c4dd5b4229f2",
+        "c8e0aec5-b956-4fab-bf44-9af450aa3ca9"
+      ],
+      "dictionary": {}
+    },
+    "b975c679-c98a-4334-91cf-bf85de766b5a": {
+      "verts": [
+        "d8dd458d-2b14-4dff-a813-f3233c9e386f",
+        "e70c77c3-9d6a-413c-a689-2537bbe8e7fd"
+      ],
+      "faces": [
+        "eef2fc3e-621a-4536-ac3a-3d3af0018637",
+        "6d4a5a57-30b7-427c-80d5-c4dd5b4229f2",
+        "c8e0aec5-b956-4fab-bf44-9af450aa3ca9"
+      ],
+      "dictionary": {}
+    },
+    "1e830189-285b-4ab0-a150-889e4fb3a5de": {
+      "verts": [
+        "e70c77c3-9d6a-413c-a689-2537bbe8e7fd",
+        "998ce122-a7d0-4cb8-90d5-5f094f6a4e6d"
+      ],
+      "faces": [
+        "eef2fc3e-621a-4536-ac3a-3d3af0018637",
+        "1a91cf73-8621-4832-ab54-f0e2477716c7",
+        "84621b2e-69d7-4f88-af2d-de4a43889938"
+      ],
+      "dictionary": {}
+    },
+    "daf7313b-ee93-450a-857b-a5dc9f6d0f13": {
+      "verts": [
+        "998ce122-a7d0-4cb8-90d5-5f094f6a4e6d",
+        "f2f8d381-112a-45de-85f4-dca0c93c5f2b"
+      ],
+      "faces": [
+        "eef2fc3e-621a-4536-ac3a-3d3af0018637",
+        "1a91cf73-8621-4832-ab54-f0e2477716c7",
+        "84621b2e-69d7-4f88-af2d-de4a43889938"
+      ],
+      "dictionary": {}
+    },
+    "1fb5252d-1914-4bce-8177-e97e3341bf96": {
+      "verts": [
+        "ebe838be-8e41-4f39-b1f4-84e90a737c95",
+        "3e27e152-d6f8-4a34-b8e1-43e802a2b4e2"
+      ],
+      "faces": [
+        "eef2fc3e-621a-4536-ac3a-3d3af0018637",
+        "cb0c6ec8-b153-4458-b0e3-9c649d7021ca",
+        "75cc001e-f857-43db-8732-eb52dbe641e0"
+      ],
+      "dictionary": {}
+    },
+    "a1dfc203-2ef2-4728-a077-9ba7275fc738": {
+      "verts": [
+        "e70c77c3-9d6a-413c-a689-2537bbe8e7fd",
+        "ffc8e378-36a2-4e6d-928b-a18c35531c4e"
+      ],
+      "faces": [
+        "1a91cf73-8621-4832-ab54-f0e2477716c7",
+        "6d4a5a57-30b7-427c-80d5-c4dd5b4229f2"
+      ],
+      "dictionary": {}
+    },
+    "e818e4ab-3f40-4e89-97d8-8a617c037094": {
+      "verts": [
+        "ffc8e378-36a2-4e6d-928b-a18c35531c4e",
+        "0ef4d5ca-7b4c-424e-8c5a-61d67a1671ac"
+      ],
+      "faces": [
+        "1a91cf73-8621-4832-ab54-f0e2477716c7",
+        "6d4a5a57-30b7-427c-80d5-c4dd5b4229f2"
+      ],
+      "dictionary": {}
+    },
+    "9cac633d-6dd5-4d93-b50c-b2bf50c082bd": {
+      "verts": [
+        "0ef4d5ca-7b4c-424e-8c5a-61d67a1671ac",
+        "e96495dc-ff38-43d2-a81b-016816cbf2c0"
+      ],
+      "faces": [
+        "1a91cf73-8621-4832-ab54-f0e2477716c7",
+        "07190a37-a44c-4aec-96b4-0b5d753ea965"
+      ],
+      "dictionary": {}
+    },
+    "a5a978b8-ae5a-4478-bdb8-d6a36ee39fda": {
+      "verts": [
+        "e96495dc-ff38-43d2-a81b-016816cbf2c0",
+        "be538499-3112-41f5-8efe-f0efbc03bb3a"
+      ],
+      "faces": [
+        "1a91cf73-8621-4832-ab54-f0e2477716c7",
+        "07190a37-a44c-4aec-96b4-0b5d753ea965"
+      ],
+      "dictionary": {}
+    },
+    "c381f5c7-10cd-4eff-9a00-42057274add3": {
+      "verts": [
+        "0ef4d5ca-7b4c-424e-8c5a-61d67a1671ac",
+        "41ec0a68-3823-4600-9a73-e87d39c861c9"
+      ],
+      "faces": [
+        "07190a37-a44c-4aec-96b4-0b5d753ea965",
+        "6d4a5a57-30b7-427c-80d5-c4dd5b4229f2"
+      ],
+      "dictionary": {}
+    },
+    "47201db9-5845-48f1-876f-eac6fb52fd62": {
+      "verts": [
+        "41ec0a68-3823-4600-9a73-e87d39c861c9",
+        "893def5f-4a1f-4b00-a6aa-c31e8955e516"
+      ],
+      "faces": [
+        "07190a37-a44c-4aec-96b4-0b5d753ea965",
+        "6d4a5a57-30b7-427c-80d5-c4dd5b4229f2"
+      ],
+      "dictionary": {}
+    },
+    "ce806b46-436b-40df-9ef2-5c347116ef71": {
+      "verts": [
+        "893def5f-4a1f-4b00-a6aa-c31e8955e516",
+        "76bd377c-b298-47c9-adc8-35348448345c"
+      ],
+      "faces": [
+        "07190a37-a44c-4aec-96b4-0b5d753ea965",
+        "cb0c6ec8-b153-4458-b0e3-9c649d7021ca"
+      ],
+      "dictionary": {}
+    },
+    "93e865b3-a0c4-469d-888e-8c101e3072ef": {
+      "verts": [
+        "76bd377c-b298-47c9-adc8-35348448345c",
+        "1ffb20bd-ef51-4739-adfc-f8c569928f29"
+      ],
+      "faces": [
+        "07190a37-a44c-4aec-96b4-0b5d753ea965",
+        "cb0c6ec8-b153-4458-b0e3-9c649d7021ca"
+      ],
+      "dictionary": {}
+    },
+    "64e39e08-5851-4049-b1f7-6b09b5705291": {
+      "verts": [
+        "893def5f-4a1f-4b00-a6aa-c31e8955e516",
+        "51db3588-6f7c-4d98-a095-7f4ecbd52059"
+      ],
+      "faces": [
+        "cb0c6ec8-b153-4458-b0e3-9c649d7021ca",
+        "6d4a5a57-30b7-427c-80d5-c4dd5b4229f2"
+      ],
+      "dictionary": {}
+    },
+    "05928ca8-142d-4322-aea5-c02b131217c4": {
+      "verts": [
+        "51db3588-6f7c-4d98-a095-7f4ecbd52059",
+        "5e235921-6213-4b6b-a3b1-9bbc3caab226"
+      ],
+      "faces": [
+        "cb0c6ec8-b153-4458-b0e3-9c649d7021ca",
+        "6d4a5a57-30b7-427c-80d5-c4dd5b4229f2"
+      ],
+      "dictionary": {}
+    },
+    "3d6fc702-a3bc-4876-abca-7d668116babb": {
+      "verts": [
+        "0262343c-b0cc-4686-91ba-aeada06b43ec",
+        "daefef2f-f0b9-4827-9b2d-7b7375be814d"
+      ],
+      "faces": [
+        "cff21a44-de05-43ab-8f90-5535a2fd0892",
+        "675ddb8e-1f2c-4452-8899-dfe37808394a"
+      ],
+      "dictionary": {}
+    },
+    "e77e70dc-f6c2-4963-8976-5fa8bdb68495": {
+      "verts": [
+        "daefef2f-f0b9-4827-9b2d-7b7375be814d",
+        "4e048b0f-28dd-40a2-89e2-dd5ecd4baa4f"
+      ],
+      "faces": [
+        "cff21a44-de05-43ab-8f90-5535a2fd0892",
+        "84621b2e-69d7-4f88-af2d-de4a43889938"
+      ],
+      "dictionary": {}
+    },
+    "f3acacff-0cf6-43c4-85fb-d7c3bd484953": {
+      "verts": [
+        "4e048b0f-28dd-40a2-89e2-dd5ecd4baa4f",
+        "f2f8d381-112a-45de-85f4-dca0c93c5f2b"
+      ],
+      "faces": [
+        "cff21a44-de05-43ab-8f90-5535a2fd0892",
+        "84621b2e-69d7-4f88-af2d-de4a43889938"
+      ],
+      "dictionary": {}
+    },
+    "87f86d38-8002-48dc-a59a-2b0d7fb7860d": {
+      "verts": [
+        "ebe838be-8e41-4f39-b1f4-84e90a737c95",
+        "182fd9ae-ac00-44cc-b6e9-f4c85ffb048d"
+      ],
+      "faces": [
+        "cff21a44-de05-43ab-8f90-5535a2fd0892",
+        "75cc001e-f857-43db-8732-eb52dbe641e0"
+      ],
+      "dictionary": {}
+    },
+    "66c09d8c-3294-4026-9aa8-445a784a97ea": {
+      "verts": [
+        "182fd9ae-ac00-44cc-b6e9-f4c85ffb048d",
+        "b772e46c-cc54-4cdd-9d69-eb107264ca50"
+      ],
+      "faces": [
+        "cff21a44-de05-43ab-8f90-5535a2fd0892",
+        "75cc001e-f857-43db-8732-eb52dbe641e0"
+      ],
+      "dictionary": {}
+    },
+    "bc8f7405-82f4-4ae2-b7ad-8babcc25c223": {
+      "verts": [
+        "b772e46c-cc54-4cdd-9d69-eb107264ca50",
+        "0262343c-b0cc-4686-91ba-aeada06b43ec"
+      ],
+      "faces": [
+        "cff21a44-de05-43ab-8f90-5535a2fd0892",
+        "675ddb8e-1f2c-4452-8899-dfe37808394a"
+      ],
+      "dictionary": {}
+    },
+    "4b3c24dd-620e-47b5-812c-52ee59f96afb": {
+      "verts": [
+        "b772e46c-cc54-4cdd-9d69-eb107264ca50",
+        "0128282a-7752-48bd-b20b-06dc4d5efa5a"
+      ],
+      "faces": [
+        "675ddb8e-1f2c-4452-8899-dfe37808394a",
+        "75cc001e-f857-43db-8732-eb52dbe641e0"
+      ],
+      "dictionary": {}
+    },
+    "abed9955-0331-4e95-87d7-15ba25b381a4": {
+      "verts": [
+        "0128282a-7752-48bd-b20b-06dc4d5efa5a",
+        "0f423b51-0146-4ebc-9683-7ed0812a5301"
+      ],
+      "faces": [
+        "675ddb8e-1f2c-4452-8899-dfe37808394a",
+        "75cc001e-f857-43db-8732-eb52dbe641e0"
+      ],
+      "dictionary": {}
+    },
+    "7f62fe05-0b34-4692-9164-365aa1cee149": {
+      "verts": [
+        "0f423b51-0146-4ebc-9683-7ed0812a5301",
+        "375dffc7-81ca-4023-a24f-619ac64f85d3"
+      ],
+      "faces": [
+        "675ddb8e-1f2c-4452-8899-dfe37808394a",
+        "c8e0aec5-b956-4fab-bf44-9af450aa3ca9"
+      ],
+      "dictionary": {}
+    },
+    "160dbd05-57a2-489f-8bbd-9b1251475571": {
+      "verts": [
+        "375dffc7-81ca-4023-a24f-619ac64f85d3",
+        "716ab27b-f7e0-41a8-acf2-1a6cd5ac4f4c"
+      ],
+      "faces": [
+        "675ddb8e-1f2c-4452-8899-dfe37808394a",
+        "c8e0aec5-b956-4fab-bf44-9af450aa3ca9"
+      ],
+      "dictionary": {}
+    },
+    "122356cc-f034-492a-a3fd-982e74058933": {
+      "verts": [
+        "716ab27b-f7e0-41a8-acf2-1a6cd5ac4f4c",
+        "75ff5a91-1b94-4ed3-a1ac-17d4c173f74e"
+      ],
+      "faces": [
+        "675ddb8e-1f2c-4452-8899-dfe37808394a",
+        "84621b2e-69d7-4f88-af2d-de4a43889938"
+      ],
+      "dictionary": {}
+    },
+    "36efc8bb-b529-433a-b5a5-332a8377ebbf": {
+      "verts": [
+        "75ff5a91-1b94-4ed3-a1ac-17d4c173f74e",
+        "daefef2f-f0b9-4827-9b2d-7b7375be814d"
+      ],
+      "faces": [
+        "675ddb8e-1f2c-4452-8899-dfe37808394a",
+        "84621b2e-69d7-4f88-af2d-de4a43889938"
+      ],
+      "dictionary": {}
+    },
+    "152a146e-8d46-4274-a100-8241240ff4f2": {
+      "verts": [
+        "716ab27b-f7e0-41a8-acf2-1a6cd5ac4f4c",
+        "d71ae7fc-1872-464f-9a49-80e1645e3fa8"
+      ],
+      "faces": [
+        "84621b2e-69d7-4f88-af2d-de4a43889938",
+        "c8e0aec5-b956-4fab-bf44-9af450aa3ca9"
+      ],
+      "dictionary": {}
+    },
+    "826e5ab8-ed44-4b5f-a68d-8c341749a22c": {
+      "verts": [
+        "d71ae7fc-1872-464f-9a49-80e1645e3fa8",
+        "e70c77c3-9d6a-413c-a689-2537bbe8e7fd"
+      ],
+      "faces": [
+        "84621b2e-69d7-4f88-af2d-de4a43889938",
+        "c8e0aec5-b956-4fab-bf44-9af450aa3ca9"
+      ],
+      "dictionary": {}
+    },
+    "986c750e-eb3d-49b4-8513-843eb2374fcf": {
+      "verts": [
+        "81c52b41-2e27-41ec-9a96-836f16c0d2ba",
+        "0f423b51-0146-4ebc-9683-7ed0812a5301"
+      ],
+      "faces": [
+        "75cc001e-f857-43db-8732-eb52dbe641e0",
+        "c8e0aec5-b956-4fab-bf44-9af450aa3ca9"
+      ],
+      "dictionary": {}
+    },
+    "c02ef97c-6630-4cef-a839-c073603f0d10": {
+      "verts": [
+        "5e235921-6213-4b6b-a3b1-9bbc3caab226",
+        "81c52b41-2e27-41ec-9a96-836f16c0d2ba"
+      ],
+      "faces": [
+        "75cc001e-f857-43db-8732-eb52dbe641e0",
+        "c8e0aec5-b956-4fab-bf44-9af450aa3ca9"
+      ],
+      "dictionary": {}
+    }
+  },
+  "faces": {
+    "3dc14b0f-b60f-4299-a36a-0fcf95bec30e": {
+      "verts": [
+        "ddd49a86-66c1-492a-8055-09c5f1b3837d",
+        "ebe838be-8e41-4f39-b1f4-84e90a737c95",
+        "082526f5-a0e2-44e1-b435-3ec89664d95a",
+        "1ffb20bd-ef51-4739-adfc-f8c569928f29",
+        "feddc274-3495-475b-9d32-006392884d06",
+        "be538499-3112-41f5-8efe-f0efbc03bb3a",
+        "79ffa1fe-d61f-4e07-8ce2-78aaecc4ac51",
+        "f2f8d381-112a-45de-85f4-dca0c93c5f2b"
+      ],
+      "edges": [
+        "b421576d-92e2-43e1-a1ba-dcbd7a4fb816",
+        "7617b987-1358-4918-8420-f23021ddcacd",
+        "e3850b1e-6169-4d49-af15-3b0259a592bd",
+        "33f2fbf4-fb88-4ec6-839e-b5229f40abd1",
+        "eaaa4488-e5c3-4479-bf40-9ed77bebd32a",
+        "a5174a5d-06fc-4e59-8948-dca6f1c20a7a",
+        "12ead49f-c70d-4b7e-8021-5becf364ad6d",
+        "fdac8729-9876-45b9-8ed0-6c6eb55416b1"
+      ],
+      "cells": [
+        "d76a5c9f-f114-40a5-a1c8-f96963fcd938"
+      ],
+      "construction": "1f8976d6-d03f-41dc-a3ec-6ff27bafa655",
+      "type": "Foundation",
+      "uvn": [
+        [
+          0.176187,
+          0.984357,
+          0.0
+        ],
+        [
+          -0.984357,
+          0.176187,
+          0.0
+        ],
+        [
+          0.0,
+          -0.0,
+          1.0
+        ]
+      ],
+      "dictionary": {}
+    },
+    "eef2fc3e-621a-4536-ac3a-3d3af0018637": {
+      "verts": [
+        "f2f8d381-112a-45de-85f4-dca0c93c5f2b",
+        "ddd49a86-66c1-492a-8055-09c5f1b3837d",
+        "ebe838be-8e41-4f39-b1f4-84e90a737c95",
+        "3e27e152-d6f8-4a34-b8e1-43e802a2b4e2",
+        "5e235921-6213-4b6b-a3b1-9bbc3caab226",
+        "d8dd458d-2b14-4dff-a813-f3233c9e386f",
+        "e70c77c3-9d6a-413c-a689-2537bbe8e7fd",
+        "998ce122-a7d0-4cb8-90d5-5f094f6a4e6d"
+      ],
+      "edges": [
+        "fdac8729-9876-45b9-8ed0-6c6eb55416b1",
+        "b421576d-92e2-43e1-a1ba-dcbd7a4fb816",
+        "1fb5252d-1914-4bce-8177-e97e3341bf96",
+        "a1f49b0b-e1c1-450d-ad41-c828838afc38",
+        "7c314a8b-efbd-4227-9c21-03452f22e01e",
+        "b975c679-c98a-4334-91cf-bf85de766b5a",
+        "1e830189-285b-4ab0-a150-889e4fb3a5de",
+        "daf7313b-ee93-450a-857b-a5dc9f6d0f13"
+      ],
+      "cells": [
+        "d76a5c9f-f114-40a5-a1c8-f96963fcd938",
+        "635cddde-66c6-44f4-89b2-7fdfbc320993"
+      ],
+      "construction": "f5299341-7a8a-4d25-aac7-eba59d4873ab",
+      "type": "Interior wall",
+      "uvn": [
+        [
+          0.176187,
+          0.984357,
+          0.0
+        ],
+        [
+          -0.0,
+          0.0,
+          1.0
+        ],
+        [
+          0.984357,
+          -0.176187,
+          0.0
+        ]
+      ],
+      "dictionary": {}
+    },
+    "1a91cf73-8621-4832-ab54-f0e2477716c7": {
+      "verts": [
+        "be538499-3112-41f5-8efe-f0efbc03bb3a",
+        "79ffa1fe-d61f-4e07-8ce2-78aaecc4ac51",
+        "f2f8d381-112a-45de-85f4-dca0c93c5f2b",
+        "998ce122-a7d0-4cb8-90d5-5f094f6a4e6d",
+        "e70c77c3-9d6a-413c-a689-2537bbe8e7fd",
+        "ffc8e378-36a2-4e6d-928b-a18c35531c4e",
+        "0ef4d5ca-7b4c-424e-8c5a-61d67a1671ac",
+        "e96495dc-ff38-43d2-a81b-016816cbf2c0"
+      ],
+      "edges": [
+        "a5174a5d-06fc-4e59-8948-dca6f1c20a7a",
+        "12ead49f-c70d-4b7e-8021-5becf364ad6d",
+        "daf7313b-ee93-450a-857b-a5dc9f6d0f13",
+        "1e830189-285b-4ab0-a150-889e4fb3a5de",
+        "a1dfc203-2ef2-4728-a077-9ba7275fc738",
+        "e818e4ab-3f40-4e89-97d8-8a617c037094",
+        "9cac633d-6dd5-4d93-b50c-b2bf50c082bd",
+        "a5a978b8-ae5a-4478-bdb8-d6a36ee39fda"
+      ],
+      "cells": [
+        "d76a5c9f-f114-40a5-a1c8-f96963fcd938"
+      ],
+      "construction": "2063ecc7-0b32-4890-a305-2837a41d79fe",
+      "type": "Facade",
+      "uvn": [
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          -0.0,
+          1.0
+        ],
+        [
+          0.0,
+          -1.0,
+          -0.0
+        ]
+      ],
+      "dictionary": {}
+    },
+    "07190a37-a44c-4aec-96b4-0b5d753ea965": {
+      "verts": [
+        "1ffb20bd-ef51-4739-adfc-f8c569928f29",
+        "feddc274-3495-475b-9d32-006392884d06",
+        "be538499-3112-41f5-8efe-f0efbc03bb3a",
+        "e96495dc-ff38-43d2-a81b-016816cbf2c0",
+        "0ef4d5ca-7b4c-424e-8c5a-61d67a1671ac",
+        "41ec0a68-3823-4600-9a73-e87d39c861c9",
+        "893def5f-4a1f-4b00-a6aa-c31e8955e516",
+        "76bd377c-b298-47c9-adc8-35348448345c"
+      ],
+      "edges": [
+        "33f2fbf4-fb88-4ec6-839e-b5229f40abd1",
+        "eaaa4488-e5c3-4479-bf40-9ed77bebd32a",
+        "a5a978b8-ae5a-4478-bdb8-d6a36ee39fda",
+        "9cac633d-6dd5-4d93-b50c-b2bf50c082bd",
+        "c381f5c7-10cd-4eff-9a00-42057274add3",
+        "47201db9-5845-48f1-876f-eac6fb52fd62",
+        "ce806b46-436b-40df-9ef2-5c347116ef71",
+        "93e865b3-a0c4-469d-888e-8c101e3072ef"
+      ],
+      "cells": [
+        "d76a5c9f-f114-40a5-a1c8-f96963fcd938"
+      ],
+      "construction": "2063ecc7-0b32-4890-a305-2837a41d79fe",
+      "type": "Facade",
+      "uvn": [
+        [
+          -0.024569,
+          -0.999698,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ],
+        [
+          -0.999698,
+          0.024569,
+          0.0
+        ]
+      ],
+      "dictionary": {}
+    },
+    "cb0c6ec8-b153-4458-b0e3-9c649d7021ca": {
+      "verts": [
+        "ebe838be-8e41-4f39-b1f4-84e90a737c95",
+        "082526f5-a0e2-44e1-b435-3ec89664d95a",
+        "1ffb20bd-ef51-4739-adfc-f8c569928f29",
+        "76bd377c-b298-47c9-adc8-35348448345c",
+        "893def5f-4a1f-4b00-a6aa-c31e8955e516",
+        "51db3588-6f7c-4d98-a095-7f4ecbd52059",
+        "5e235921-6213-4b6b-a3b1-9bbc3caab226",
+        "3e27e152-d6f8-4a34-b8e1-43e802a2b4e2"
+      ],
+      "edges": [
+        "7617b987-1358-4918-8420-f23021ddcacd",
+        "e3850b1e-6169-4d49-af15-3b0259a592bd",
+        "93e865b3-a0c4-469d-888e-8c101e3072ef",
+        "ce806b46-436b-40df-9ef2-5c347116ef71",
+        "64e39e08-5851-4049-b1f7-6b09b5705291",
+        "05928ca8-142d-4322-aea5-c02b131217c4",
+        "a1f49b0b-e1c1-450d-ad41-c828838afc38",
+        "1fb5252d-1914-4bce-8177-e97e3341bf96"
+      ],
+      "cells": [
+        "d76a5c9f-f114-40a5-a1c8-f96963fcd938"
+      ],
+      "construction": "2063ecc7-0b32-4890-a305-2837a41d79fe",
+      "type": "Facade",
+      "uvn": [
+        [
+          -1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          -0.0,
+          1.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "dictionary": {}
+    },
+    "6d4a5a57-30b7-427c-80d5-c4dd5b4229f2": {
+      "verts": [
+        "d8dd458d-2b14-4dff-a813-f3233c9e386f",
+        "5e235921-6213-4b6b-a3b1-9bbc3caab226",
+        "51db3588-6f7c-4d98-a095-7f4ecbd52059",
+        "893def5f-4a1f-4b00-a6aa-c31e8955e516",
+        "41ec0a68-3823-4600-9a73-e87d39c861c9",
+        "0ef4d5ca-7b4c-424e-8c5a-61d67a1671ac",
+        "ffc8e378-36a2-4e6d-928b-a18c35531c4e",
+        "e70c77c3-9d6a-413c-a689-2537bbe8e7fd"
+      ],
+      "edges": [
+        "7c314a8b-efbd-4227-9c21-03452f22e01e",
+        "05928ca8-142d-4322-aea5-c02b131217c4",
+        "64e39e08-5851-4049-b1f7-6b09b5705291",
+        "47201db9-5845-48f1-876f-eac6fb52fd62",
+        "c381f5c7-10cd-4eff-9a00-42057274add3",
+        "e818e4ab-3f40-4e89-97d8-8a617c037094",
+        "a1dfc203-2ef2-4728-a077-9ba7275fc738",
+        "b975c679-c98a-4334-91cf-bf85de766b5a"
+      ],
+      "cells": [
+        "d76a5c9f-f114-40a5-a1c8-f96963fcd938"
+      ],
+      "construction": "e369a18b-3e2e-408b-90cf-c853a0183e73",
+      "type": "Roof",
+      "uvn": [
+        [
+          0.176187,
+          0.984357,
+          0.0
+        ],
+        [
+          -0.984357,
+          0.176187,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "dictionary": {}
+    },
+    "cff21a44-de05-43ab-8f90-5535a2fd0892": {
+      "verts": [
+        "ddd49a86-66c1-492a-8055-09c5f1b3837d",
+        "f2f8d381-112a-45de-85f4-dca0c93c5f2b",
+        "4e048b0f-28dd-40a2-89e2-dd5ecd4baa4f",
+        "daefef2f-f0b9-4827-9b2d-7b7375be814d",
+        "0262343c-b0cc-4686-91ba-aeada06b43ec",
+        "b772e46c-cc54-4cdd-9d69-eb107264ca50",
+        "182fd9ae-ac00-44cc-b6e9-f4c85ffb048d",
+        "ebe838be-8e41-4f39-b1f4-84e90a737c95"
+      ],
+      "edges": [
+        "fdac8729-9876-45b9-8ed0-6c6eb55416b1",
+        "f3acacff-0cf6-43c4-85fb-d7c3bd484953",
+        "e77e70dc-f6c2-4963-8976-5fa8bdb68495",
+        "3d6fc702-a3bc-4876-abca-7d668116babb",
+        "bc8f7405-82f4-4ae2-b7ad-8babcc25c223",
+        "66c09d8c-3294-4026-9aa8-445a784a97ea",
+        "87f86d38-8002-48dc-a59a-2b0d7fb7860d",
+        "b421576d-92e2-43e1-a1ba-dcbd7a4fb816"
+      ],
+      "cells": [
+        "635cddde-66c6-44f4-89b2-7fdfbc320993"
+      ],
+      "construction": "1f8976d6-d03f-41dc-a3ec-6ff27bafa655",
+      "type": "Foundation",
+      "uvn": [
+        [
+          -0.176187,
+          -0.984357,
+          0.0
+        ],
+        [
+          0.984357,
+          -0.176187,
+          -0.0
+        ],
+        [
+          0.0,
+          -0.0,
+          1.0
+        ]
+      ],
+      "dictionary": {}
+    },
+    "675ddb8e-1f2c-4452-8899-dfe37808394a": {
+      "verts": [
+        "daefef2f-f0b9-4827-9b2d-7b7375be814d",
+        "0262343c-b0cc-4686-91ba-aeada06b43ec",
+        "b772e46c-cc54-4cdd-9d69-eb107264ca50",
+        "0128282a-7752-48bd-b20b-06dc4d5efa5a",
+        "0f423b51-0146-4ebc-9683-7ed0812a5301",
+        "375dffc7-81ca-4023-a24f-619ac64f85d3",
+        "716ab27b-f7e0-41a8-acf2-1a6cd5ac4f4c",
+        "75ff5a91-1b94-4ed3-a1ac-17d4c173f74e"
+      ],
+      "edges": [
+        "3d6fc702-a3bc-4876-abca-7d668116babb",
+        "bc8f7405-82f4-4ae2-b7ad-8babcc25c223",
+        "4b3c24dd-620e-47b5-812c-52ee59f96afb",
+        "abed9955-0331-4e95-87d7-15ba25b381a4",
+        "7f62fe05-0b34-4692-9164-365aa1cee149",
+        "160dbd05-57a2-489f-8bbd-9b1251475571",
+        "122356cc-f034-492a-a3fd-982e74058933",
+        "36efc8bb-b529-433a-b5a5-332a8377ebbf"
+      ],
+      "cells": [
+        "635cddde-66c6-44f4-89b2-7fdfbc320993"
+      ],
+      "construction": "2063ecc7-0b32-4890-a305-2837a41d79fe",
+      "type": "Facade",
+      "uvn": [
+        [
+          0.176187,
+          0.984357,
+          0.0
+        ],
+        [
+          -0.0,
+          0.0,
+          1.0
+        ],
+        [
+          0.984357,
+          -0.176187,
+          0.0
+        ]
+      ],
+      "dictionary": {}
+    },
+    "84621b2e-69d7-4f88-af2d-de4a43889938": {
+      "verts": [
+        "f2f8d381-112a-45de-85f4-dca0c93c5f2b",
+        "4e048b0f-28dd-40a2-89e2-dd5ecd4baa4f",
+        "daefef2f-f0b9-4827-9b2d-7b7375be814d",
+        "75ff5a91-1b94-4ed3-a1ac-17d4c173f74e",
+        "716ab27b-f7e0-41a8-acf2-1a6cd5ac4f4c",
+        "d71ae7fc-1872-464f-9a49-80e1645e3fa8",
+        "e70c77c3-9d6a-413c-a689-2537bbe8e7fd",
+        "998ce122-a7d0-4cb8-90d5-5f094f6a4e6d"
+      ],
+      "edges": [
+        "f3acacff-0cf6-43c4-85fb-d7c3bd484953",
+        "e77e70dc-f6c2-4963-8976-5fa8bdb68495",
+        "36efc8bb-b529-433a-b5a5-332a8377ebbf",
+        "122356cc-f034-492a-a3fd-982e74058933",
+        "152a146e-8d46-4274-a100-8241240ff4f2",
+        "826e5ab8-ed44-4b5f-a68d-8c341749a22c",
+        "1e830189-285b-4ab0-a150-889e4fb3a5de",
+        "daf7313b-ee93-450a-857b-a5dc9f6d0f13"
+      ],
+      "cells": [
+        "635cddde-66c6-44f4-89b2-7fdfbc320993"
+      ],
+      "construction": "2063ecc7-0b32-4890-a305-2837a41d79fe",
+      "type": "Facade",
+      "uvn": [
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          -0.0,
+          1.0
+        ],
+        [
+          0.0,
+          -1.0,
+          -0.0
+        ]
+      ],
+      "dictionary": {}
+    },
+    "75cc001e-f857-43db-8732-eb52dbe641e0": {
+      "verts": [
+        "b772e46c-cc54-4cdd-9d69-eb107264ca50",
+        "182fd9ae-ac00-44cc-b6e9-f4c85ffb048d",
+        "ebe838be-8e41-4f39-b1f4-84e90a737c95",
+        "3e27e152-d6f8-4a34-b8e1-43e802a2b4e2",
+        "5e235921-6213-4b6b-a3b1-9bbc3caab226",
+        "81c52b41-2e27-41ec-9a96-836f16c0d2ba",
+        "0f423b51-0146-4ebc-9683-7ed0812a5301",
+        "0128282a-7752-48bd-b20b-06dc4d5efa5a"
+      ],
+      "edges": [
+        "66c09d8c-3294-4026-9aa8-445a784a97ea",
+        "87f86d38-8002-48dc-a59a-2b0d7fb7860d",
+        "1fb5252d-1914-4bce-8177-e97e3341bf96",
+        "a1f49b0b-e1c1-450d-ad41-c828838afc38",
+        "c02ef97c-6630-4cef-a839-c073603f0d10",
+        "986c750e-eb3d-49b4-8513-843eb2374fcf",
+        "abed9955-0331-4e95-87d7-15ba25b381a4",
+        "4b3c24dd-620e-47b5-812c-52ee59f96afb"
+      ],
+      "cells": [
+        "635cddde-66c6-44f4-89b2-7fdfbc320993"
+      ],
+      "construction": "2063ecc7-0b32-4890-a305-2837a41d79fe",
+      "type": "Facade",
+      "uvn": [
+        [
+          -1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ],
+        [
+          -0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "dictionary": {}
+    },
+    "c8e0aec5-b956-4fab-bf44-9af450aa3ca9": {
+      "verts": [
+        "d8dd458d-2b14-4dff-a813-f3233c9e386f",
+        "e70c77c3-9d6a-413c-a689-2537bbe8e7fd",
+        "d71ae7fc-1872-464f-9a49-80e1645e3fa8",
+        "716ab27b-f7e0-41a8-acf2-1a6cd5ac4f4c",
+        "375dffc7-81ca-4023-a24f-619ac64f85d3",
+        "0f423b51-0146-4ebc-9683-7ed0812a5301",
+        "81c52b41-2e27-41ec-9a96-836f16c0d2ba",
+        "5e235921-6213-4b6b-a3b1-9bbc3caab226"
+      ],
+      "edges": [
+        "b975c679-c98a-4334-91cf-bf85de766b5a",
+        "826e5ab8-ed44-4b5f-a68d-8c341749a22c",
+        "152a146e-8d46-4274-a100-8241240ff4f2",
+        "160dbd05-57a2-489f-8bbd-9b1251475571",
+        "7f62fe05-0b34-4692-9164-365aa1cee149",
+        "986c750e-eb3d-49b4-8513-843eb2374fcf",
+        "c02ef97c-6630-4cef-a839-c073603f0d10",
+        "7c314a8b-efbd-4227-9c21-03452f22e01e"
+      ],
+      "cells": [
+        "635cddde-66c6-44f4-89b2-7fdfbc320993"
+      ],
+      "construction": "e369a18b-3e2e-408b-90cf-c853a0183e73",
+      "type": "Roof",
+      "uvn": [
+        [
+          -0.176187,
+          -0.984357,
+          0.0
+        ],
+        [
+          0.984357,
+          -0.176187,
+          -0.0
+        ],
+        [
+          0.0,
+          -0.0,
+          1.0
+        ]
+      ],
+      "dictionary": {}
+    }
+  },
+  "cells": {
+    "d76a5c9f-f114-40a5-a1c8-f96963fcd938": {
+      "faces": [
+        "3dc14b0f-b60f-4299-a36a-0fcf95bec30e",
+        "eef2fc3e-621a-4536-ac3a-3d3af0018637",
+        "1a91cf73-8621-4832-ab54-f0e2477716c7",
+        "07190a37-a44c-4aec-96b4-0b5d753ea965",
+        "cb0c6ec8-b153-4458-b0e3-9c649d7021ca",
+        "6d4a5a57-30b7-427c-80d5-c4dd5b4229f2"
+      ],
+      "dictionary": {}
+    },
+    "635cddde-66c6-44f4-89b2-7fdfbc320993": {
+      "faces": [
+        "cff21a44-de05-43ab-8f90-5535a2fd0892",
+        "675ddb8e-1f2c-4452-8899-dfe37808394a",
+        "84621b2e-69d7-4f88-af2d-de4a43889938",
+        "eef2fc3e-621a-4536-ac3a-3d3af0018637",
+        "75cc001e-f857-43db-8732-eb52dbe641e0",
+        "c8e0aec5-b956-4fab-bf44-9af450aa3ca9"
+      ],
+      "dictionary": {}
+    }
+  }
+}
