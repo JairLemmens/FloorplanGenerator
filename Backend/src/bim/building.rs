@@ -412,7 +412,7 @@ impl Building {
 
             let group_id = face.layer_group_id.unwrap();
             let group = self.construction_set.layer_group(group_id).unwrap();
-
+            
             for layer_idx in 0..group.layers.len() {
                 let layer = self.construction_set.layer(group.layers[layer_idx]).unwrap();
                 priority_layers.push((layer.priority, LayerRef {face_id: assembly.face_id, layer_idx,assembly_idx}));
@@ -463,8 +463,7 @@ impl Building {
                         break;
                     }
 
-                    let go_cw =
-                        !assemblies[index].is_ccw ^ scan_cw;
+                    let go_cw = !assemblies[index].is_ccw ^ scan_cw;
 
                     candidate_index = (candidate_index as isize + if go_cw { -1 } else { 1 }).rem_euclid(assemblies.len() as isize) as usize;
 
@@ -501,7 +500,7 @@ impl Building {
                                 candidate_ref.layer_idx,
                                 JointType::Butt,
                             );
-
+                          
                             layer_joints.insert(layer_ref, candidate_ref);
 
                             found = true;
