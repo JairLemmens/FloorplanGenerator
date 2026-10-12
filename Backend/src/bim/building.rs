@@ -97,7 +97,7 @@ impl Building {
         face.geometry(&self.topology,&self.construction_set)
     }
 
-    pub fn apply_joint(&mut self,face0_idx: usize,face1_idx: usize,joint_edge_id: Id,layer0_idx: usize,layer1_idx: usize,mut joint_type: JointType,) {
+    pub fn apply_joint(&mut self,face0_idx: usize,face1_idx: usize,joint_edge_id: Id,layer0_idx: usize,layer1_idx: usize,mut joint_type: JointType,candidate_layers_reversed: bool,) {
 
         let (joint_edge_vert0, joint_edge_vert1, face0_id, face1_id) = {
             let joint_edge = self.topology.edge(joint_edge_id).unwrap();
@@ -234,7 +234,13 @@ impl Building {
             }
 
             JointType::Butt => {
-                if face0_reversed == face1_reversed {
+                if candidate_layers_reversed {
+                    (
+                        offset_from_intersection(i12, p01, n0),
+                        offset_from_intersection(i22, p01, n0),
+                        None,
+                    )
+                } else if face0_reversed == face1_reversed {
                     (
                         offset_from_intersection(i11, p01, n0),
                         offset_from_intersection(i21, p01, n0),
@@ -499,6 +505,7 @@ impl Building {
                                 layer_ref.layer_idx,
                                 candidate_ref.layer_idx,
                                 JointType::Butt,
+                                flip_layers,
                             );
                           
                             layer_joints.insert(layer_ref, candidate_ref);
@@ -531,6 +538,7 @@ impl Building {
                                 layer_ref.layer_idx,
                                 candidate_ref.layer_idx,
                                 JointType::Butt,
+                                flip_layers,
                             );
 
                             layer_joints.insert(layer_ref, candidate_ref);
@@ -551,6 +559,7 @@ impl Building {
                                 layer_ref.layer_idx,
                                 candidate_ref.layer_idx,
                                 JointType::Miter,
+                                flip_layers,
                             );
                         } else {
                             self.apply_joint(
@@ -560,6 +569,7 @@ impl Building {
                                 layer_ref.layer_idx,
                                 candidate_ref.layer_idx,
                                 JointType::DoubleButt,
+                                flip_layers,
                             );
 
                             covered.insert(candidate_ref, layer_ref);
