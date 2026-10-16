@@ -50,51 +50,59 @@ impl PyBuilding {
     }
 
     pub fn layer_geometry(&self, py: Python<'_>, face_id: &PyId) -> PyResult<Py<PyAny>> {
+        
+        let face_id = Id {index: face_id.index, generation: face_id.generation};
+
         let geometry = self
             .binding
-            .layer_geometry(Id {
-                index: face_id.index,
-                generation: face_id.generation,
-            })
+            .layer_geometry(face_id)
             .map_err(PyValueError::new_err)?;
+        
+        let face_uuid = self
+            .binding
+            .topology
+            .face(face_id)
+            .ok_or_else(|| PyValueError::new_err("Invalid face Id"))?
+            .uuid
+            .clone();
 
         let result = PyList::empty(py);
 
-        for (name, uuid, edge_materials, layer, area) in geometry {
+        for (layer_idx, (name, uuid, joints, layer, area)) in geometry.into_iter().enumerate() {
             let layer_dict = PyDict::new(py);
 
             layer_dict.set_item("name", name)?;
             layer_dict.set_item("uuid", uuid)?;
             layer_dict.set_item("area", area)?;
 
-            let py_edge_materials = PyList::empty(py);
+            let py_joints = PyList::empty(py);
 
-            for edge in edge_materials {
-                let py_edge = PyList::empty(py);
+            let layer_joints = joints
+                .get(layer_idx)
+                .ok_or_else(|| PyValueError::new_err("Joints do not match layer count"))?;
 
-                for id in edge {
-                    match id {
-                        Some(id) => {
-                            let construction_layer = self
-                                .binding
-                                .construction_set
-                                .layer(id)
-                                .ok_or_else(|| {PyValueError::new_err("Invalid construction layer Id")
-                                })?;
+            for joint in layer_joints {
+                match joint {
+                    Some(joint) => {
+                        let face = self
+                            .binding
+                            .topology
+                            .face(joint.face_id)
+                            .ok_or_else(|| PyValueError::new_err("Invalid joint face Id"))?;
 
-                            py_edge.append(&construction_layer.uuid)?;
-                        }
+                        let py_joint = PyDict::new(py);
+                        py_joint.set_item("face_Id", &face.uuid)?;
+                        py_joint.set_item("layer_idx", joint.layer_idx)?;
+                        py_joints.append(py_joint)?;
+                    }
 
-                        None => {
-                            py_edge.append(py.None())?;
-                        }
+                    None => {
+                        py_joints.append(py.None())?;
                     }
                 }
-
-                py_edge_materials.append(py_edge)?;
             }
 
-            layer_dict.set_item("edge_materials", py_edge_materials)?;
+            layer_dict.set_item("joints", py_joints)?;
 
             layer_dict.set_item(
                 "inner",
@@ -108,8 +116,10 @@ impl PyBuilding {
 
             result.append(layer_dict)?;
         }
+        let output = PyDict::new(py);
+        output.set_item(face_uuid.to_string(), result)?;
 
-        Ok(result.into())
+        Ok(output.into())
     }
 
 
