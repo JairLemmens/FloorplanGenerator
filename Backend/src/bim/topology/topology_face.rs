@@ -1,6 +1,6 @@
 use serde::{Serialize, Deserialize};
 
-use crate::bim::base_types::{Id, ConstructionRef, EdgeOffsets, LayerGeometry, Dictionary, EdgeMaterials, Frame};
+use crate::bim::base_types::{Id, ConstructionRef, EdgeOffsets, LayerGeometry, Dictionary, FaceJoints, Frame};
 use crate::bim::utils::{offset_per_segments, lift_points_with_offset, area_2d};
 use crate::bim::construction::construction_set::{ConstructionSet};
 use super::topology::{Topology};
@@ -26,7 +26,7 @@ pub struct TopologyFace {
 
     pub(crate) construction: ConstructionRef,
     pub(crate) layer_group_id: Option<Id>,
-    pub(crate) joint_materials: EdgeMaterials,
+    pub(crate) joints: FaceJoints,
     pub(crate) inner_edge_offsets: EdgeOffsets,
     pub(crate) outer_edge_offsets: EdgeOffsets,
 
@@ -36,7 +36,7 @@ pub struct TopologyFace {
 }
 
 impl TopologyFace {
-    pub fn geometry(&self,topology: &Topology,construction_set: &ConstructionSet,) -> Result<Vec<(String, String, EdgeMaterials, LayerGeometry, f64)>, String> {
+    pub fn geometry(&self,topology: &Topology,construction_set: &ConstructionSet,) -> Result<Vec<(String, String, FaceJoints, LayerGeometry, f64)>, String> {
         let layer_group_id = self
             .layer_group_id
             .ok_or_else(|| "Face has no layer group".to_string())?;
@@ -88,7 +88,7 @@ impl TopologyFace {
             let inner = lift_points_with_offset(&self.frame, &inner_2d, z_in);
             let outer = lift_points_with_offset(&self.frame, &outer_2d, z_out);
 
-            geometry.push((layer.name.clone(), layer.uuid.clone(), self.joint_materials.clone(), LayerGeometry{inner, outer}, area.clone()));            
+            geometry.push((layer.name.clone(), layer.uuid.clone(), self.joints.clone(), LayerGeometry{inner, outer}, area.clone()));
         }
 
         Ok(geometry)

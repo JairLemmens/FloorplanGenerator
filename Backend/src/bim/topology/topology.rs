@@ -62,7 +62,7 @@ impl Topology {
             cells: Vec::new(),
             construction,
             layer_group_id: None,
-            joint_materials: Vec::new(),
+            joints: Vec::new(),
             inner_edge_offsets: Vec::new(),
             outer_edge_offsets: Vec::new(),
             face_type,

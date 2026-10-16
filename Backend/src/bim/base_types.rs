@@ -18,7 +18,14 @@ pub enum MatOrCompId { Material(Id), Composite(Id), }
 
 pub type EdgeOffsets = Vec<Vec<f64>>;
 
-pub type EdgeMaterials = Vec<Vec<Option<Id>>>;
+#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
+pub struct Joint {
+    #[serde(rename = "face_Id")]
+    pub face_id: Id,
+    pub layer_idx: usize,
+}
+
+pub type FaceJoints = Vec<Vec<Option<Joint>>>;
 
 #[derive(Serialize)]
 pub struct LayerGeometry {

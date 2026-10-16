@@ -4,7 +4,7 @@ use std::collections::HashMap;
 use crate::bim::topology::topology::Topology;
 use crate::bim::construction::construction_set::ConstructionSet;
 use crate::bim::construction::construction_layer::ConstructionLayer;
-use crate::bim::base_types::{Id, JointType, ConstructionRef, EdgeOffsets, LayerGeometry, Frame, EdgeMaterials};
+use crate::bim::base_types::{Id, Joint, JointType, ConstructionRef, EdgeOffsets, LayerGeometry, Frame, FaceJoints};
 use crate::bim::utils::*;
 
 
@@ -77,9 +77,9 @@ impl Building {
             face.layer_group_id = Some(layer_group_id);
             face.inner_edge_offsets = offsets.clone();
             face.outer_edge_offsets = offsets.clone();
-            face.joint_materials = offsets
+            face.joints = offsets
                 .iter()
-                .map(|edge_offsets| vec![None; edge_offsets.len()])
+                .map(|edge_offsets| vec![None::<Joint>; edge_offsets.len()])
                 .collect();
         }
 
@@ -92,7 +92,7 @@ impl Building {
         Self::from_data(topology, construction_set)
     }
         
-    pub fn layer_geometry(&self,face_id: Id) -> Result<Vec<(String, String, EdgeMaterials, LayerGeometry, f64)>, String> {
+    pub fn layer_geometry(&self,face_id: Id) -> Result<Vec<(String, String, FaceJoints, LayerGeometry, f64)>, String> {
         let face = self.topology.face(face_id).ok_or_else(|| "Face not found".to_string())?;
         face.geometry(&self.topology,&self.construction_set)
     }
@@ -114,7 +114,7 @@ impl Building {
         let joint_frame =Frame::from_origin_normal(edge_point, joint_edge_dir);
 
         // Everything in this scope is read-only.
-        let (face0_edge_idx, face1_edge_idx, face0_reversed, face1_reversed, n0, n1, p01, p02, p11, p12, parallel_offset, layer0_id, layer1_id) = 
+        let (face0_edge_idx, face1_edge_idx, face0_reversed, face1_reversed, n0, n1, p01, p02, p11, p12, parallel_offset) = 
         {
             let face0 = self.topology.face(face0_id).unwrap();
             let group0 = self.construction_set.layer_group(face0.layer_group_id.unwrap()).unwrap();
@@ -172,7 +172,7 @@ impl Building {
 
             assert!((n0.0 * n0.0 + n0.1 * n0.1 - 1.0).abs() < 1e-9);
             assert!((n1.0 * n1.0 + n1.1 * n1.1 - 1.0).abs() < 1e-9);
-            (face0_edge_idx, face1_edge_idx, face0_reversed, face1_reversed, n0, n1, p01, p02, p11, p12, parallel_offset, layer0_id, layer1_id)
+            (face0_edge_idx, face1_edge_idx, face0_reversed, face1_reversed, n0, n1, p01, p02, p11, p12, parallel_offset)
 
         };
 
@@ -318,13 +318,13 @@ impl Building {
 
         face0.inner_edge_offsets[layer0_idx][face0_edge_idx] = face0_inner;
         face0.outer_edge_offsets[layer0_idx][face0_edge_idx] = face0_outer;
-        face0.joint_materials[layer0_idx][face0_edge_idx] = Some(layer1_id);
+        face0.joints[layer0_idx][face0_edge_idx] = Some(Joint { face_id: face1_id, layer_idx: layer1_idx });
 
         if let Some((face1_inner, face1_outer)) = face1_offsets {
             let face1 = self.topology.faces.get_mut(face1_id).unwrap();
             face1.inner_edge_offsets[layer1_idx][face1_edge_idx] = face1_inner;
             face1.outer_edge_offsets[layer1_idx][face1_edge_idx] = face1_outer;
-            face1.joint_materials[layer1_idx][face1_edge_idx] = Some(layer0_id);
+            face1.joints[layer1_idx][face1_edge_idx] = Some(Joint { face_id: face0_id, layer_idx: layer0_idx });
         }
     }  
 
