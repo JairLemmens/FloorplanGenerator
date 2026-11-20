@@ -97,7 +97,7 @@ impl Building {
         face.geometry(&self.topology,&self.construction_set)
     }
 
-    pub fn apply_joint(&mut self,face0_idx: usize,face1_idx: usize,joint_edge_id: Id,layer0_idx: usize,layer1_idx: usize,mut joint_type: JointType,candidate_layers_reversed: bool,debug: bool,) {
+    pub fn apply_joint(&mut self,face0_idx: usize,face1_idx: usize,joint_edge_id: Id,layer0_idx: usize,layer1_idx: usize,mut joint_type: JointType,debug: bool,) {
 
         let (joint_edge_vert0, joint_edge_vert1, face0_id, face1_id) = {
             let joint_edge = self.topology.edge(joint_edge_id).unwrap();
@@ -185,8 +185,8 @@ impl Building {
             let uuid0 = self.topology.face(face0_id).unwrap().uuid.clone();
             let uuid1 = self.topology.face(face1_id).unwrap().uuid.clone();
             debug_log(&format!(
-                "joint {:?}: face {} (layer {}) <-> face {} (layer {}) | flip={} candidate_layers_reversed={}",
-                joint_type, uuid0, layer0_idx, uuid1, layer1_idx, flip, candidate_layers_reversed
+                "joint {:?}: face {} (layer {}) <-> face {} (layer {}) | flip={}",
+                joint_type, uuid0, layer0_idx, uuid1, layer1_idx, flip
             ));
         }
 
@@ -219,9 +219,14 @@ impl Building {
             _ => return,
         };
 
+        // A reversed candidate layer order means face1 is effectively seen from the other side.
+        let same_side = face0_reversed == face1_reversed;
+        // When the faces are on opposite sides, `flip` decides which one counts as reversed.
+        let face0_flipped = face0_reversed ^ flip;
+
         let (face0_inner, face0_outer, face1_offsets) = match joint_type {
             JointType::Miter => {
-                if face0_reversed == face1_reversed {
+                if same_side {
                     (
                         offset_from_intersection(i12, p01, n0),
                         offset_from_intersection(i21, p01, n0),
@@ -243,45 +248,29 @@ impl Building {
             }
 
             JointType::Butt => {
-                if candidate_layers_reversed {
-                    (
-                        offset_from_intersection(i12, p01, n0),
-                        offset_from_intersection(i22, p01, n0),
-                        None,
-                    )
-                } else if face0_reversed == face1_reversed {
+                if same_side {
                     (
                         offset_from_intersection(i11, p01, n0),
                         offset_from_intersection(i21, p01, n0),
                         None,
                     )
+                } else if face0_flipped {
+                    (
+                        offset_from_intersection(i22, p01, n0),
+                        offset_from_intersection(i12, p01, n0),
+                        None,
+                    )
                 } else {
-                    let mut reversed0 = face0_reversed;
-                    let mut reversed1 = face1_reversed;
-
-                    if flip {
-                        reversed0 = !reversed0;
-                        reversed1 = !reversed1;
-                    }
-
-                    if reversed0 && !reversed1 {
-                        (
-                            offset_from_intersection(i22, p01, n0),
-                            offset_from_intersection(i12, p01, n0),
-                            None,
-                        )
-                    } else {
-                        (
-                            offset_from_intersection(i11, p01, n0),
-                            offset_from_intersection(i21, p01, n0),
-                            None,
-                        )
-                    }
+                    (
+                        offset_from_intersection(i11, p01, n0),
+                        offset_from_intersection(i21, p01, n0),
+                        None,
+                    )
                 }
             }
 
             JointType::DoubleButt => {
-                if face0_reversed == face1_reversed {
+                if same_side {
                     (
                         offset_from_intersection(i12, p01, n0),
                         offset_from_intersection(i22, p01, n0),
@@ -290,34 +279,24 @@ impl Building {
                             offset_from_intersection(i22, p11, n1),
                         )),
                     )
+                } else if face0_flipped {
+                    (
+                        offset_from_intersection(i11, p01, n0),
+                        offset_from_intersection(i21, p01, n0),
+                        Some((
+                            offset_from_intersection(i21, p11, n1),
+                            offset_from_intersection(i22, p11, n1),
+                        )),
+                    )
                 } else {
-                    let mut reversed0 = face0_reversed;
-                    let mut reversed1 = face1_reversed;
-
-                    if flip {
-                        reversed0 = !reversed0;
-                        reversed1 = !reversed1;
-                    }
-
-                    if reversed0 && !reversed1 {
-                        (
-                            offset_from_intersection(i11, p01, n0),
-                            offset_from_intersection(i21, p01, n0),
-                            Some((
-                                offset_from_intersection(i21, p11, n1),
-                                offset_from_intersection(i22, p11, n1),
-                            )),
-                        )
-                    } else {
-                        (
-                            offset_from_intersection(i12, p01, n0),
-                            offset_from_intersection(i22, p01, n0),
-                            Some((
-                                offset_from_intersection(i11, p11, n1),
-                                offset_from_intersection(i12, p11, n1),
-                            )),
-                        )
-                    }
+                    (
+                        offset_from_intersection(i12, p01, n0),
+                        offset_from_intersection(i22, p01, n0),
+                        Some((
+                            offset_from_intersection(i11, p11, n1),
+                            offset_from_intersection(i12, p11, n1),
+                        )),
+                    )
                 }
             }
         };
@@ -510,7 +489,6 @@ impl Building {
                                 layer_ref.layer_idx,
                                 candidate_ref.layer_idx,
                                 JointType::Butt,
-                                flip_layers,
                                 debug,
                             );
                           
@@ -544,7 +522,6 @@ impl Building {
                                 layer_ref.layer_idx,
                                 candidate_ref.layer_idx,
                                 JointType::Butt,
-                                flip_layers,
                                 debug,
                             );
 
@@ -566,7 +543,6 @@ impl Building {
                                 layer_ref.layer_idx,
                                 candidate_ref.layer_idx,
                                 JointType::Miter,
-                                flip_layers,
                                 debug,
                             );
                         } else {
@@ -577,7 +553,6 @@ impl Building {
                                 layer_ref.layer_idx,
                                 candidate_ref.layer_idx,
                                 JointType::DoubleButt,
-                                flip_layers,
                                 debug,
                             );
 
