@@ -1,4 +1,4 @@
-use super::polyline::{Polyline, sub};
+use super::polyline::{self, Polyline, ring_edges, turn};
 pub use crate::topology::topology::QuadMesh;
 use opengeometry::geometry::poly2d::{Pt2, point_in_ring2, signed_area2};
 
@@ -6,6 +6,12 @@ use opengeometry::geometry::poly2d::{Pt2, point_in_ring2, signed_area2};
 pub struct Region {
     pub outer: Polyline,
     pub holes: Vec<Polyline>,
+}
+
+fn orient_ring(ring: &mut [Pt2], ccw: bool) {
+    if (signed_area2(ring) > 0.0) != ccw {
+        ring.reverse();
+    }
 }
 
 impl Region {
@@ -16,16 +22,11 @@ impl Region {
         }
     }
 
-    pub fn orient_ring(ring: &mut [Pt2], ccw: bool) {
-        if (signed_area2(ring) > 0.0) != ccw {
-            ring.reverse();
-        }
-    }
-
+    /// Counter-clockwise outer ring, clockwise holes.
     pub fn orient(&mut self) {
-        Self::orient_ring(&mut self.outer, true);
+        orient_ring(&mut self.outer, true);
         for hole in &mut self.holes {
-            Self::orient_ring(hole, false);
+            orient_ring(hole, false);
         }
     }
 
@@ -46,44 +47,43 @@ impl Region {
         std::iter::once(self.outer.as_slice()).chain(self.holes.iter().map(Vec::as_slice))
     }
 
+    /// Directed boundary edges of every ring.
+    pub fn edges(&self) -> impl Iterator<Item = (Pt2, Pt2)> + '_ {
+        self.rings().flat_map(ring_edges)
+    }
+
     pub fn bounds(&self) -> [f64; 4] {
-        let mut b = [
-            f64::INFINITY,
-            f64::INFINITY,
-            f64::NEG_INFINITY,
-            f64::NEG_INFINITY,
-        ];
-        for ring in self.rings() {
-            let r = super::polyline::bounds(ring);
-            b[0] = b[0].min(r[0]);
-            b[1] = b[1].min(r[1]);
-            b[2] = b[2].max(r[2]);
-            b[3] = b[3].max(r[3]);
-        }
-        b
+        polyline::bounds(self.rings().flatten())
     }
 
+    /// Bounding-box diagonal; all tolerances are expressed relative to it.
     pub fn scale(&self) -> f64 {
-        let b = self.bounds();
-        (b[2] - b[0]).hypot(b[3] - b[1])
+        polyline::diagonal(self.rings().flatten())
     }
 
+    /// Ring vertices turning by more than `ang_tol`.
     pub fn corners(&self, ang_tol: f64) -> Vec<Pt2> {
-        let mut out = Vec::new();
-        for ring in self.rings() {
-            for i in 0..ring.len() {
-                let a = sub(ring[i], ring[(i + ring.len() - 1) % ring.len()]);
-                let b = sub(ring[(i + 1) % ring.len()], ring[i]);
-                if (a.x * b.z - a.z * b.x).atan2(a.x * b.x + a.z * b.z).abs() > ang_tol {
-                    out.push(ring[i]);
-                }
-            }
-        }
-        out
+        self.rings()
+            .flat_map(polyline::ring_corners)
+            .filter(|&(prev, here, next)| turn(prev, here, next).abs() > ang_tol)
+            .map(|(_, here, _)| here)
+            .collect()
     }
 }
 
+/// The single numerical tolerance of the quad pipeline.
+///
+/// Lengths are compared against `EPS * scale` (`scale` = bounding-box diagonal
+/// of the domain), areas against `(EPS * scale)^2` or `EPS * l_tar^2`, and
+/// angles (radians) and unit-interval parameters against `EPS` itself.
+pub const EPS: f64 = 1e-6;
+
 pub type Patch = [Polyline; 4];
+
+/// Rotate a patch so side `k` comes first.
+pub fn rotate_patch(patch: &Patch, k: usize) -> Patch {
+    std::array::from_fn(|i| patch[(k + i) % 4].clone())
+}
 
 #[derive(Clone, Debug)]
 pub struct QParams {
@@ -128,9 +128,7 @@ pub struct SegmentParams {
     pub beta_f: f64,
     pub ecv_tol: f64,
     pub n_samples: usize,
-    pub eps_rel: f64,
     pub relax_reflex: bool,
-    pub max_hole_samples: usize,
     pub edge_rays: bool,
     pub relax_if_stuck: bool,
     pub relax_top_k: usize,
@@ -145,9 +143,7 @@ impl Default for SegmentParams {
             beta_f: std::f64::consts::PI / 12.0,
             ecv_tol: 15.0_f64.to_radians(),
             n_samples: 25,
-            eps_rel: 1.0e-7,
             relax_reflex: true,
-            max_hole_samples: 16,
             edge_rays: true,
             relax_if_stuck: true,
             relax_top_k: 40,

@@ -42,7 +42,7 @@ pub fn mesh_domain(
         ));
     }
     let outer: Vec<_> = outer.into_iter().map(|[x, y]| Pt2::new(x, y)).collect();
-    let mesh = crate::quads::mesh_domain_with_field(&outer, &[], l_tar, field_samples.as_deref())
+    let mesh = crate::quads::quad_mesh_from_coords(&outer, l_tar, field_samples.as_deref())
         .map_err(|err| PyValueError::new_err(err.to_string()))?;
     let vertex_ids = mesh.vertex_ids();
     let index: HashMap<_, _> = vertex_ids
@@ -83,7 +83,7 @@ mod tests {
         // Rebuild the former binding conversion directly from the backing
         // topology, independently of the TopologyOps iterator methods.
         let points: Vec<_> = outer.into_iter().map(|[x, y]| Pt2::new(x, y)).collect();
-        let mesh = quad_mesh_from_coords(&points, 30.0).unwrap();
+        let mesh = quad_mesh_from_coords(&points, 30.0, None).unwrap();
         let ids: Vec<_> = mesh.topology().vert_ids();
         let index: HashMap<_, _> = ids.iter().enumerate().map(|(i, &id)| (id, i)).collect();
         let expected_vertices = ids

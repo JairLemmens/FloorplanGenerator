@@ -5,7 +5,6 @@ use openmaths::Vector3;
 
 use crate::arena::Arena;
 use crate::base_types::{ConstructionRef, Dictionary, Frame, Id};
-use crate::quads::types::{QParams, Region};
 use super::topology::{QuadMesh, Topology, TopologyData};
 use super::topology_cell::TopologyCell;
 use super::topology_edge::TopologyEdge;
@@ -256,15 +255,6 @@ pub trait QuadMeshOps: TopologyOps {
         for (_, face) in other.faces() { let q: [Id; 4] = face.try_into().unwrap(); self.add_quad(q.map(|id| remap[&id])).unwrap(); }
         remap
     }
-    fn edge_map(&self) -> crate::quads::mesh::EdgeMap { crate::quads::mesh::EdgeMap::new(self.topology()) }
-    fn boundary_info(&self) -> (crate::quads::mesh::EdgeMap, HashMap<Id, bool>) { crate::quads::mesh::boundary_info(self.topology()) }
-    fn feature_vertices(&self, edges: &crate::quads::mesh::EdgeMap, tolerance: f64) -> HashMap<Id, bool> { crate::quads::mesh::feature_vertices(self.topology(), edges, tolerance) }
-    fn compress(&self) -> QuadMesh { crate::quads::mesh::compress(self.topology()) }
-    fn remove_duplicate_faces(self) -> QuadMesh { crate::quads::mesh::remove_duplicate_quads(self.into_topology()) }
-    fn min_jacobian_determinant(&self) -> f64 { crate::quads::mesh::min_det(self.topology()) }
-    fn alpha_error(&self) -> f64 { crate::quads::mesh::alpha_error(self.topology()) }
-    fn is_valid_connectivity(&self) -> bool { self.validate().is_ok() }
-    fn simplify(self, region: &Region, params: &QParams) -> QuadMesh { crate::quads::simplify::simplify(self.into_topology(), region, params) }
 }
 
 impl QuadMeshOps for Topology {}

@@ -1,11 +1,16 @@
 use std::collections::HashMap;
+use std::f64::consts::{FRAC_PI_2, FRAC_PI_4, PI, TAU};
 
-use opengeometry::geometry::poly2d::Pt2;
+use opengeometry::geometry::poly2d::{Pt2, dot2};
 
-use super::geom::{TWO_PI, split_region, valid_chord};
-use super::polyline::{angle, distance, point, point_segment_distance, sub};
-use super::types::{Region, SegmentParams};
+use super::geom::{boundary_intersections, split_region, valid_chord};
+use super::polyline::{
+    Polyline, angle, clean_ring, corner_angle, distance, interior_angles, lerp, point,
+    point_segment_distance, ring_corners, ring_edges, sub, wrap_quarter,
+};
+use super::types::{EPS, Region, SegmentParams};
 
+/// Extreme concave vertex: a reflex corner that segmentation chords start from.
 #[derive(Clone, Copy, Debug)]
 pub struct EcV {
     pub p: Pt2,
@@ -13,24 +18,22 @@ pub struct EcV {
     pub next: Pt2,
 }
 
-#[derive(Clone)]
+// ------------------------------------------------------- direction fields
+
+/// Preferred (mod 90°) direction taken from the nearest boundary edge.
 struct BoundaryField {
     edges: Vec<(Pt2, Pt2, f64)>,
 }
 
 impl BoundaryField {
     fn new(region: &Region) -> Self {
-        let mut edges = Vec::new();
-        for ring in region.rings() {
-            for i in 0..ring.len() {
-                let a = ring[i];
-                let b = ring[(i + 1) % ring.len()];
-                if distance(a, b) > 0.0 {
-                    edges.push((a, b, angle(sub(b, a))));
-                }
-            }
+        Self {
+            edges: region
+                .edges()
+                .filter(|&(a, b)| distance(a, b) > 0.0)
+                .map(|(a, b)| (a, b, angle(sub(b, a))))
+                .collect(),
         }
-        Self { edges }
     }
 
     fn angle_at(&self, p: Pt2) -> f64 {
@@ -38,21 +41,28 @@ impl BoundaryField {
             .iter()
             .map(|&(a, b, theta)| (point_segment_distance(p, a, b), theta))
             .min_by(|a, b| a.0.total_cmp(&b.0))
-            .map(|x| x.1)
-            .unwrap_or(0.0)
+            .map_or(0.0, |x| x.1)
     }
 }
 
-#[derive(Clone)]
+type Sample = (Pt2, f64, f64);
+
+/// Direction field interpolated from `[x, y, cos 4θ, sin 4θ]` samples with
+/// Gaussian weights, truncated at 3σ.
 struct SampledField {
-    samples: Vec<(Pt2, f64, f64)>,
+    samples: Vec<Sample>,
     cells: HashMap<(i64, i64), Vec<usize>>,
     cell_size: f64,
     sigma2: f64,
 }
 
+/// Field angle (mod 90°) from a 4θ vector.
+fn quarter_angle(x: f64, y: f64) -> f64 {
+    (y.atan2(x) * 0.25).rem_euclid(FRAC_PI_2)
+}
+
 impl SampledField {
-    fn new(rows: &[[f64; 4]], area: f64) -> Result<Self, String> {
+    fn new(rows: &[[f64; 4]], area: f64, tol: f64) -> Result<Self, String> {
         if rows.is_empty() {
             return Err("field_samples must contain at least one row".to_string());
         }
@@ -62,7 +72,7 @@ impl SampledField {
                 return Err("field_samples values must be finite".to_string());
             }
             let norm = row[2].hypot(row[3]);
-            if norm <= 1.0e-12 {
+            if norm <= EPS {
                 return Err(
                     "field_samples direction components must have non-zero length".to_string(),
                 );
@@ -71,79 +81,79 @@ impl SampledField {
         }
 
         // Mean sample spacing sets a scale-aware Gaussian bandwidth.
-        let sigma = (area / samples.len() as f64).sqrt().max(1.0e-12);
+        let sigma = (area / samples.len() as f64).sqrt().max(tol);
         let cell_size = 3.0 * sigma;
-        let mut cells: HashMap<(i64, i64), Vec<usize>> = HashMap::new();
-        for (i, (p, _, _)) in samples.iter().enumerate() {
-            let key = (
-                (p.x / cell_size).floor() as i64,
-                (p.z / cell_size).floor() as i64,
-            );
-            cells.entry(key).or_default().push(i);
-        }
-        Ok(Self {
+        let mut field = Self {
             samples,
-            cells,
+            cells: HashMap::new(),
             cell_size,
             sigma2: sigma * sigma,
-        })
+        };
+        for i in 0..field.samples.len() {
+            let key = field.cell_of(field.samples[i].0);
+            field.cells.entry(key).or_default().push(i);
+        }
+        Ok(field)
+    }
+
+    fn cell_of(&self, p: Pt2) -> (i64, i64) {
+        (
+            (p.x / self.cell_size).floor() as i64,
+            (p.z / self.cell_size).floor() as i64,
+        )
+    }
+
+    fn dist2(p: Pt2, s: &Sample) -> f64 {
+        let (dx, dy) = (p.x - s.0.x, p.z - s.0.z);
+        dx * dx + dy * dy
     }
 
     fn angle_at(&self, p: Pt2) -> f64 {
-        let mut sum_x = 0.0;
-        let mut sum_y = 0.0;
-        let mut weight_sum = 0.0;
-        let mut nearest = (f64::INFINITY, 1.0, 0.0);
-        let cutoff2 = 9.0 * self.sigma2;
-        let base = (
-            (p.x / self.cell_size).floor() as i64,
-            (p.z / self.cell_size).floor() as i64,
-        );
+        // A 3σ cutoff and 3σ cell width only require the 3x3 neighbourhood.
+        let (cx, cz) = self.cell_of(p);
+        let near: Vec<&Sample> = (-1..=1)
+            .flat_map(|dx| (-1..=1).map(move |dz| (cx + dx, cz + dz)))
+            .filter_map(|key| self.cells.get(&key))
+            .flatten()
+            .map(|&i| &self.samples[i])
+            .collect();
 
-        // A 3-sigma cutoff and 3-sigma cell width only require the 3x3 neighborhood.
-        for dx_cell in -1..=1 {
-            for dy_cell in -1..=1 {
-                if let Some(indices) = self.cells.get(&(base.0 + dx_cell, base.1 + dy_cell)) {
-                    for &i in indices {
-                        let (q, x, y) = self.samples[i];
-                        let dx = p.x - q.x;
-                        let dy = p.z - q.z;
-                        let d2 = dx * dx + dy * dy;
-                        if d2 < nearest.0 {
-                            nearest = (d2, x, y);
-                        }
-                        if d2 <= cutoff2 {
-                            let weight = (-0.5 * d2 / self.sigma2).exp();
-                            sum_x += weight * x;
-                            sum_y += weight * y;
-                            weight_sum += weight;
-                        }
-                    }
-                }
+        let cutoff2 = 9.0 * self.sigma2;
+        let (mut sum_x, mut sum_y, mut weight_sum) = (0.0, 0.0, 0.0);
+        for s in &near {
+            let d2 = Self::dist2(p, s);
+            if d2 <= cutoff2 {
+                let weight = (-0.5 * d2 / self.sigma2).exp();
+                sum_x += weight * s.1;
+                sum_y += weight * s.2;
+                weight_sum += weight;
             }
         }
 
-        if weight_sum == 0.0 {
-            nearest = self.samples.iter().fold(nearest, |best, &(q, x, y)| {
-                let dx = p.x - q.x;
-                let dy = p.z - q.z;
-                let d2 = dx * dx + dy * dy;
-                if d2 < best.0 { (d2, x, y) } else { best }
-            });
-        }
+        let nearest = || {
+            let by_dist = |a: &&Sample, b: &&Sample| {
+                Self::dist2(p, a).total_cmp(&Self::dist2(p, b))
+            };
+            let s = if weight_sum > 0.0 {
+                near.iter().copied().min_by(by_dist)
+            } else {
+                self.samples.iter().min_by(by_dist)
+            };
+            s.map_or((1.0, 0.0), |s| (s.1, s.2))
+        };
         let (x, y) = if weight_sum > 0.0 {
             (sum_x / weight_sum, sum_y / weight_sum)
         } else {
-            (nearest.1, nearest.2)
+            nearest()
         };
-        if x.hypot(y) <= 1.0e-12 {
-            return (nearest.2.atan2(nearest.1) * 0.25).rem_euclid(std::f64::consts::FRAC_PI_2);
+        if x.hypot(y) <= EPS {
+            let (nx, ny) = nearest();
+            return quarter_angle(nx, ny);
         }
-        (y.atan2(x) * 0.25).rem_euclid(std::f64::consts::FRAC_PI_2)
+        quarter_angle(x, y)
     }
 }
 
-#[derive(Clone)]
 enum DirectionField {
     Boundary(BoundaryField),
     Samples(SampledField),
@@ -158,142 +168,142 @@ impl DirectionField {
     }
 }
 
-fn rings(region: &Region, micro: f64) -> Vec<Vec<Pt2>> {
-    region
-        .rings()
-        .map(|r| super::layout::clean_ring_for_segmentation(r, micro))
+// -------------------------------------------------------------- geometry
+
+pub fn find_ecvs(rings: &[Polyline], p: &SegmentParams) -> Vec<EcV> {
+    rings
+        .iter()
+        .flat_map(|ring| ring_corners(ring))
+        .filter(|&(prev, here, next)| {
+            let total = corner_angle(prev, here, next);
+            PI + p.ecv_tol < total && total < TAU - EPS
+        })
+        .map(|(prev, p, next)| EcV { p, prev, next })
         .collect()
 }
 
-pub fn find_ecvs(rings: &[Vec<Pt2>], p: &SegmentParams) -> Vec<(usize, EcV)> {
-    let mut out = Vec::new();
-    for (ri, ring) in rings.iter().enumerate() {
-        for i in 0..ring.len() {
-            let prev = ring[(i + ring.len() - 1) % ring.len()];
-            let here = ring[i];
-            let next = ring[(i + 1) % ring.len()];
-            let total = (angle(sub(prev, here)) - angle(sub(next, here))).rem_euclid(TWO_PI);
-            if std::f64::consts::PI + p.ecv_tol < total && total < TWO_PI - 1e-9 {
-                out.push((
-                    ri,
-                    EcV {
-                        p: here,
-                        prev,
-                        next,
-                    },
-                ));
-            }
+/// How a chord endpoint divides the boundary angle it lands on.
+struct EndSplit {
+    first: f64,
+    second: f64,
+    total: f64,
+    at_vertex: bool,
+}
+
+impl EndSplit {
+    fn new(prev: Pt2, next: Pt2, p: Pt2, dir: Pt2, at_vertex: bool) -> Self {
+        let mut total = corner_angle(prev, p, next);
+        if total < EPS {
+            total = TAU;
+        }
+        let first = (angle(dir) - angle(sub(next, p))).rem_euclid(TAU);
+        Self {
+            first,
+            second: total - first,
+            total,
+            at_vertex,
         }
     }
-    out
-}
 
-fn split_angles(prev: Pt2, next: Pt2, p: Pt2, dir: Pt2, is_vertex: bool) -> (f64, f64, f64, bool) {
-    let mut total = (angle(sub(prev, p)) - angle(sub(next, p))).rem_euclid(TWO_PI);
-    if total < 1e-9 {
-        total = TWO_PI;
+    fn degenerate(&self) -> bool {
+        self.first <= EPS || self.second <= EPS
     }
-    let first = (angle(dir) - angle(sub(next, p))).rem_euclid(TWO_PI);
-    (first, total - first, total, is_vertex)
 }
 
-fn endpoint_angles(
-    rings: &[Vec<Pt2>],
-    p: Pt2,
-    dir: Pt2,
-    tol: f64,
-) -> Option<(f64, f64, f64, bool)> {
+/// Split of the boundary angle at `p` by a chord leaving in direction `dir`.
+fn end_split(rings: &[Polyline], p: Pt2, dir: Pt2, tol: f64) -> Option<EndSplit> {
     for ring in rings {
-        for i in 0..ring.len() {
-            if distance(ring[i], p) < tol {
-                return Some(split_angles(
-                    ring[(i + ring.len() - 1) % ring.len()],
-                    ring[(i + 1) % ring.len()],
-                    p,
-                    dir,
-                    true,
-                ));
+        for (prev, here, next) in ring_corners(ring) {
+            if distance(here, p) < tol {
+                return Some(EndSplit::new(prev, next, p, dir, true));
             }
         }
     }
     for ring in rings {
-        for i in 0..ring.len() {
-            let a = ring[i];
-            let b = ring[(i + 1) % ring.len()];
+        for (a, b) in ring_edges(ring) {
             let ab = sub(b, a);
-            let len2 = ab.x * ab.x + ab.z * ab.z;
+            let len2 = dot2(ab, ab);
             if len2 == 0.0 {
                 continue;
             }
-            let t = ((p.x - a.x) * ab.x + (p.z - a.z) * ab.z) / len2;
-            if t > 0.0 && t < 1.0 && distance(point(a.x + t * ab.x, a.z + t * ab.z), p) < tol {
-                return Some(split_angles(a, b, p, dir, false));
+            let t = dot2(sub(p, a), ab) / len2;
+            if t > 0.0 && t < 1.0 && distance(lerp(a, b, t), p) < tol {
+                return Some(EndSplit::new(a, b, p, dir, false));
             }
         }
     }
     None
 }
 
-fn angles_ok(rings: &[Vec<Pt2>], a: Pt2, b: Pt2, p: &SegmentParams, tol: f64) -> bool {
-    let u = sub(b, a);
-    for (point, dir) in [(a, u), (b, sub(a, b))] {
-        let Some((s1, s2, total, is_vertex)) = endpoint_angles(rings, point, dir, tol) else {
-            return false;
-        };
-        if s1 <= 1e-9 || s2 <= 1e-9 {
-            return false;
-        }
-        let reflex = is_vertex && total > std::f64::consts::PI + p.ecv_tol;
+/// Both ends of chord `a-b`, each with the split it produces.
+fn chord_splits(rings: &[Polyline], a: Pt2, b: Pt2, tol: f64) -> Option<[EndSplit; 2]> {
+    let end = |p, dir| end_split(rings, p, dir, tol).filter(|s| !s.degenerate());
+    Some([end(a, sub(b, a))?, end(b, sub(a, b))?])
+}
+
+fn angles_ok(rings: &[Polyline], a: Pt2, b: Pt2, p: &SegmentParams, tol: f64) -> bool {
+    let Some(ends) = chord_splits(rings, a, b, tol) else {
+        return false;
+    };
+    ends.iter().all(|s| {
+        let reflex = s.at_vertex && s.total > PI + p.ecv_tol;
         let high = if reflex && p.relax_reflex {
-            std::f64::consts::PI + p.ecv_tol
+            PI + p.ecv_tol
         } else {
             p.theta_max
         };
-        if !(p.theta_min <= s1 && s1 <= high && p.theta_min <= s2 && s2 <= high) {
-            return false;
-        }
-    }
-    true
+        [s.first, s.second]
+            .iter()
+            .all(|&x| p.theta_min <= x && x <= high)
+    })
 }
 
+/// `(max, mean)` deviation of the chord direction from the field along it.
 fn misalignment(field: &DirectionField, a: Pt2, b: Pt2, n: usize) -> (f64, f64) {
     let d = angle(sub(b, a));
     let mut max: f64 = 0.0;
     let mut sum = 0.0;
     for i in 0..n {
         let t = 0.05 + 0.9 * i as f64 / (n.saturating_sub(1).max(1)) as f64;
-        let p = point(a.x + t * (b.x - a.x), a.z + t * (b.z - a.z));
-        let theta = field.angle_at(p);
-        let diff = (d - theta + std::f64::consts::PI / 4.0).rem_euclid(std::f64::consts::FRAC_PI_2)
-            - std::f64::consts::PI / 4.0;
-        let dev = diff.abs();
+        let dev = wrap_quarter(d - field.angle_at(lerp(a, b, t))).abs();
         max = max.max(dev);
         sum += dev;
     }
     (max, sum / n as f64)
 }
 
-fn angle_dev(rings: &[Vec<Pt2>], a: Pt2, b: Pt2, tol: f64) -> Option<(f64, f64)> {
-    let mut devs = Vec::with_capacity(4);
-    let mut subs = Vec::with_capacity(4);
-    for (p, dir) in [(a, sub(b, a)), (b, sub(a, b))] {
-        let (s1, s2, _, _) = endpoint_angles(rings, p, dir, tol)?;
-        if s1 <= 1e-9 || s2 <= 1e-9 {
-            return None;
-        }
-        for s in [s1, s2] {
-            subs.push(s);
-            devs.push(
-                ((s + std::f64::consts::PI / 4.0).rem_euclid(std::f64::consts::FRAC_PI_2)
-                    - std::f64::consts::PI / 4.0)
-                    .abs(),
-            );
-        }
-    }
-    Some((
-        devs.iter().sum::<f64>() / devs.len() as f64,
-        subs.into_iter().fold(f64::INFINITY, f64::min),
-    ))
+/// `(mean deviation of the four sub-angles from the axes, smallest sub-angle)`.
+fn angle_dev(rings: &[Polyline], a: Pt2, b: Pt2, tol: f64) -> Option<(f64, f64)> {
+    let subs: Vec<f64> = chord_splits(rings, a, b, tol)?
+        .iter()
+        .flat_map(|s| [s.first, s.second])
+        .collect();
+    let mean = subs.iter().map(|&s| wrap_quarter(s).abs()).sum::<f64>() / subs.len() as f64;
+    Some((mean, subs.into_iter().fold(f64::INFINITY, f64::min)))
+}
+
+// ------------------------------------------------------------ candidates
+
+/// Successively looser acceptance rules for ranking chords.
+#[derive(Clone, Copy, PartialEq)]
+enum Stage {
+    /// Aligned with the field and with sub-angles in the allowed range.
+    Aligned,
+    /// Sub-angles in range; alignment only affects the score.
+    Angles,
+    /// Any chord whose smallest sub-angle is at least 20°.
+    MinAngle,
+}
+
+const STAGES: [Stage; 3] = [Stage::Aligned, Stage::Angles, Stage::MinAngle];
+
+/// Where chord candidates come from.
+#[derive(Clone, Copy, PartialEq)]
+enum ChordSource {
+    /// Chords joining pairs of reflex vertices.
+    TwoEcv,
+    /// Rays shot from a reflex vertex to the first boundary hit.
+    Rays,
 }
 
 #[derive(Clone, Copy)]
@@ -304,44 +314,46 @@ struct Candidate {
 }
 
 fn rank_candidates(
-    rings: &[Vec<Pt2>],
+    rings: &[Polyline],
     candidates: &[(Pt2, Pt2)],
     field: &DirectionField,
     p: &SegmentParams,
-    eps: f64,
-    stage: u8,
+    tol: f64,
+    stage: Stage,
 ) -> Vec<Candidate> {
-    let mut out = Vec::new();
-    for &(a, b) in candidates {
-        let (max_mis, mean_mis) = misalignment(field, a, b, p.n_samples);
-        let score = if stage == 0 {
-            if max_mis >= p.beta_f || !angles_ok(rings, a, b, p, 10.0 * eps) {
-                continue;
-            }
-            mean_mis
-        } else {
-            let Some((dev, min_sub)) = angle_dev(rings, a, b, 10.0 * eps) else {
-                continue;
+    let mut out: Vec<_> = candidates
+        .iter()
+        .filter_map(|&(a, b)| {
+            let (max_mis, mean_mis) = misalignment(field, a, b, p.n_samples);
+            let score = match stage {
+                Stage::Aligned => {
+                    if max_mis >= p.beta_f || !angles_ok(rings, a, b, p, tol) {
+                        return None;
+                    }
+                    mean_mis
+                }
+                Stage::Angles | Stage::MinAngle => {
+                    let (dev, min_sub) = angle_dev(rings, a, b, tol)?;
+                    let admissible = match stage {
+                        Stage::Angles => angles_ok(rings, a, b, p, tol),
+                        _ => min_sub >= PI / 9.0,
+                    };
+                    if !admissible {
+                        return None;
+                    }
+                    mean_mis + dev
+                }
             };
-            if stage == 1 && !angles_ok(rings, a, b, p, 10.0 * eps) {
-                continue;
-            }
-            if stage == 2 && min_sub < std::f64::consts::PI / 9.0 {
-                continue;
-            }
-            mean_mis + dev
-        };
-        out.push(Candidate { score, a, b });
-    }
+            Some(Candidate { score, a, b })
+        })
+        .collect();
     out.sort_by(|a, b| a.score.total_cmp(&b.score));
     out
 }
 
-fn ray_candidates(region: &Region, ecvs: &[EcV], p: &SegmentParams, eps: f64) -> Vec<(Pt2, Pt2)> {
-    let b = region.bounds();
-    let radius = 2.0 * (b[2] - b[0]).hypot(b[3] - b[1]);
-    let n_rays = (TWO_PI / p.ray_step).round() as usize;
-    let field = region;
+fn ray_candidates(region: &Region, ecvs: &[EcV], p: &SegmentParams, tol: f64) -> Vec<(Pt2, Pt2)> {
+    let radius = 2.0 * region.scale();
+    let n_rays = (TAU / p.ray_step).round() as usize;
     let mut candidates = Vec::new();
     for ecv in ecvs {
         let mut angles: Vec<f64> = (0..n_rays).map(|k| k as f64 * p.ray_step).collect();
@@ -350,16 +362,14 @@ fn ray_candidates(region: &Region, ecvs: &[EcV], p: &SegmentParams, eps: f64) ->
             angles.push(angle(sub(ecv.p, ecv.next)));
         }
         for theta in angles {
-            let d = point(theta.cos(), theta.sin());
-            let points = super::geom::boundary_intersections(field, ecv.p, d, eps);
-            let mut forward: Vec<_> = points
+            let dir = point(theta.cos(), theta.sin());
+            let hit = boundary_intersections(region, ecv.p, dir, tol)
                 .into_iter()
-                .filter(|(t, _)| *t > 10.0 * eps && *t <= radius)
-                .collect();
-            forward.sort_by(|a, b| a.0.total_cmp(&b.0));
-            if let Some((_, endpoint)) = forward.first() {
-                if valid_chord(region, ecv.p, *endpoint, eps) {
-                    candidates.push((ecv.p, *endpoint));
+                .filter(|(t, _)| *t > tol && *t <= radius)
+                .min_by(|a, b| a.0.total_cmp(&b.0));
+            if let Some((_, end)) = hit {
+                if valid_chord(region, ecv.p, end, tol) {
+                    candidates.push((ecv.p, end));
                 }
             }
         }
@@ -367,139 +377,131 @@ fn ray_candidates(region: &Region, ecvs: &[EcV], p: &SegmentParams, eps: f64) ->
     candidates
 }
 
-fn two_ecv_candidates(region: &Region, ecvs: &[EcV], eps: f64) -> Vec<(Pt2, Pt2)> {
+fn two_ecv_candidates(region: &Region, ecvs: &[EcV], tol: f64) -> Vec<(Pt2, Pt2)> {
     let mut out = Vec::new();
-    for i in 0..ecvs.len() {
-        for j in i + 1..ecvs.len() {
-            if valid_chord(region, ecvs[i].p, ecvs[j].p, eps) {
-                out.push((ecvs[i].p, ecvs[j].p));
+    for (i, a) in ecvs.iter().enumerate() {
+        for b in &ecvs[i + 1..] {
+            if valid_chord(region, a.p, b.p, tol) {
+                out.push((a.p, b.p));
             }
         }
     }
     out
 }
 
-fn piece_cost(region: &Region, micro: f64) -> f64 {
-    let ring = super::layout::clean_ring_for_segmentation(&region.outer, micro);
-    let mut devs = Vec::new();
-    let mut min_corner = std::f64::consts::PI;
-    for i in 0..ring.len() {
-        let prev = ring[(i + ring.len() - 1) % ring.len()];
-        let here = ring[i];
-        let next = ring[(i + 1) % ring.len()];
-        let a = (angle(sub(prev, here)) - angle(sub(next, here))).rem_euclid(TWO_PI);
-        if (a - std::f64::consts::PI).abs() < 10.0_f64.to_radians() {
-            continue;
-        }
-        devs.push((a - std::f64::consts::FRAC_PI_2).abs());
-        min_corner = min_corner.min(a);
+/// Lower is better: corner deviation from 90°, corner-count deviation from 4,
+/// and a penalty for sharp corners.
+fn piece_cost(region: &Region, tol: f64) -> f64 {
+    let ring = clean_ring(&region.outer, tol);
+    let corners: Vec<f64> = interior_angles(&ring)
+        .into_iter()
+        .filter(|a| (a - PI).abs() >= 10.0_f64.to_radians())
+        .collect();
+    let (avg, sharp) = if corners.is_empty() {
+        (0.0, 0.0)
+    } else {
+        let min_corner = corners.iter().copied().fold(PI, f64::min);
+        (
+            corners.iter().map(|a| (a - FRAC_PI_2).abs()).sum::<f64>() / corners.len() as f64,
+            (FRAC_PI_4 - min_corner).max(0.0),
+        )
+    };
+    avg + 0.3 * (corners.len() as f64 - 4.0).abs() + 0.5 * sharp
+}
+
+// ------------------------------------------------------------- splitting
+
+/// Pick the split for the ranked candidates: the first that works when
+/// `Aligned`, otherwise the cheapest among the top `relax_top_k`.
+fn pick_split(
+    region: &Region,
+    ranked: &[Candidate],
+    p: &SegmentParams,
+    stage: Stage,
+    tol: f64,
+    min_area: f64,
+) -> Option<Vec<Region>> {
+    let split = |c: &Candidate| {
+        Some(split_region(region, c.a, c.b, tol, min_area)).filter(|parts| parts.len() >= 2)
+    };
+    if stage == Stage::Aligned {
+        return ranked.iter().find_map(split);
     }
-    let sharp = if devs.is_empty() {
-        0.0
-    } else {
-        (std::f64::consts::FRAC_PI_4 - min_corner).max(0.0)
-    };
-    let avg = if devs.is_empty() {
-        0.0
-    } else {
-        devs.iter().sum::<f64>() / devs.len() as f64
-    };
-    avg + 0.3 * (devs.len() as f64 - 4.0).abs() + 0.5 * sharp
+    ranked
+        .iter()
+        .take(p.relax_top_k)
+        .filter_map(|c| {
+            let parts = split(c)?;
+            let mean_cost = parts.iter().map(|r| piece_cost(r, tol)).sum::<f64>()
+                / parts.len() as f64;
+            Some((mean_cost + c.score, parts))
+        })
+        .min_by(|a, b| a.0.total_cmp(&b.0))
+        .map(|(_, parts)| parts)
 }
 
 fn try_split(
     region: &Region,
     field: &DirectionField,
     p: &SegmentParams,
-    method_two: bool,
-    eps: f64,
+    source: ChordSource,
+    tol: f64,
     min_area: f64,
 ) -> Option<Vec<Region>> {
-    let ring_set = rings(region, 1e3 * eps);
-    let ecvs: Vec<_> = find_ecvs(&ring_set, p)
-        .into_iter()
-        .map(|(_, e)| e)
-        .collect();
-    if ecvs.is_empty() || (method_two && ecvs.len() < 2) {
+    let rings: Vec<Polyline> = region.rings().map(|r| clean_ring(r, tol)).collect();
+    let ecvs = find_ecvs(&rings, p);
+    if ecvs.is_empty() || (source == ChordSource::TwoEcv && ecvs.len() < 2) {
         return None;
     }
-    let candidates = if method_two {
-        two_ecv_candidates(region, &ecvs, eps)
-    } else {
-        ray_candidates(region, &ecvs, p, eps)
+    let candidates = match source {
+        ChordSource::TwoEcv => two_ecv_candidates(region, &ecvs, tol),
+        ChordSource::Rays => ray_candidates(region, &ecvs, p, tol),
     };
-    let stages: &[u8] = if !method_two && p.relax_if_stuck {
-        &[0, 1, 2]
+    let stages = if source == ChordSource::Rays && p.relax_if_stuck {
+        &STAGES[..]
     } else {
-        &[0]
+        &STAGES[..1]
     };
-    for &stage in stages {
-        let ranked = rank_candidates(&ring_set, &candidates, field, p, eps, stage);
-        if stage == 0 {
-            for c in ranked {
-                let parts = split_region(region, c.a, c.b, eps, min_area);
-                if parts.len() >= 2 {
-                    return Some(parts);
-                }
-            }
-        } else {
-            let mut best: Option<(f64, Vec<Region>)> = None;
-            for c in ranked.iter().take(p.relax_top_k) {
-                let parts = split_region(region, c.a, c.b, eps, min_area);
-                if parts.len() < 2 {
-                    continue;
-                }
-                let cost = parts.iter().map(|r| piece_cost(r, 1e3 * eps)).sum::<f64>()
-                    / parts.len() as f64
-                    + c.score;
-                if best.as_ref().is_none_or(|(old, _)| cost < *old) {
-                    best = Some((cost, parts));
-                }
-            }
-            if let Some((_, parts)) = best {
-                return Some(parts);
-            }
-        }
-    }
-    None
+    stages.iter().find_map(|&stage| {
+        let ranked = rank_candidates(&rings, &candidates, field, p, tol, stage);
+        pick_split(region, &ranked, p, stage, tol, min_area)
+    })
 }
 
 fn recurse(
     regions: Vec<Region>,
     field: &DirectionField,
     p: &SegmentParams,
-    method_two: bool,
-    eps: f64,
+    source: ChordSource,
+    tol: f64,
     min_area: f64,
 ) -> Vec<Region> {
     let mut stack = regions;
-    let mut final_regions = Vec::new();
+    let mut done = Vec::new();
     while let Some(region) = stack.pop() {
-        if let Some(parts) = try_split(&region, field, p, method_two, eps, min_area) {
-            stack.extend(parts);
-        } else {
-            final_regions.push(region);
+        match try_split(&region, field, p, source, tol, min_area) {
+            Some(parts) => stack.extend(parts),
+            None => done.push(region),
         }
     }
-    final_regions
+    done
 }
 
+/// Recursively cut `domain` into near-rectangular regions.
 pub fn segment_domain(
     domain: Region,
     p: &SegmentParams,
     field_samples: Option<&[[f64; 4]]>,
 ) -> Result<Vec<Region>, String> {
-    let scale = domain.scale();
-    let eps = p.eps_rel * scale;
-    let min_area = eps * eps;
-    let field = match field_samples {
-        Some(rows) => DirectionField::Samples(SampledField::new(rows, domain.area())?),
-        None => DirectionField::Boundary(BoundaryField::new(&domain)),
-    };
     if !domain.holes.is_empty() {
         return Err("the parity prototype currently segments exterior-only domains".to_string());
     }
-    let mut regions = recurse(vec![domain], &field, p, true, eps, min_area);
-    regions = recurse(regions, &field, p, false, eps, min_area);
-    Ok(regions)
+    let tol = EPS * domain.scale();
+    let min_area = tol * tol;
+    let field = match field_samples {
+        Some(rows) => DirectionField::Samples(SampledField::new(rows, domain.area(), tol)?),
+        None => DirectionField::Boundary(BoundaryField::new(&domain)),
+    };
+    let regions = recurse(vec![domain], &field, p, ChordSource::TwoEcv, tol, min_area);
+    Ok(recurse(regions, &field, p, ChordSource::Rays, tol, min_area))
 }

@@ -1,3 +1,4 @@
+use floorplan_backend::topology::ops::{QuadMeshOps, TopologyOps};
 use floorplan_backend::quads::{mesh_domain, signed_quad_area};
 use opengeometry::geometry::poly2d::Pt2;
 use serde_json::Value;
@@ -128,7 +129,7 @@ fn rust_kernel_covers_all_saved_examples() {
         let coords_pt2: Vec<_> = coords.iter().map(|p| Pt2::new(p[0], p[1])).collect();
         let mesh = mesh_domain(&coords_pt2, &[])
             .unwrap_or_else(|err| panic!("{}: {err}", path.display()));
-        let vertex_ids: Vec<_> = mesh.vertex_ids().collect();
+        let vertex_ids = mesh.vertex_ids();
         let vertex_index: std::collections::HashMap<_, _> = vertex_ids.iter().enumerate().map(|(i, &id)| (id, i)).collect();
         let actual_vertices: Vec<_> = vertex_ids.iter().map(|&id| { let p = mesh.point(id).unwrap(); [p.x, p.z] }).collect();
         let actual_quads: Vec<[usize; 4]> = mesh.faces().map(|(_, face)| face.iter().map(|id| vertex_index[id]).collect::<Vec<_>>().try_into().unwrap()).collect();

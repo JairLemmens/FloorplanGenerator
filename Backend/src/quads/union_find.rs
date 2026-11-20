@@ -1,40 +1,7 @@
-use crate::base_types::Id;
-use std::collections::HashMap;
-
-/// Small disjoint-set helper shared by mesh assembly and simplification.
+/// Disjoint-set over `0..n`, used for edge-count classes, chord collapses and
+/// vertex welding.
 pub(crate) struct UnionFind {
     parent: Vec<usize>,
-}
-
-pub(crate) struct IdUnionFind {
-    parent: HashMap<Id, Id>,
-}
-impl IdUnionFind {
-    pub(crate) fn new(ids: impl IntoIterator<Item = Id>) -> Self {
-        Self {
-            parent: ids.into_iter().map(|id| (id, id)).collect(),
-        }
-    }
-    pub(crate) fn find(&mut self, id: Id) -> Id {
-        let parent = self.parent[&id];
-        if parent == id {
-            id
-        } else {
-            let root = self.find(parent);
-            self.parent.insert(id, root);
-            root
-        }
-    }
-    pub(crate) fn join(&mut self, a: Id, b: Id) {
-        let ra = self.find(a);
-        let rb = self.find(b);
-        self.parent.insert(ra, rb);
-    }
-    pub(crate) fn join_min(&mut self, a: Id, b: Id) {
-        let ra = self.find(a);
-        let rb = self.find(b);
-        self.parent.insert(ra.max(rb), ra.min(rb));
-    }
 }
 
 impl UnionFind {
@@ -52,11 +19,15 @@ impl UnionFind {
         x
     }
 
-    /// Join sets using the second root as representative, matching the historical
-    /// behavior used for count constraints and chord collapses.
+    /// Join sets; the second root becomes the representative.
     pub(crate) fn join(&mut self, a: usize, b: usize) {
-        let ra = self.find(a);
-        let rb = self.find(b);
+        let (ra, rb) = (self.find(a), self.find(b));
         self.parent[ra] = rb;
+    }
+
+    /// Join sets; the smallest index becomes the representative.
+    pub(crate) fn join_min(&mut self, a: usize, b: usize) {
+        let (ra, rb) = (self.find(a), self.find(b));
+        self.parent[ra.max(rb)] = ra.min(rb);
     }
 }
