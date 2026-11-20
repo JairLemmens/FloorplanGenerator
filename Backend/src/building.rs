@@ -97,7 +97,7 @@ impl Building {
         face.geometry(&self.topology,&self.construction_set)
     }
 
-    pub fn apply_joint(&mut self,face0_idx: usize,face1_idx: usize,joint_edge_id: Id,layer0_idx: usize,layer1_idx: usize,mut joint_type: JointType,candidate_layers_reversed: bool,) {
+    pub fn apply_joint(&mut self,face0_idx: usize,face1_idx: usize,joint_edge_id: Id,layer0_idx: usize,layer1_idx: usize,mut joint_type: JointType,candidate_layers_reversed: bool,debug: bool,) {
 
         let (joint_edge_vert0, joint_edge_vert1, face0_id, face1_id) = {
             let joint_edge = self.topology.edge(joint_edge_id).unwrap();
@@ -180,6 +180,15 @@ impl Building {
         let _cross = n0.x * n1.z - n0.z * n1.x;
 
         let flip = _cross.atan2(_dot).rem_euclid(std::f64::consts::TAU)< std::f64::consts::PI;
+
+        if debug {
+            let uuid0 = self.topology.face(face0_id).unwrap().uuid.clone();
+            let uuid1 = self.topology.face(face1_id).unwrap().uuid.clone();
+            debug_log(&format!(
+                "joint {:?}: face {} (layer {}) <-> face {} (layer {}) | flip={} candidate_layers_reversed={}",
+                joint_type, uuid0, layer0_idx, uuid1, layer1_idx, flip, candidate_layers_reversed
+            ));
+        }
 
         if _dot.abs() > 0.9 {
             if joint_type == JointType::DoubleButt {
@@ -328,7 +337,7 @@ impl Building {
         }
     }  
 
-    pub fn solve_joint(&mut self,joint_edge_id: Id) -> HashMap<LayerRef, LayerRef> {
+    pub fn solve_joint(&mut self,joint_edge_id: Id, debug: bool) -> HashMap<LayerRef, LayerRef> {
         
         let (joint_faces, edge_v0, edge_v1) = {
             let edge = self.topology.edge(joint_edge_id).unwrap();
@@ -502,6 +511,7 @@ impl Building {
                                 candidate_ref.layer_idx,
                                 JointType::Butt,
                                 flip_layers,
+                                debug,
                             );
                           
                             layer_joints.insert(layer_ref, candidate_ref);
@@ -535,6 +545,7 @@ impl Building {
                                 candidate_ref.layer_idx,
                                 JointType::Butt,
                                 flip_layers,
+                                debug,
                             );
 
                             layer_joints.insert(layer_ref, candidate_ref);
@@ -556,6 +567,7 @@ impl Building {
                                 candidate_ref.layer_idx,
                                 JointType::Miter,
                                 flip_layers,
+                                debug,
                             );
                         } else {
                             self.apply_joint(
@@ -566,6 +578,7 @@ impl Building {
                                 candidate_ref.layer_idx,
                                 JointType::DoubleButt,
                                 flip_layers,
+                                debug,
                             );
 
                             covered.insert(candidate_ref, layer_ref);
@@ -586,10 +599,34 @@ impl Building {
         layer_joints
     }
     
-    pub fn solve_joints(&mut self){
+    pub fn solve_joints(&mut self, debug: bool){
         for edge_id in self.topology.edges.ids().collect::<Vec<_>>(){
-            self.solve_joint(edge_id);
+            self.solve_joint(edge_id, debug);
         }
     }
+}
+
+#[cfg(feature = "wasm")]
+mod console {
+    use wasm_bindgen::prelude::wasm_bindgen;
+    #[wasm_bindgen]
+    extern "C" {
+        #[wasm_bindgen(js_namespace = console)]
+        pub fn log(s: &str);
+    }
+}
+
+fn debug_log(msg: &str) {
+    #[cfg(feature = "wasm")]
+    console::log(msg);
+    // Route through Python's print so output shows up in Jupyter cells
+    // (Rust's println! writes to the process stdout, which notebooks don't capture).
+    #[cfg(feature = "python")]
+    pyo3::Python::attach(|py| {
+        use pyo3::types::PyAnyMethods;
+        let _ = py.import("builtins").and_then(|b| b.call_method1("print", (msg,)));
+    });
+    #[cfg(not(any(feature = "wasm", feature = "python")))]
+    println!("{}", msg);
 }
 use crate::topology::ops::TopologyOps;

@@ -45,8 +45,8 @@ impl WasmBuilding {
     }
 
     #[wasm_bindgen(js_name = solveJoints)]
-    pub fn solve_joints(&mut self) {
-        self.binding.solve_joints();
+    pub fn solve_joints(&mut self, debug: Option<bool>) {
+        self.binding.solve_joints(debug.unwrap_or(false));
     }
 }
 use crate::topology::ops::TopologyOps;

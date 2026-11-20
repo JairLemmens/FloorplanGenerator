@@ -130,8 +130,9 @@ impl PyBuilding {
     }
 
 
-    pub fn solve_joints(&mut self) {
-        self.binding.solve_joints();
+    #[pyo3(signature = (debug=false))]
+    pub fn solve_joints(&mut self, debug: bool) {
+        self.binding.solve_joints(debug);
     }
 }
 
